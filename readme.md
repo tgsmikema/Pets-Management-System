@@ -15,11 +15,11 @@ The repository has the following structure:
 - [project](project): a folder for storing all project artifacts, including source code.
 - [proposal](proposal): contains the files for the project proposal report ([see Canvas assignment](https://canvas.auckland.ac.nz/courses/91591/assignments/315398)).
 - [risk-analysis](risk-analysis): contains the files for the risk analysis report ([see Canvas assignment](https://canvas.auckland.ac.nz/courses/91591/assignments/315395)).
-- capstone.cls: LaTeX documentation template for the reports.
-- team.tex: LaTeX file for storing your team name and members.
+- [capstone.cls](capstone.cls): LaTeX documentation template for the reports.
+- [team.tex](team.tex): LaTeX file for storing your team name and members.
 
 ## Extra details
 
 Modify [team.tex](team.tex) in this folder to contain the name of your team and the team members.
 
-GitHub will automatically build your reports when you push any changes to the porposal or final-report folder.
+GitHub will automatically build your reports when you push any changes to the proposal or final-report folder.
