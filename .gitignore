@@ -1,0 +1,10 @@
+# Wildcards - all files with these extensions will be ignored
+**/*.aux
+**/*.log
+**/*.toc
+
+# Specific files - these are the PDF output files and should be ignored
+**/full.pdf
+**/business.pdf
+**/technical.pdf
+**/anonymous.pdf

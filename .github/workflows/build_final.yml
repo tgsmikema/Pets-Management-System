@@ -1,0 +1,41 @@
+name: Build Project Final Report
+on: 
+  push:
+    paths:
+      - final-report/**/*.*
+  workflow_dispatch:
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3.0.0
+
+      - name: Compile full report
+        uses: Sakul6499/GitHub-Action-LaTeX@v1.0.0
+        with:
+          latex_main_file: final-report/full.tex
+
+      - name: Compile business case
+        uses: Sakul6499/GitHub-Action-LaTeX@v1.0.0
+        with:
+          latex_main_file: final-report/business.tex
+
+      - name: Compile technical report
+        uses: Sakul6499/GitHub-Action-LaTeX@v1.0.0
+        with:
+          latex_main_file: final-report/technical.tex
+
+      - name: Upload build output
+        uses: actions/upload-artifact@master
+        with:
+          name: final-report
+          path: |
+            full.pdf
+            full.log
+            business.pdf
+            business.log
+            technical.pdf
+            technical.log
+        if: always()

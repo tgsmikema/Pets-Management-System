@@ -1,0 +1,60 @@
+%----------------------------------------------------------------------------------------
+%	PROJECT PROPOSAL TEMPLATE: Full submission
+%	=========================
+%   Do NOT modify this file. This file will be replaced for the final submission
+%	generation.
+%----------------------------------------------------------------------------------------
+\documentclass{capstone}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\titlepage
+	{\includegraphics[width=\paperwidth]{ecse-decal-title}}
+	{
+		\centering\sffamily
+		{\Huge\bfseries ECSE Capstone Project\par}
+		\vspace{16pt} 
+		{\LARGE Proposal: Full Submission\par} 
+		\vspace{24pt}
+		{\huge\bfseries \teamname\par} % Author name
+	}
+
+%----------------------------------------------------------------------------------------
+%	TEAM INFORMATION
+%----------------------------------------------------------------------------------------
+
+~\vfill
+
+\noindent \textbf{Team Members}
+\teammembers
+
+\noindent \textit{Generated \today}
+
+\tableofcontents
+
+\cleardoublepage
+\import{proposal/parts/}{summary.tex}
+
+\cleardoublepage
+
+\part{Business Case}
+\import{proposal/parts/}{business-case.tex}
+
+\part{Technical Details}
+\import{proposal/parts/}{technical-overview.tex}
+\import{final-report/parts/}{technical-hardware.tex}
+\import{final-report/parts/}{technical-software.tex}
+
+\cleardoublepage
+
+\import{proposal/parts/}{conclusion.tex}
+
+\begin{appendices}
+\import{proposal/parts/}{appendices.tex}
+\end{appendices}
+
+\end{document}

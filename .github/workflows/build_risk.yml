@@ -1,0 +1,27 @@
+name: Build Risk Analysis Report
+on: 
+  push:
+    paths:
+      - risk-analysis/**/*.*
+  workflow_dispatch:
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3.0.0
+
+      - name: Compile full report
+        uses: Sakul6499/GitHub-Action-LaTeX@v1.0.0
+        with:
+          latex_main_file: risk-analysis/full.tex
+
+      - name: Upload build output
+        uses: actions/upload-artifact@master
+        with:
+          name: risk-analysis
+          path: |
+            full.pdf
+            full.log
+        if: always()
