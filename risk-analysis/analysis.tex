@@ -1,5 +1,90 @@
 %----------------------------------------------------------------------------------------
 %	Analysis
 %----------------------------------------------------------------------------------------
+\section*{1 Student Contribution}
 
-TODO: Include the risk analysis details here.
+\subsection*{1.1 Low Performance}
+
+With eight people participating in a project that spans over three months, there is a high likelihood that some of the work done by team members will not be up to par. However, it is of low severity as one of the other seven team members should be able to pick up the slack. This can be identified as a risk when multiple people realise this work is subpar, not just one teammate. An example of this risk is a student not completing an allocated task, and having no work to present during the weekly meeting. They also do not communicate a reason for this to the group.
+
+The team will communicate their progress at every Thursday meeting. If a group member cannot complete their allocated task, technical leaders will organise help or reallocate the task. Other mitigation strategies are to not make Git commits directly to master, have pull requests require at least two other reviewers before branches are merged, and Git reverts if the work is unsatisfactory or it may create issues for any branches later.
+
+An example of this risk mitigation is when the team leader notices a student does not submit their work before the due date and raises the issue with the student. The team leader will allocate the work to another team member to support or take over from the first student. Another example is if someone reviews a team member’s pull request and doesn’t find it satisfactory quality. They leave detailed review comments on how to improve the work. Everyone will share progress updates at the Thursday meetings to ensure they are on track with their tasks. If a team member has concerns about another’s work, they will raise it with the person or the team leader.
+
+The team will monitor this risk by having all members share updates on their progress during weekly Thursday meetings to ensure everyone is on track. If a team member notices another member is falling behind, they should raise the issue to the group during weekly meetings. The group should inform their respective technical leader or the student that their performance needs improvement. For GitHub, the repo should not allow commits to master and require manual review before merging. All team members should know how to use GitHub.
+
+\subsection*{1.2 Meeting Attendance}
+
+Attending meetings becomes difficult later in the semester as students become busy with other classes. There is a high likelihood of this occurring, although each student should avoid double-booking the Thursday meeting time. This is a low-severity risk, although it becomes more severe with repeated absences. An example of this risk is when a large software project is due, so the software students are very busy working on that project and do not attend the weekly meetings to focus on the other project. 
+
+The mitigation method is as follows: every student still attends the Thursday 10-12 meeting except in extreme cases. If they cannot attend (e.g. they have a test or a presentation during that time), they will inform the team as soon as possible. They will send a written update to the team before the meeting containing what they have been working on during the week and their plan for the coming week. They will read the meeting minutes after the meeting is complete and contact the team leader if they have any questions. If a student misses two consecutive meetings, the team leader will contact the student directly to find out what is happening. The team leader will notify the team mentor via email if the student needs to improve their attendance.
+
+An example of this mitigation method is when a student has a project demo at 11 am on Thursday, so they message the team telling them they cannot attend the meeting. On Thursday morning, they send a status update on the team discord. The team leader, Breanna, reads this update to the team during the meeting. The absent student reads the meeting notes after their demonstration and needs clarification on one section. Hence, they message the team leader, who clarifies it for them. Another example is when a student misses a meeting with only one hour of notice and then misses the next meeting with no notice. The team leader contacts them directly, and the student apologises and promises to make the next meeting. However, they miss the next meeting without warning. The team leader emails the mentor about the situation and asks for further guidance. 
+
+The team will monitor this risk by taking attendance at each meeting and noting known and unknown absences to keep track of each student. If a student gives a warning that they cannot attend the meeting but forgets to send a status update, the team leader will send a message to remind the student. If a student misses two or more meetings, the team leader will message them to inquire about their absences and see how to rectify the situation.
+
+\section*{2 Resources}
+
+\subsection*{2.1 Damaging Equipment}
+
+Hardware components may be damaged or broken when members experiment or perform incorrect operations. For example, some electronic components are burned out or not working due to voltage overload. In some cases, hardware components can fail due to manufacturing defects. Poor quality control, design flaws, or faulty parts can cause this. Also, physical damage, such as dropping or bumping the device, can cause damage to the hardware components.
+
+The team must double-check the hardware components used and whether they could be damaged easily. The team will use equipment carefully and place it in a safe and suitable environment after use. Further, the team should gain training to use the equipment correctly. Most importantly, the team should let the teaching team know if anything is damaged so it can get replaced as soon as possible.
+
+When the team selects hardware components, members will check these components carefully, for issues like ageing or damage. Once finished using the equipment, the team member who used it will place it in the team's locker. When a part is broken during development, the student responsible will contact the rest of the group to inform them of the damage. Then, the team leader will tell the teaching team and get it replaced as soon as possible. 
+
+To monitor this risk and reduce its likelihood, the electrical leader, Puja, and computer systems leader, Victor, will review all hardware used. They will check the Bill of Materials to ensure parts are standard and available from the university ECSE store. Members will inform other team members whenever components are damaged as soon as possible. The electrical leader will also notify the teaching staff via email if the component is relatively expensive or difficult to obtain from the ECSE store.
+
+\subsection*{2.2 Merge Conflicts}
+
+There is a risk of merge conflicts on the repository, which will likely happen during development. However, with careful planning, the team can minimise the risk to reduce the impact of any conflicts. An example is when a student opens a pull request to merge their feature branch into the master branch. A merge conflict occurs, and the branch cannot be merged automatically.
+
+To mitigate this risk, the person who makes the pull request should contact the author of the conflicting code. They should work together to resolve the conflict as soon as possible and with minimal ripple effects. If the two members cannot easily resolve the conflict, they will inform the team. The software lead, Mike, will oversee the merge process and resolve the issue. All other merges will be postponed until the conflict has been resolved and the branch merged successfully. An example of this method is where the student creating the pull request contacts the student who wrote the method where the merge conflict occurs. They meet and discuss the issue but need help finding an easy solution. They contact the group by sending a message on Discord, and organise a meeting with the software lead, Mike. The three of them resolve the conflict and successfully merge the branch. 
+
+The monitoring plan for this risk is that every pull request will require two reviewers to approve it, which they will not do during merge conflicts. This will block a merge from happening until the conflict is resolved correctly. If the reviewers notice a pull request left for more than 48 hours without resolving the merge conflict, they will notify the software lead. The software leader will contact the people involved in the merge conflict and organise a meeting within 48 hours. 
+
+\section*{3 Team Self-Management}
+
+\subsection*{3.1 Data Loss}
+
+Another risk is the loss of data. Data loss occurs when work is lost because it was stored locally and not elsewhere. For example, a team member writes code but does not commit or push the changes to GitHub, and their computer gets destroyed, so the code is lost. This risk is likely to happen because it is easy to forget to save work, especially when in a rush. However, the consequences of data loss are severe when important work is lost. 
+
+The risk of data loss is mitigated by placing work into the team’s existing GitHub repository or Google Drive upon every significant change or working session, not just locally. In this example, the team member mitigates the risk by committing their work to a branch on Git and pushing it to GitHub. 
+
+The monitoring plan for the risk of data loss is to utilise the existing GitHub repository and Google Drive storage. Further, the team will keep a work log in an existing Google Document available to all. Any time a student finishes any portion of work, they add a short description of the work to the log document and commit and push it to GitHub. The team lead, Breanna, will check the log and GitHub once a week on Thursday mornings and ensure they match. If the log and GitHub contents do not match, Breanna will immediately contact the student who will need to replace the missing work. Thus the team minimises the risk of data loss and the severity of the consequences.
+
+\subsection*{3.2 Coordination Between Technical Teams}
+
+Due to the team’s organisation into different sub-teams, there is a risk when combining work. This could be due to incompatible system interfaces or poor communication between each sub-team. This is likely to occur and is of high severity as it will greatly impact the development cycle. 
+
+An example of this risk occurring is if an input voltage from the hardware is too high for the ADC of the Raspberry Pi. Alternatively, the object sent from the Raspberry Pi is of a different format to the web endpoint made by the software team. A non-technical example is one team working much faster than another, leading to bottlenecks.
+
+Mitigation methods mainly involve comprehensive planning. Every member should know the requirements of their parts and when they should be completed. Examples of mitigation include listing all functional requirements and testing each before integrating it with another system. A schedule would help keep teams working at a similar pace.
+
+The team leader, Breanna, will check with each subteam at the weekly Thursday meeting to ensure the work is going according to the functional requirements and schedule. If there are any issues, the team will rectify the situation immediately during the same meeting. 
+
+\subsection*{3.3 Interpersonal Issues}
+
+In any group situation, team members may have a falling out and not want to work together. This becomes an issue when important project work is delayed and stops effective collaboration. This is unlikely to happen but would be of high severity. An example of this risk could be a fight between two members with competing ideas over which software tool to use in the project. 
+
+To mitigate this risk, all team members should always act professionally. Any team member in a falling out should notify the team leader if they think it is an issue. If other team members notice a falling out or hostility, they should speak directly to involved members to see if they are okay. If that team member is not okay, they should escalate the situation to the team leader. If this happens, the team will meet with the two group members and the team leader to work through any interpersonal issues they may have. If this meeting fails to improve the relationship between the two group members, the team leader will escalate further to the team mentor and course coordinator. 
+
+The team can apply mitigation methods to mitigate the risk in the above example. If two members fall out over competing ideas, one or both should discuss the situation with the team leader. Alternatively, another member notices their hostility and talks privately with either member to ensure they are okay and notifies the team leader of the situation. The team leader will organise a meeting between the two students and act as a neutral third party. In this meeting, the two students can talk to each other and understand each other's position. The risk has been mitigated through a shared effort of team members, and work will not be further impacted. 
+
+To monitor this risk, all team members should make sure to talk to each other regularly and make sure they speak up if they sense any hostility. The team will have regular team meetings in which the team leader will remind everyone that they can voice any issues here or contact her privately. The team leader will take any notification of a potential interpersonal seriously. 
+
+\subsection*{3.4 Scope Creep}
+
+With a project of this size, there is a high risk of scope creep. This is likely to occur and would severely impact the project. An example is when an aspect or requirement of the brief is not met because the entire team forgot about it. Then the implementation of that requirement is rushed later. Another example is adding unnecessary components or complexity to the project, which was not specified in the brief's requirements. This leads to excessive time spent on something the stakeholders may not want.
+
+The team will mitigate this risk by explicitly stating the scope regularly in meetings, referencing the project brief, and checking with teammates if changes or additions fall within the scope. For example, the front-end design contains features that aren’t part of the requirements. A student raises this during the Thursday meeting. Then, the feature is sidelined as a ‘nice to have’ and is not worked on until all essential features are complete. 
+
+During weekly team meetings the team will go through the brief together and make sure the current work being done aligns with the project requirements. If any work is found to not align with the brief, the person who created the work will be notified immediately if changes are required. To save time developing something out of scope, each member will also state what they are working on during weekly Thursday meetings.
+
+\subsection*{3.5 Wellbeing of Team Members}
+
+It is likely that throughout the project, some members will fall ill or be unable to work for some reason. This is a low-severity risk, as the team can mitigate the impacts with good planning. An example of this risk is when one or more team members become sick, and their work must be postponed. This can include people with critical roles, such as the team leader or a specialisation leader.
+
+The team will mitigate the impact of this risk by having the team leader reallocate work from the sick student to other students in the group. After the student has recovered, the workload will be balanced by allocating them extra work. If people with critical roles become sick, key responsibilities will be appointed to another team member by the team leader or the next available team member. An example is when the software leader becomes sick.The team leader will meet with the group and appoint another software developer as a temporary replacement. Once the official software leader returns to the team, the role will be handed back to them. They will take a higher workload from other team members to make up for the time they were away.
+
+The monitoring plan is as follows: the team leader, Breanna, will track who attends every meeting and monitor the work progress of each student, as well as communications from each student. If any students feel unwell and cannot work effectively, they will raise it as soon as possible.
