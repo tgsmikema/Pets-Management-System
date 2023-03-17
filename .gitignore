@@ -29,6 +29,9 @@
 # Mono auto generated files
 mono_crash.*
 
+# Visual Studio cache/options directory
+.vs/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
