@@ -18,7 +18,7 @@ namespace SPCA_backend.Controllers
         [HttpGet("demo")]
         public ActionResult demoFunction()
         {
-            return Ok();
+            return Ok("Hello World");
         }
     }
 }
