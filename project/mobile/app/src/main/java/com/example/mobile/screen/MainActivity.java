@@ -1,8 +1,9 @@
-package com.example.mobile;
+package com.example.mobile.screen;
 
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.mobile.R;
 import com.example.mobile.databinding.ActivityMainBinding;
 import com.example.mobile.screen.home.HomeFragment;
 import com.example.mobile.screen.message.MessageFragment;

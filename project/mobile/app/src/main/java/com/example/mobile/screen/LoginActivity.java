@@ -1,4 +1,4 @@
-package com.example.mobile;
+package com.example.mobile.screen;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = binding.buttonLogin;
         loginButton.setOnClickListener((event)->{
             Intent intent = new Intent();
-            intent.setClass(LoginActivity.this,MainActivity.class);
+            intent.setClass(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         });
     }
