@@ -18,14 +18,14 @@ constants.js: this file is used to store global constant variable, such as the b
 
 ensure the `node` is installed on your computer, then redirect to the web folder in your CMD, then run command
 
-```
+```npm
 npm install
 npm run dev
 ```
 
 to open you web app. 
 
-## The third-library used
+## The third-library may used
 
 1.Materail UI (used for the UI component)
 
