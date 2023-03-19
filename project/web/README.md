@@ -27,7 +27,7 @@ to open you web app.
 
 ## The third-library may used
 
-1.Materail UI (used for the UI component)
+1.Material UI (used for the UI component)
 
 2.react router
 
