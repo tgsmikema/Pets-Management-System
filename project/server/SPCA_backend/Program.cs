@@ -26,29 +26,29 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly",
                                     policy => policy.RequireClaim("admin"));
-    options.AddPolicy("VetsOnly",
-                                    policy => policy.RequireClaim("vets"));
-    options.AddPolicy("VolunteersOnly",
-                                    policy => policy.RequireClaim("volunteers"));
-    options.AddPolicy("AdminAndVetsOnly", policy =>
+    options.AddPolicy("VetOnly",
+                                    policy => policy.RequireClaim("vet"));
+    options.AddPolicy("VolunteerOnly",
+                                    policy => policy.RequireClaim("volunteer"));
+    options.AddPolicy("AdminAndVetOnly", policy =>
     {
         policy.RequireAssertion(context => context.User.HasClaim(c =>
-        (c.Type == "admin" || c.Type == "vets")));
+        (c.Type == "admin" || c.Type == "vet")));
     });
-    options.AddPolicy("VetsAndVolunteersOnly", policy =>
+    options.AddPolicy("VetAndVolunteerOnly", policy =>
     {
         policy.RequireAssertion(context => context.User.HasClaim(c =>
-        (c.Type == "vets" || c.Type == "volunteers")));
+        (c.Type == "vet" || c.Type == "volunteer")));
     });
-    options.AddPolicy("AdminAndVolunteersOnly", policy =>
+    options.AddPolicy("AdminAndVolunteerOnly", policy =>
     {
         policy.RequireAssertion(context => context.User.HasClaim(c =>
-        (c.Type == "admin" || c.Type == "volunteers")));
+        (c.Type == "admin" || c.Type == "volunteer")));
     });
-    options.AddPolicy("AllUsers", policy =>
+    options.AddPolicy("AllUser", policy =>
     {
         policy.RequireAssertion(context => context.User.HasClaim(c =>
-        (c.Type == "admin" || c.Type == "vets" || c.Type == "volunteers")));
+        (c.Type == "admin" || c.Type == "vet" || c.Type == "volunteer")));
     });
 
 });

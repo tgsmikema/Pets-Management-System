@@ -22,7 +22,7 @@ namespace SPCA_backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordSha256Hash")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

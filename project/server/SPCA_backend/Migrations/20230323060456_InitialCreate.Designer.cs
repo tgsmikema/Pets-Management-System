@@ -10,7 +10,7 @@ using SPCA_backend.Data;
 namespace SPCA_backend.Migrations
 {
     [DbContext(typeof(SPCA_DBContext))]
-    [Migration("20230318015634_InitialCreate")]
+    [Migration("20230323060456_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace SPCA_backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordSha256Hash")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
