@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using SPCA_backend.Dtos;
 using SPCA_backend.Model;
+using SPCA_backend.Handler;
 
 namespace SPCA_backend.Data
 {
@@ -12,10 +14,10 @@ namespace SPCA_backend.Data
             _dbContext = dbContext;
         }
 
-        public bool ValidLoginAdmin(string username, string password)
+        public bool ValidLoginAdmin(string username, string passwordSha256Hash)
         {
             UserLogin userLogin = _dbContext.UserLogins.FirstOrDefault
-               (e => e.UserName == username && e.Password == password && e.UserType == "admin");
+               (e => e.UserName == username && e.PasswordSha256Hash == passwordSha256Hash && e.UserType == "admin");
 
             if (userLogin == null)
             {
@@ -27,10 +29,10 @@ namespace SPCA_backend.Data
             }
         }
 
-        public bool ValidLoginVets(string username, string password)
+        public bool ValidLoginVets(string username, string passwordSha256Hash)
         {
             UserLogin userLogin = _dbContext.UserLogins.FirstOrDefault
-               (e => e.UserName == username && e.Password == password && e.UserType == "vets");
+               (e => e.UserName == username && e.PasswordSha256Hash == passwordSha256Hash && e.UserType == "vet");
 
             if (userLogin == null)
             {
@@ -42,10 +44,10 @@ namespace SPCA_backend.Data
             }
         }
 
-        public bool ValidLoginVolunteers(string username, string password)
+        public bool ValidLoginVolunteers(string username, string passwordSha256Hash)
         {
             UserLogin userLogin = _dbContext.UserLogins.FirstOrDefault
-               (e => e.UserName == username && e.Password == password && e.UserType == "volunteers");
+               (e => e.UserName == username && e.PasswordSha256Hash == passwordSha256Hash && e.UserType == "volunteer");
 
             if (userLogin == null)
             {
@@ -54,6 +56,29 @@ namespace SPCA_backend.Data
             else
             {
                 return true;
+            }
+        }
+
+        public bool AddNewUser(UserLoginInDto userLoginInDto)
+        {
+            UserLogin userCheck = _dbContext.UserLogins.FirstOrDefault(e => e.UserName == userLoginInDto.UserName);
+
+            if (userCheck == null)
+            {
+                UserLogin newUser = new UserLogin
+                {
+                    UserName = userLoginInDto.UserName,
+                    PasswordSha256Hash = SPCAAuthHandler.getSha256Hash(userLoginInDto.Password),
+                    UserType = userLoginInDto.UserType
+                };
+
+                EntityEntry<UserLogin> e = _dbContext.UserLogins.Add(newUser);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

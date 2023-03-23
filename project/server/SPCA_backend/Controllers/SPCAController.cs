@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SPCA_backend.Data;
+using SPCA_backend.Dtos;
 using SPCA_backend.Model;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Mime;
@@ -7,7 +8,7 @@ using System.Security.Claims;
 
 namespace SPCA_backend.Controllers
 {
-    [Route("webapi")]
+    [Route("api")]
     [ApiController]
     public class SPCAController : Controller
     {
@@ -18,34 +19,60 @@ namespace SPCA_backend.Controllers
             _repository = repository;
         }
 
-        [HttpGet("GetLoginPasswordForTestingPurpose")]
+        [HttpGet("testing")]
         public ActionResult demoFunction()
         {
-            return Ok("admin 123; vets 123; volunteers 123");
+            return Ok("admin 123; vet 123; volunteer 123");
         }
 
+        [HttpPost("register")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
-        [HttpGet("adminFunction")]
-        public ActionResult adminFunction()
+        public ActionResult userRegister(UserLoginInDto userLoginInDto)
         {
-            return Ok("logged In As ADMIN!");
+            bool isRegisterSuccessful = _repository.AddNewUser(userLoginInDto);
+
+            if (isRegisterSuccessful)
+            {
+                return Ok("User successfully registered.");
+            }
+            else
+            {
+                return Ok("Username not available. Please Try again.");
+            }
         }
 
-        [Authorize(AuthenticationSchemes = "Authentication")]
-        [Authorize(Policy = "VetsOnly")]
-        [HttpGet("vetsFunction")]
-        public ActionResult vetsFunction()
-        {
-            return Ok("logged In As VETS!");
-        }
 
         [Authorize(AuthenticationSchemes = "Authentication")]
-        [Authorize(Policy = "VolunteersOnly")]
-        [HttpGet("volunteersFunction")]
-        public ActionResult volunteersFunction()
+        [Authorize(Policy = "AllUser")]
+        [HttpPost("login")]
+        public ActionResult<UserLoginOutDto> userLogin()
         {
-            return Ok("logged In As VOLUNTEERS!");
+            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
+            string userName = "";
+            string userType = "";
+            if (ci.FindFirst("admin") != null)
+            {
+                userName = ci.FindFirst("admin").Value;
+                userType = "admin";
+            }
+            else if (ci.FindFirst("vet") != null)
+            {
+                userName = ci.FindFirst("vet").Value;
+                userType = "vet";
+            }
+            else if (ci.FindFirst("volunteer") != null)
+            {
+                userName = ci.FindFirst("volunteer").Value;
+                userType = "volunteer";
+            }
+                
+                return Ok(new UserLoginOutDto
+                {
+                    UserName = userName,
+                    UserType = userType
+                });
+
         }
 
     }

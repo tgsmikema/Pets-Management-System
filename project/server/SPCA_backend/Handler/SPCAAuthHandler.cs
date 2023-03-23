@@ -11,7 +11,7 @@ using System.Text;
 using System.Security.Claims;
 
 using SPCA_backend.Data;
-
+using System.Security.Cryptography;
 
 namespace SPCA_backend.Handler
 {
@@ -42,9 +42,9 @@ namespace SPCA_backend.Handler
                 var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
                 var credentials = Encoding.UTF8.GetString(credentialBytes).Split(":");
                 var username = credentials[0];
-                var password = credentials[1];
+                var passwordSha256Hash = getSha256Hash(credentials[1]);
 
-                if (_repository.ValidLoginAdmin(username, password))
+                if (_repository.ValidLoginAdmin(username, passwordSha256Hash))
                 {
                     var claims = new[] { new Claim("admin", username) };
                     ClaimsIdentity identity = new ClaimsIdentity(claims, "Basic");
@@ -53,18 +53,18 @@ namespace SPCA_backend.Handler
 
                     return AuthenticateResult.Success(ticket);
                 }
-                else if (_repository.ValidLoginVets(username, password))
+                else if (_repository.ValidLoginVets(username, passwordSha256Hash))
                 {
-                    var claims = new[] { new Claim("vets", username) };
+                    var claims = new[] { new Claim("vet", username) };
                     ClaimsIdentity identity = new ClaimsIdentity(claims, "Basic");
                     ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                     AuthenticationTicket ticket = new AuthenticationTicket(principal, Scheme.Name);
 
                     return AuthenticateResult.Success(ticket);
                 }
-                else if (_repository.ValidLoginVolunteers(username, password))
+                else if (_repository.ValidLoginVolunteers(username, passwordSha256Hash))
                 {
-                    var claims = new[] { new Claim("volunteers", username) };
+                    var claims = new[] { new Claim("volunteer", username) };
                     ClaimsIdentity identity = new ClaimsIdentity(claims, "Basic");
                     ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                     AuthenticationTicket ticket = new AuthenticationTicket(principal, Scheme.Name);
@@ -76,6 +76,16 @@ namespace SPCA_backend.Handler
                     Response.Headers.Add("WWW-Authenticate", "Basic");
                     return AuthenticateResult.Fail("user not found or username and password do not match");
                 }
+            }
+        }
+
+        public static String getSha256Hash(String value)
+        {
+            using (SHA256 hash = SHA256.Create())
+            {
+                return String.Concat(hash
+                  .ComputeHash(Encoding.UTF8.GetBytes(value))
+                  .Select(item => item.ToString("x2")));
             }
         }
     }
