@@ -64,7 +64,22 @@ According to the Web API endpoint listed above, there are categorised into three
 
 Most of the endpoints will be secured with Basic Authentication that is configurable as part of the .NET framework. This means Authentication header for HTTP requests will be needed to access most of the secured API endpoints. Username and Password combination as an encoded string will be sent over the secure HTTPS network to eliminate the chance of being compromised. On the other hand, Basic Authentication will support the distinction of different user types, therefore, we can further secure the access level of different users on the API, not only from the front end of the application, in order to minimise the chance for API endpoints to be abused. For the single endpoint of hardware access for sending over weight data, it is not secured due to the added complexity of implementing it. However, we will add a pseudo password string so any request coming through this API that does not contain this string will be ignored.
 
-
-
-
 \subsection{Frontends}
+We have decided to create two front-end frameworks: a mobile application built in Android Studio, and a web application built in React JS. Both applications will have the same functionality so that users can easily switch between both platforms, however we will not support real-time updates. Creating a mobile application is ideal for vets and volunteers to use while they are on the go, and they can easily record dogs weight with the scales wherever they are. The web application will be helpful for administrators to track trends across centres, and export data to use in excel and other workflows. 
+
+The key functionalities that will be supplied are:
+\begin{itemize}
+  \item Users can login and logout of their accounts, and change their password
+  \item Admin can view dogs across all centres, vets and volunteers are restricted to the centre that they work in
+  \item Any user can create a new dog, but volunteers cannot edit or delete existing dogs
+  \item Users can access a dogs information and their past weights, and add a new weight
+  \item Dogs can be ‘flagged’ by vets and admin, indicating alarming weight change
+  \item There can be an ‘alert’ on a dog, indicating that they need to be weighed
+  \item Users can see trends as pie charts and line charts across the centres that they have access to, and can export this data as .csv files
+  \item Users can send messages to each other within the application
+  \item Admins can create new users, and edit the access of existing users
+ \end{itemize}
+ 
+ Below is a look at the UI of the mobile application. The web application has been omitted for space reasons, and it follows a very similar pattern to the mobile application. The user can navigate through the main screens by the navigation bar on the bottom, and the red arrows show navigation to additional screens. 
+ 
+
