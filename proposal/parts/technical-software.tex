@@ -21,5 +21,50 @@ The workflow for the communication between the Raspberry Pi and the backend is t
 We have decided to include a seven-segment display into our design. This is done for the purpose of convenience and reliability. It increases convenience as the user can immediately read the weights. It also adds reliability as the scale would be able to function without wifi, which may occur for several reasons. A shift register is connected to the Raspberry Pi to store the segments that should be lit. The communication between the register and Pi includes several connections - one for shifting the register and one for the data. 
 
 \subsection{Backend}
+For the backend, we have used .NET with C# for the Web API endpoints, integrated with a light weight SQLite serverless database for data handling. 
+
+For data tracking, we are planning to have: user login information, centre information, animal information, and chat messages. The information will be stored in a few SQL tables in the database. For a draft plan, here's the initial view of the database entity relationship diagram:
+
+As the above database structure will satisfy the requirement of the SPCA. The backend web API will work with the database to carry out Create, Read, Update, and Delete operations in order to satisfy the business requirements from the SPCA.
+
+Next, for the web API endpoints, here a list according to the requirements:
+
+(Keys: A: admin access; VE: vet access; VO: volunteer access;)
+User Operations
+\begin{itemize}
+  \item Login (A, VE, VO)
+  \item Register New User (A)
+  \item Edit existing User Access Level (A)
+  \item Delete an existing user (A)
+  \item Changing Login Password for one's own account(A, VE, VO)
+  \item Search for an existing user (A) -> return a List
+ \end{itemize}
+ Animal Operations
+ \begin{itemize}
+  \item Add a new Dog Information (VE, VO, A)
+  \item Edit a Dog Information (VE, A, VO)
+  \item Delete a Dog Information (VE, A)
+  \item List Animals in one Centre (VE, VO)
+  \item List Animals in All Centres (A)
+  \item View a Selected Dog Information(VE, VO, A)
+  \item Add a weight for a Dog (Not Secured)
+  \item Search for dog in current centre (A, VE, VO)
+  \item Search for dog across all centres (A) 
+  \item Toggle Flag for a selected Dog (A, VE)
+  \item Toggle Alert for a selected Dog (A, VE)
+  \item Export dogs data (A)
+ \end{itemize}
+ Chat Operations
+ \begin{itemize}
+  \item Send Chat Message (A, VE, VO)
+  \item Retrieve Own Chat History (A, VE, VO) 
+ \end{itemize}
+
+According to the Web API endpoint listed above, there are categorised into three main components to satisfy the main requirements.
+
+Most of the endpoints will be secured with Basic Authentication that is configurable as part of the .NET framework. This means Authentication header for HTTP requests will be needed to access most of the secured API endpoints. Username and Password combination as an encoded string will be sent over the secure HTTPS network to eliminate the chance of being compromised. On the other hand, Basic Authentication will support the distinction of different user types, therefore, we can further secure the access level of different users on the API, not only from the front end of the application, in order to minimise the chance for API endpoints to be abused. For the single endpoint of hardware access for sending over weight data, it is not secured due to the added complexity of implementing it. However, we will add a pseudo password string so any request coming through this API that does not contain this string will be ignored.
+
+
+
 
 \subsection{Frontends}
