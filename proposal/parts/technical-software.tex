@@ -21,7 +21,7 @@ The workflow for the communication between the Raspberry Pi and the backend is t
 We have decided to include a seven-segment display into our design. This is done for the purpose of convenience and reliability. It increases convenience as the user can immediately read the weights. It also adds reliability as the scale would be able to function without wifi, which may occur for several reasons. A shift register is connected to the Raspberry Pi to store the segments that should be lit. The communication between the register and Pi includes several connections - one for shifting the register and one for the data. 
 
 \subsection{Backend}
-For the backend, we have used .NET with C# for the Web API endpoints, integrated with a light weight SQLite serverless database for data handling. 
+For the backend, we have used .NET with C Sharp for the Web API endpoints, integrated with a light weight SQLite serverless database for data handling. 
 
 For data tracking, we are planning to have: user login information, centre information, animal information, and chat messages. The information will be stored in a few SQL tables in the database. For a draft plan, here's the initial view of the database entity relationship diagram:
 
