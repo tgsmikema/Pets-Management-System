@@ -22,13 +22,28 @@ namespace SPCA_backend.Controllers
         [HttpGet("testing")]
         public ActionResult demoFunction()
         {
-            return Ok("admin 123; vet 123; volunteer 123");
+            return Ok("This is a 770 Team 2 Hosted backend API, you are connected if you can see this message! :-) Other API endpoints are being built right now....");
         }
 
         [HttpPost("register")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         public ActionResult userRegister(UserLoginInDto userLoginInDto)
+        {
+            bool isRegisterSuccessful = _repository.AddNewUser(userLoginInDto);
+
+            if (isRegisterSuccessful)
+            {
+                return Ok("User successfully registered.");
+            }
+            else
+            {
+                return Ok("Username not available. Please Try again.");
+            }
+        }
+
+        [HttpPost("register2")]
+        public ActionResult userRegister2(UserLoginInDto userLoginInDto)
         {
             bool isRegisterSuccessful = _repository.AddNewUser(userLoginInDto);
 

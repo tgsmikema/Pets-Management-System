@@ -13,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//builder.Services.AddDbContext<SPCA_DBContext>(options => options.UseSqlServer(builder.Configuration["WebAPIConnection"]));
 builder.Services.AddDbContext<SPCA_DBContext>(options => options.UseSqlite(builder.Configuration["WebAPIConnection"]));
 builder.Services.AddScoped<ISPCARepo, SPCARepo>();
 
