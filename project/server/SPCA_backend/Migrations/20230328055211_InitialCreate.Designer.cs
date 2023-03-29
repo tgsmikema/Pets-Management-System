@@ -10,7 +10,7 @@ using SPCA_backend.Data;
 namespace SPCA_backend.Migrations
 {
     [DbContext(typeof(SPCA_DBContext))]
-    [Migration("20230323060456_InitialCreate")]
+    [Migration("20230328055211_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
