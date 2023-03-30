@@ -24,15 +24,6 @@ Generally, all physical weight scales are the same, with differences being in th
 A strain gauge is an electrical sensor that reacts to weight by having an electrical resistance that increases or decreases when weight is applied. A load cell uses several strain gauges to measure weight more accurately than one strain gauge. The provided load cells have two strain gauges as in Figure \ref{fig:load_cell}. One’s resistance decreases linearly with weight, and the other’s resistance increases linearly. Four load cells are provided, referred to as R1, R2, R3, and R4.
 
 
-
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[scale=0.3]{load-cell.png}
-	\caption{Diagram of the provided load cell.}
-	\label{fig:load_cell}
-\end{figure}
-
-
 \section{Sensing Topologies}
 
 Topologies to connect the load cells are compared. The load cells could individually be connected to the ADC to gain a measurement from each, as in Figure \ref{fig:sense-1}. This would allow weight distribution to be sensed across the scale by gaining measurements from each corner; however, it requires four signals to be input to the ADC. With only three ADC ports, this option is only possible if an external ADC is used at additional cost. Another option is connecting all load cells together in a parallel configuration as in Figure \ref{fig:sense-2} and sending one signal to the ADC. This option is low cost as it only requires one processing circuit. However, parallel connections reduce resolution because each load cell's resistance changes are averaged instead of being added. Alternatively, the load cells could be placed in a Wheatstone bridge as in Figure \ref{fig:sense-3}. This topology is used to detect small changes in resistance and produces a high-resolution output. Adding multiple load cells in the Wheatstone bridge does not reduce resolution because differences are added and not averaged. Further, this option only requires one processing circuit; thus is a low-cost solution. 
