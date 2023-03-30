@@ -4,29 +4,67 @@
 
 \chapter{Overview}
 
-TODO: Introduce the project and what it will deliver
+We have been tasked to create a set of digital scales with an accompanying app for the SPCA to more easily weigh their animals. For this initial minimum viable product (MVP), we narrow the scope to only include dogs from 5-25kgs. By the end of this project we will deliver a working set of scales with a WiFi connection to a software product that is usable by SPCA staff. 
+
+The SPCA cares for over 31000 animals each year, with staff including administrators, vets and volunteers. It can be a very busy environment, and weighing animals can be very difficult as you have to have the animal remain still and calm on the scales while also recording the weight. Our product will help this process by automating the weight recording, so that the staff can focus solely on the animal. In order to better provide for the animals, our product will also create graphs of the animals’ weight over time. This will help staff to identify health issues in individual animals, and administrators will be able to view trends across centres to identify areas that need more attention. 
+
+Our project is a joint effort between electrical, computer systems and software engineers. Through working together in a multidisciplinary team, we will be able to deliver the best possible product for the SPCA. The electrical and computer systems engineers will build a set of digital scales with WiFi communication that can send data directly to staffs’ computers. The software team will build a fullstack application that stores this data and allows staff to view trends and add data. We believe that this product will greatly improve the ease with which the SPCA can track their animals’ weight and therefore be able to care for their health more effectively.
+
 
 \chapter{Deliverables}
 
-TODO: What are the main deliverables, how will they be achieved, how does it meet the project requirements
+
+We will implement our prototype over the following semester, which will include building the scales, linking it to the software using embedded software, and creating a software backend and two frontends. To ensure that every team member contributes equally and all of the work is completed on time, we have created a Gantt chart to plan our development (see \ref{fig:gantt-chart-1} in Appendix A) . Please note that all team members have been anonymised to numbers. 
+
+Team member 2 has the most experience in the electrical engineering space, so she will take the lead for all electronic components. This includes building the digital scales and all the required hardware within it to accurately measure weight. She will be supported by member 6, and 3 and 7 both have the knowledge required to assist if necessary. 3 will coordinate the effort on the embedded components, which will include 6 and 7. The embedded software will be a Raspberry Pi with a WiFi module which will be configured to send data to the software department. Member 1 will lead the software development process. This will be broken down into backend and frontend, with 1 and 4 working on the backend and then assisting 5 and 8 with the frontend when they are finished. Due to the large scope of the frontend, 3, 6 and 8 will also help to develop these applications as they have experience with the required technologies. 
+
+Having members of the team shift around between sections will ensure that all parts of the project are coordinated and will work together once assembled. We will leverage the diverse experience of all team members to create the best possible product. Our final product will be a fully functional set of scales with a data connection to two software applications. This will allow SPCA staff to weigh animals, view the data, and detect trends over time. 
+
 
 \chapter{Requirements}
 
-TODO: This chapter should review the different areas and explain how they are met
+This application will help the SPCA to more efficiently and effectively manage the weight of their animals. For the purpose of a minimum viable product (MVP), we will only focus on dogs between 5 and 25kgs. Our application will help SPCA staff to more easily weigh animals by recording the weight automatically. It will also streamline the process of viewing a dog’s weight history, identifying trends, and noting any problems. In the future there is a possibility of expanding this to all animals and to encompass more health areas. 
+Through our work in the electrical section, we will ensure that the weights are recorded quickly and accurately. Our custom-built scale will record the dogs weight electronically, and will display it through an LED display. The embedded software will allow the weight to be sent using Wi-Fi to a staff member’s phone and/or computer. The LED display will serve as a back-up system in case the WiFi connection goes down or if a staff member cannot use their computer for any reason.The software will record this weight, and keep track of a dog’s history. This will allow staff members to view this data and identify issues. The intuitive interface of the software will make it easy for staff to use, and will have a low learning curve to ensure that the system can be used as quickly as possible and with minimal obstacles
+
 
 \section{Te Tiriti o Waitangi}
 
-TODO: How are the Te Tiriti o Waitangi goals met
+In New Zealand, it is important that we fulfil our treaty obligations to make the system usable by different cultures including Māori. This means we must recognise and respect the treaty principles of partnership, participation, protection and options. We must also protect tino rangatiratanga of resources. For the purposes of this project these obligations are either in scope or out of scope. 
+
+The principles of protection and tino rangatiratanga over resources are in scope for this project. The resources that we use and collect are mainly in the form of data. In Te Ao Māori, data is taonga and we must recognize tangata whenua as kaitiaki of their data. To fulfil this obligation we need processes in place to allow any user to maintain full control over their data including access, management, deletion. We will also use Māori place names in our frontend application to support the protection and revitalisation of te reo Māori.  
+ 
+Other obligations like partnership, participation and options are out of scope because we lack resources to meet and discuss with tangata whenua about the development and implementation of our project. To ensure the system is usable by different cultures we would require consultation with representatives of different cultures to understand their needs. An example of this could be offering our app and website in different languages. With no resources to implement these changes they remain out of scope.
+
 
 \section{Sustaintability and Environmental}
 
-TODO: How are the sustaintability goals met
+Many of the sustainability concerns involve the components that we are using and their effects on the environment. WEEE (electrical and electronics waste) is increasing year by year so we need to reduce the amount of waste to the best of our abilities. Starting with the electrical components, PCBs are mostly made out of resin and metals including copper, tin and lead. All these materials are potentially hazardous if they are not disposed of properly.
+
+In order to maximise sustainability, we need to ensure that we are designing our circuit in a way that uses the least amount of materials and dispose of them correctly after use. Other than this, we can choose to use components that comply with the RoHS restrictions and are less harmful to the environment. A plan for what happens to the hardware of the smart scale at its end of life should also be developed. For example, it could have instructions on it to be taken to a user’s local electronics disposal centre for responsible waste management. Further, a plan should be developed for when maintenance or repairs are required. For example, the team could have a repair policy where the scale can be sent back and refurbished in order to utilise components that remain functioning. However, this needs to be further evaluated as it would incur extra cost, and also require having technical staff available to interface with users and provide technical support. Thus, this idea is currently out of scope, but should be further investigated.
+
+In terms of the Raspberry Pi, we have little flexibility in terms of sustainability, as the Pi is chosen for us. Therefore the computer systems team will ensure any additional components that we decide to use, such as a seven-segment display, are recyclable and that we don’t use anything beyond what we need. 
+
 
 \section{Legal and Privacy}
 
-TODO: How are the legal and privacy goals met
+The main areas where we will consider data privacy are collecting data, holding data, and using and disclosing data.
+
+For data collection, in our application, user details such as first name, last name, and job description will be collected in order to open an account and update their profile. This is the minimum requirement of user information to be collected in order to find and identify an user within our system. We assume that people will communicate within our application, and hence contact details do not need to be collected, and therefore correspond to the minimum amount of data needed to be collected about each user.
+For holding data, we are planning to hold data in a serverless SQLite database, coupled with the application's back end in a secure hosted environment. Since our API endpoints are protected, only users who have access to each endpoint will be able to access the personal data stored. This prevents personal data being used by people outside the organisation and minimises the risk of being exposed.
+
+For using and disclosing data, no personal data will be ever disclosed to any other parties outside the organisation except for legal reasons. This corresponds to the idea that personal data is only used for the purpose of being collected in the first place, which is used for organisation internal communications purpose only. People who have access to the application will be able to see other user's first and last name, and job descriptions, and send messages to other users. One assumption is that all internal communications are done within our application, and hence that sensitive user data will not be disclosed outside of the organisation.
+
 
 \section{Other Ethical Issues}
 
-TODO: How are the ethical goals met
+In order to protect the confidentiality and integrity of the system, our application will have multiple levels of security. An administrator will be able to access all parts of the system, whereas a volunteer will only have limited control over the system. This protects the application from sabotage, either malicious or accidental. An example of how this will be applied is that vets and volunteers will only have access to animals within the centre that they work at, since there is no need for them to access other animals’ data.
+ 
+A large potential issue is the reliability of the recordings. This is an ethical issue as if our product measure inaccurate weights, it would impact the treatment of the dogs and could potentially negatively impact the dogs. This comes in two parts: hardware error and user error. To mitigate potential hardware errors, we will design and build the scales to the highest possible standards. Regular maintenance should be conducted on the scales to ensure that they are not degrading, however for the sake of an MVP the maintenance routine is not part of this project's scope. User error includes the potential of staff attributing the weight to the wrong dog. There is no way for us to control or mitigate this, so we will rely on the high standards of the SPCA and assume that this is not a major issue. 
+
+We will assume that the owners of these dogs give consent to the SPCA to record and store their dogs’ weight. The SPCA may need to acquire additional permissions for the long term tracking of this data, but we will assume that the SPCA has steps in place to acquire this and as such we will not consider this in our project.
+
+In order to test our product, we will use weights rather than live animals. This may cause inaccuracies in our measurements as the weights will be immoble, whereas the dogs would move around a lot and potentially skew the reading. However, we will not use dogs to test our scales for ethical reasons. We would not want to expose dogs to potentially hazardous environments, nor cause them stress from repeated weighings for testing purposes.
+
+
+
 
