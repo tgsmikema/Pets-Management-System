@@ -8,12 +8,13 @@ This section details the hardware design, including research on prior solutions,
 
 \section{Prior Art}
 
-In this section, existing hardware solutions for digital weighing scales are evaluated. A digital weighing scale is a common measurement device, thus there are many existing products on the market. Some existing options are detailed and compared below.
-The 2nd Gen Xiaomi Smart Scale is an intelligent scale that has the primary function of measuring peoples weights, with many extra functions that allow fitness tracking with connected Xiaomi accounts. The technical specifications consist of: High precision pressure sensors that can measure still items over 100g and accurately perceive subtle changes of 50g, Bluetooth 5.0 connectivity for devices to track body information via the Xiaomi sports APP. The dimensions are: 300 x 300 x 20mm. This scale’s functionality goes beyond the average scale, with data such as body balance, weight and BMI being uploaded and tracked on the sports app, and diet and fitness plans being issued/adjusted to users. Home members can be automatically identified when used, with up to 16 different members. Many functionalities improve the interactions of the product such as body tracking and small item measurements. However, the higher price does not appeal to people that are not willing to spend much on a scale.
+In this section, existing hardware solutions for digital weighing scales are evaluated. 
 
-The Living \& Co Digital Glass Scale is a cheap alternative of a weight scale with little extra functionality. It is for people that only require the bare minimum out of a weight scale, with a “high precision strain-gauge sensor” that will always give you accuracy every time. The dimensions are: 290 x 280 x 20mm. The functionality of the product is severely limited, with its only benefit over its competition being real-Time measurements that are given instantly with no extra processing. This scale is made for people without a bigger budget, or people not willing to invest much in a weight scale. This lack of extra functionality also means that it is easier for people to use, however, it means it is only limited to one function. Bad reviews about massive fluctuations in measurements also sets this product back.
+The 2nd Gen Xiaomi Smart Scale is an intelligent scale that has the primary function of measuring peoples weights, with many extra functions that allow fitness tracking with connected Xiaomi accounts. The technical specifications consist of: High precision pressure sensors that can measure still items over 100g and accurately perceive subtle changes of 50g, Bluetooth 5.0 connectivity for devices to track body information via the Xiaomi sports APP.. This scale’s functionality goes beyond the average scale, with data such as body balance, weight and BMI being uploaded and tracked on the sports app, and diet and fitness plans being issued/adjusted to users. the higher price may not appeal to people that are not willing to spend much on a scale
 
-The FItBit Aria Air is a smart scale that functions as a regular weighing scale, but also records weights and synchronises the users biometrics to the FitBit app. The technical specifications consist of: Bluetooth functionality that connects to devices that track body information via the FitBit app, and it has dimensions of 300 x 300 x 20mm. In terms of functionality, the scale syncs the weight to the FitBit app where people can view their trends and see other details recorded by FitBit trackers and watches, such as BMI. Users can use their smartphone Bluetooth technology to set up and interact with their scale too. The scale has many functionalities that improve the interactions of the product such as body tracking and small item measurements. FitBit is a very popular health and fitness brand that benefits the user if they have more ways to measure health metrics. Unfortunately, this means that the proprietary applications result in limited competition for already invested FitBit users, and the higher price does not appeal to people that are not willing to spend much on a scale
+The Living \& Co Digital Glass Scale is a cheap alternative of a weight scale with little extra functionality. It is for people that only require the bare minimum out of a weight scale, with a “high precision strain-gauge sensor” that will always give you accuracy every time. The functionality of the product is severely limited. This scale is made for people without a bigger budget, or people not willing to invest much in a weight scale. This lack of extra functionality also means that it is easier for people to use, however, it means it is only limited to one function. Bad reviews about massive fluctuations in measurements also sets this product back.
+
+The FItBit Aria Air is a smart scale that functions as a regular weighing scale, but also records weights and synchronises the users biometrics to the FitBit app. The technical specifications consist of: Bluetooth functionality that connects to devices that track body information via the FitBit app. In terms of functionality, the scale syncs the weight to the FitBit app where people can view their trends and see other details recorded by FitBit trackers and watches, such as BMI. FitBit is a very popular health and fitness brand that benefits the user if they have more ways to measure health metrics. Unfortunately, this means that the proprietary applications result in limited competition for already invested FitBit users, and the higher price does not appeal to people that are not willing to spend much on a scale
 
 Generally, all physical weight scales are the same, with differences being in the more expensive range having the ability to connect to other devices where weight metrics are processed with other body measurements to give users more information on their health. This principle can be applied to not only humans, but also dogs. Our focus is to provide the weights of dogs, but also to upload that information to a database where further processing may take place, or purely just to track weight.
 
@@ -26,7 +27,7 @@ A strain gauge is an electrical sensor that reacts to weight by having an electr
 
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[scale=0.35]{load-cell.png}
+	\includegraphics[scale=0.3]{load-cell.png}
 	\caption{Diagram of the provided load cell.}
 	\label{fig:load_cell}
 \end{figure}
@@ -54,14 +55,14 @@ The proposed design comprises a Wheatstone bridge and instrumentation amplifier 
 
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[scale=0.35]{schematic.png}
+	\includegraphics[scale=0.33]{schematic.png}
 	\caption{Hardware schematic.}
 	\label{fig:schematic}
 \end{figure}
 
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[scale=0.7]{simulation.png}
+	\includegraphics[scale=0.37]{simulation.png}
 	\caption{Hardware simulation results.}
 	\label{fig:simulation}
 \end{figure}
