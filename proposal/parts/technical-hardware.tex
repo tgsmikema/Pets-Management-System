@@ -7,23 +7,20 @@
 \section{Prior Art}
 
 In this section, existing hardware solutions for digital weighing scales are evaluated. 
-The 2nd Gen Xiaomi Smart Scale is an intelligent scale that has the primary function of measuring peoples weights, with many extra functions that allow fitness tracking with connected Xiaomi accounts. The technical specifications consist of: High precision pressure sensors that can measure still items over 100g and accurately perceive subtle changes of 50g, Bluetooth 5.0 connectivity for devices to track body information via the Xiaomi sports APP.. This scale’s functionality goes beyond the average scale, with data such as body balance, weight and BMI being uploaded and tracked on the sports app, and diet and fitness plans being issued/adjusted to users. the higher price may not appeal to people that are not willing to spend much on a scale
+The 2nd Gen Xiaomi Smart Scale is an intelligent scale that has the primary function of measuring peoples weights, with many extra functions that allow fitness tracking with connected Xiaomi accounts. It has high precision pressure sensors, and bluetooth connection to the Xiaomi sports app. It shows extra data and suggestions such as fitness plans, but is quite expensive. The Living \& Co Digital Glass Scale is a cheap alternative, with a high precision strain-gauge sensor but only displays the weight through LEDs and does not have any additional functionality. The FitBit Aria Air is a smart scale that functions as a regular weighing scale, but also records weights and synchronises the users biometrics to the FitBit app. This allows users to view trends and data such as their BMI, but like the Xiaomi is quite expensive.
 
-The Living \& Co Digital Glass Scale is a cheap alternative of a weight scale with little extra functionality. It is for people that only require the bare minimum out of a weight scale, with a “high precision strain-gauge sensor” that will always give you accuracy every time. The functionality of the product is severely limited. This scale is made for people without a bigger budget, or people not willing to invest much in a weight scale. This lack of extra functionality also means that it is easier for people to use, however, it means it is only limited to one function. Bad reviews about massive fluctuations in measurements also sets this product back.
+Generally, all physical weight scales are the same, with differences being in the more expensive range having the ability to connect to other devices where weight metrics are processed with other body measurements to give users more information on their health. 
 
-The FItBit Aria Air is a smart scale that functions as a regular weighing scale, but also records weights and synchronises the users biometrics to the FitBit app. The technical specifications consist of: Bluetooth functionality that connects to devices that track body information via the FitBit app. In terms of functionality, the scale syncs the weight to the FitBit app where people can view their trends and see other details recorded by FitBit trackers and watches, such as BMI. FitBit is a very popular health and fitness brand that benefits the user if they have more ways to measure health metrics. Unfortunately, this means that the proprietary applications result in limited competition for already invested FitBit users, and the higher price does not appeal to people that are not willing to spend much on a scale
-
-Generally, all physical weight scales are the same, with differences being in the more expensive range having the ability to connect to other devices where weight metrics are processed with other body measurements to give users more information on their health. This principle can be applied to not only humans, but also dogs. Our focus is to provide the weights of dogs, but also to upload that information to a database where further processing may take place, or purely just to track weight.
 
 
 
 \section{Circuit Topologies}
 
 
-To detect weight, load cells which contain strain gauges are used. A strain gauge is an electrical sensor that reacts by having an electrical resistance that increases or decreases when weight is applied. The provided load cells have two strain gauges as in Figure \ref{fig:load_cell}. One’s resistance decreases linearly with weight, and the other’s resistance increases linearly. Four load cells are provided, R1, R2, R3, and R4. As such, circuitry is required to connect the load cells and provide one or more output signals from them.
+To detect weight, load cells which contain strain gauges are used. A strain gauge is an electrical sensor that reacts by having an electrical resistance that increases or decreases when weight is applied. The provided load cells have two strain gauges as in Figure \ref{fig:load_cell}. One’s resistance decreases linearly with weight, and the other’s resistance increases linearly. Four load cells are provided, R1, R2, R3, and R4. As such, circuitry is required to connect the load cells and provide one or more output signals from them. 
 
 
-Topologies to connect the load cells are compared. The load cells could individually be connected to the ADC, as in Figure \ref{fig:sense-1}, allowing weight distribution sensing, however the number of ADC ports provided is insufficient. This option is only possible with an external ADC at additional cost. Another option is connecting all load cells together in a parallel configuration as in Figure \ref{fig:sense-2}. This option is low cost as it requires one processing circuit. However, parallel connections reduce resolution because each load cell's resistance changes are averaged instead of added. Alternatively, a Wheatstone bridge could be used as in Figure \ref{fig:sense-3} to produce a high-resolution output because a Wheatstone bridge adds differences, not averages. Further, this option only requires one processing circuit; thus is a low-cost solution.
+Topologies to connect the load cells are compared. The load cells could individually be connected to the ADC, as in Figure \ref{fig:sense-1}, allowing weight distribution sensing, however the number of ADC ports provided is insufficient. This option is only possible with an external ADC at additional cost. Another option is connecting all load cells together in a parallel configuration as in Figure \ref{fig:sense-2}. This option is low cost as it requires one processing circuit. However, parallel connections reduce resolution because each load cell's resistance changes are averaged instead of added. Alternatively, a Wheatstone bridge could be used as in Figure \ref{fig:sense-3} to produce a high-resolution output because a Wheatstone bridge adds differences, not averages. Further, this option only requires one processing circuit; thus is a low-cost solution. (Figures B.x are from Appendix B)
 
 
 
@@ -48,7 +45,7 @@ The proposed design is a Wheatstone bridge and instrumentation amplifier as in F
 
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[scale=0.4]{simulation.png}
+	\includegraphics[scale=0.38]{simulation.png}
 	\caption{Hardware simulation results.}
 	\label{fig:simulation}
 \end{figure}
