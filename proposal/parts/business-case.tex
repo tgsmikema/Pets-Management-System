@@ -47,11 +47,10 @@ In terms of the Raspberry Pi, we have little flexibility in terms of sustainabil
 
 \section{Legal and Privacy}
 
-The main areas where we will consider data privacy are Collecting Data, Holding Data, and Using and Disclosing Data.
+The main areas where we will consider data privacy are collecting data, holding data, and using and disclosing data.
 
-For Data Collection, In our application, user details such as first name, last name, and job description will be collected in order to open an account and update their profile. This is the minimum requirement of user information to be collected in order to find and identify an user within our system. We assume that people will communicate within our application, and hence contact details do not need to be collected, and therefore correspond to the minimum amount of data needed to be collected about each user.
-
-For holding data, we are planning to hold data in a serverless SQLite database, and it's coupled with the application's back end in a secure hosted environment. Since our API endpoints are protected, only users who have access to each endpoint will be able to access the personal data stored. This prevents personal data being used by people outside the organisation and minimises the risk of being exposed.
+For data collection, in our application, user details such as first name, last name, and job description will be collected in order to open an account and update their profile. This is the minimum requirement of user information to be collected in order to find and identify an user within our system. We assume that people will communicate within our application, and hence contact details do not need to be collected, and therefore correspond to the minimum amount of data needed to be collected about each user.
+For holding data, we are planning to hold data in a serverless SQLite database, coupled with the application's back end in a secure hosted environment. Since our API endpoints are protected, only users who have access to each endpoint will be able to access the personal data stored. This prevents personal data being used by people outside the organisation and minimises the risk of being exposed.
 
 For using and disclosing data, no personal data will be ever disclosed to any other parties outside the organisation except for legal reasons. This corresponds to the idea that personal data is only used for the purpose of being collected in the first place, which is used for organisation internal communications purpose only. People who have access to the application will be able to see other user's first and last name, and job descriptions, and send messages to other users. One assumption is that all internal communications are done within our application, and hence that sensitive user data will not be disclosed outside of the organisation.
 
