@@ -31,48 +31,17 @@ We have decided to include a seven-segment display into our design. This is done
 
 
 \subsection{Backend}
-For the backend, we have used .NET with C Sharp for the Web API endpoints, integrated with a light weight SQLite serverless database for data handling. 
 
-For data tracking, we are planning to have: user login information, centre information, animal information, and chat messages. The information will be stored in a few SQL tables in the database. For a draft plan, here's the initial view of the database entity relationship diagram:
+For the backend, we have used .NET with C\# for the Web API endpoints, integrated with a light weight SQLite serverless database for data handling. For data tracking, we are planning to have: user login information, centre information, animal information, and chat messages. The information will be stored in a few SQL tables in the database. (Refer to Figure \ref{fig:database-1} in Appendix C).
 
-As the above database structure will satisfy the requirement of the SPCA. The backend web API will work with the database to carry out Create, Read, Update, and Delete operations in order to satisfy the business requirements from the SPCA.
+The backend web API will work with the database to carry out Create, Read, Update, and Delete operations in order to satisfy the business requirements from the SPCA.
 
-Next, for the web API endpoints, here a list according to the requirements:
+We will have API endpoints for user, dog, and chat operations. Some user operation endpoints include things such as authentication, registration, and managing existing users. Dog operations include adding, editing, and deleting dogs. Other dog endpoints include viewing dog information from different SPCA centres and triggering alerts for weight. Finally, chat operations include sending messages to other users of the application as well as retrieving one’s own chat history. Each endpoint requires a specific level of access rights so that users are only authorised to use the endpoints that they are allowed to use.
 
-(Keys: A: admin access; VE: vet access; VO: volunteer access;)
-User Operations
-\begin{itemize}
-  \item Login (A, VE, VO)
-  \item Register New User (A)
-  \item Edit existing User Access Level (A)
-  \item Delete an existing user (A)
-  \item Changing Login Password for one's own account(A, VE, VO)
-  \item Search for an existing user (A) -> return a List
- \end{itemize}
- Animal Operations
- \begin{itemize}
-  \item Add a new Dog Information (VE, VO, A)
-  \item Edit a Dog Information (VE, A, VO)
-  \item Delete a Dog Information (VE, A)
-  \item List Animals in one Centre (VE, VO)
-  \item List Animals in All Centres (A)
-  \item View a Selected Dog Information(VE, VO, A)
-  \item Add a weight for a Dog (Not Secured)
-  \item Search for dog in current centre (A, VE, VO)
-  \item Search for dog across all centres (A) 
-  \item Toggle Flag for a selected Dog (A, VE)
-  \item Toggle Alert for a selected Dog (A, VE)
-  \item Export dogs data (A)
- \end{itemize}
- Chat Operations
- \begin{itemize}
-  \item Send Chat Message (A, VE, VO)
-  \item Retrieve Own Chat History (A, VE, VO) 
- \end{itemize}
-
-According to the Web API endpoint listed above, there are categorised into three main components to satisfy the main requirements.
+According to the Web API endpoint listed above, they are categorised into three main components to satisfy the main requirements.
 
 Most of the endpoints will be secured with Basic Authentication that is configurable as part of the .NET framework. This means Authentication header for HTTP requests will be needed to access most of the secured API endpoints. Username and Password combination as an encoded string will be sent over the secure HTTPS network to eliminate the chance of being compromised. On the other hand, Basic Authentication will support the distinction of different user types, therefore, we can further secure the access level of different users on the API, not only from the front end of the application, in order to minimise the chance for API endpoints to be abused. For the single endpoint of hardware access for sending over weight data, it is not secured due to the added complexity of implementing it. However, we will add a pseudo password string so any request coming through this API that does not contain this string will be ignored.
+
 
 \subsection{Frontends}
 We have decided to create two front-end frameworks: a mobile application built in Android Studio, and a web application built in React JS. Both applications will have the same functionality so that users can easily switch between both platforms, however we will not support real-time updates. Creating a mobile application is ideal for vets and volunteers to use while they are on the go, and they can easily record dogs weight with the scales wherever they are. The web application will be helpful for administrators to track trends across centres, and export data to use in excel and other workflows. 
