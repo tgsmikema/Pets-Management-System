@@ -34,24 +34,22 @@ A strain gauge is an electrical sensor that reacts to weight by having an electr
 
 \section{Sensing Topologies}
 
-Topologies to connect the load cells are compared. The load cells could individually be connected to the ADC to gain a measurement from each, as in Figure {fig:sense-1}. This would allow weight distribution to be sensed across the scale by gaining measurements from each corner; however, it requires four signals to be input to the ADC. With only three ADC ports, this option is only possible if an external ADC is used at additional cost. Another option is connecting all load cells together in a parallel configuration as in Figure {fig:sense-2} and sending one signal to the ADC. This option is low cost as it only requires one processing circuit. However, parallel connections reduce resolution because each load cell's resistance changes are averaged instead of being added. Alternatively, the load cells could be placed in a Wheatstone bridge as in Figure {fig:sense-3}. This topology is used to detect small changes in resistance and produces a high-resolution output. Adding multiple load cells in the Wheatstone bridge does not reduce resolution because differences are added and not averaged. Further, this option only requires one processing circuit; thus is a low-cost solution. 
+Topologies to connect the load cells are compared. The load cells could individually be connected to the ADC to gain a measurement from each, as in Figure \ref{fig:sense-1}. This would allow weight distribution to be sensed across the scale by gaining measurements from each corner; however, it requires four signals to be input to the ADC. With only three ADC ports, this option is only possible if an external ADC is used at additional cost. Another option is connecting all load cells together in a parallel configuration as in Figure \ref{fig:sense-2} and sending one signal to the ADC. This option is low cost as it only requires one processing circuit. However, parallel connections reduce resolution because each load cell's resistance changes are averaged instead of being added. Alternatively, the load cells could be placed in a Wheatstone bridge as in Figure \ref{fig:sense-3}. This topology is used to detect small changes in resistance and produces a high-resolution output. Adding multiple load cells in the Wheatstone bridge does not reduce resolution because differences are added and not averaged. Further, this option only requires one processing circuit; thus is a low-cost solution. 
 
 
 
 \section{Processing Topologies}
 
-Processing the sensed signal required because the signal is small and to meet requirements of the ADC, and of the chosen op-amp. The requirements are: the signal should always be 0 V to 3.3V, an offset to the signal is required for the op-amp output, and a filter is required to remove electrical noise from the signal.
+Processing the sensed signal required because the signal is small and to meet requirements of the ADC, and of the chosen op-amp. The requirements are: the signal should always be 0 V to 3.3V and an offset to the signal is required for the op-amp output.
 
 To produce an offset, a Zener regulator may be used as in Figure \ref{fig:offset}.a. However, the offset it produces is limited to standard values. Alternatively, resistors may be used to divide the supply voltage down. An op-amp buffer is added to the voltage divider to hold the offset steady as in Figure \ref{fig:offset}.b.
 
 To amplify the signal, an amplifier that allows double ended inputs must be used, as output by the Wheatstone bridge. As such, a differential amplifier as in Figure \ref{fig:amplifier} would be suitable. However, its output can vary depending on the load cells' resistances so to prevent this, an instrumentation amplifier is used as in Figure \ref{fig:amplifier-2}.
 
-To filter the signal, a resistor capacitor (RC) filter as in Figure \ref{RC lowpass filter.} will be used to keep the design simple and cheap. An op-amp (active) filter could be used, however, they are complex and unnecessary for a signal that varies slowly with time.
-
 
 \section{The Proposed Design}
 
-The proposed design comprises a Wheatstone bridge, instrumentation amplifier, and RC filter, as in Figure \ref{fig:schematic}. The design was simulated with results in Figure \ref{fig:simulation}. Values from practical testing were used for the load cell characteristics. The output varies linearly, and is amplified and offset successfully. Functional specifications include a 3.3 V operating voltage, 0 to 25 kg range, and 0.5 kg resolution. Technical specifications include a 714 V/V gain, 0.1 V offset, and 0.8 V to 1.8 V range.
+The proposed design comprises a Wheatstone bridge and instrumentation amplifier as in Figure \ref{fig:schematic}. The design was simulated with results in Figure \ref{fig:simulation}. Values from practical testing were used for the load cell characteristics. The output varies linearly, and is amplified and offset successfully. Functional specifications include a 3.3 V operating voltage, 0 to 25 kg range, and 0.5 kg resolution. Technical specifications include a 714 V/V gain, 0.1 V offset, and 0.8 V to 1.8 V range.
 
 
 \begin{figure}[!ht]
@@ -63,7 +61,7 @@ The proposed design comprises a Wheatstone bridge, instrumentation amplifier, an
 
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[scale=0.4]{simulation.png}
+	\includegraphics[scale=0.7]{simulation.png}
 	\caption{Hardware simulation results.}
 	\label{fig:simulation}
 \end{figure}
