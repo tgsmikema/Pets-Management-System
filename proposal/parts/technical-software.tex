@@ -38,8 +38,6 @@ The backend web API will work with the database to carry out Create, Read, Updat
 
 We will have API endpoints for user, dog, and chat operations. Some user operation endpoints include things such as authentication, registration, and managing existing users. Dog operations include adding, editing, and deleting dogs. Other dog endpoints include viewing dog information from different SPCA centres and triggering alerts for weight. Finally, chat operations include sending messages to other users of the application as well as retrieving one’s own chat history. Each endpoint requires a specific level of access rights so that users are only authorised to use the endpoints that they are allowed to use.
 
-According to the Web API endpoint listed above, they are categorised into three main components to satisfy the main requirements.
-
 Most of the endpoints will be secured with Basic Authentication that is configurable as part of the .NET framework. This means Authentication header for HTTP requests will be needed to access most of the secured API endpoints. Username and Password combination as an encoded string will be sent over the secure HTTPS network to eliminate the chance of being compromised. On the other hand, Basic Authentication will support the distinction of different user types, therefore, we can further secure the access level of different users on the API, not only from the front end of the application, in order to minimise the chance for API endpoints to be abused. For the single endpoint of hardware access for sending over weight data, it is not secured due to the added complexity of implementing it. However, we will add a pseudo password string so any request coming through this API that does not contain this string will be ignored.
 
 
