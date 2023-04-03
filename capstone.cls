@@ -1,7 +1,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{capstone}[2023/02/27 ECSE Capstone Project Report Template]
 
-\LoadClass[a4paper]{book}
+\LoadClass[a4paper]{report}
 
 \RequirePackage{appendix}
 \RequirePackage{emptypage}
@@ -9,13 +9,20 @@
 \RequirePackage{import}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[T1]{fontenc}
+\RequirePackage[a4paper, margin=2.5cm]{geometry}
 \RequirePackage{avant}
 \RequirePackage{mathptmx}
 \RequirePackage{microtype}
 \RequirePackage{parskip}
-\RequirePackage[Glenn]{fncychap}
 \RequirePackage{graphicx}
+\RequirePackage{titlesec}
 \graphicspath{{images/}}
+
+\titlespacing*{\chapter}{0pt}{10pt}{10pt}
+
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily\bfseries}
+  {\chaptertitlename\ \thechapter}{0pt}{\Large}
 
 \definecolor{engineeringPurple}{RGB}{76, 33, 119} 
 
@@ -33,4 +40,3 @@
 \include{team.tex}
 
 \RequirePackage{tikz}
-
