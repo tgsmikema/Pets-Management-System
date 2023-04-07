@@ -4,7 +4,20 @@ using Microsoft.EntityFrameworkCore;
 using SPCA_backend.Data;
 using SPCA_backend.Handler;
 
+// configure CORS setting
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+// configure CORS setting to accept incoming request from the react + vite frontend server.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); ;
+        });
+});
 
 // Add services to the container.
 
@@ -66,6 +79,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// configure CORS setting
+app.UseCors(MyAllowSpecificOrigins);
 
 //add authentication to the processing pipeline
 app.UseAuthentication();
