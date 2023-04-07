@@ -30,6 +30,15 @@ namespace SPCA_backend.Controllers
             return Ok("This is a 770 Team 2 Hosted backend API, you are connected if you can see this message! :-) Other API endpoints are being built right now....");
         }
 
+        [HttpGet("testing2")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminOnly")]
+        public ActionResult demoFunction2()
+        {
+            return Ok("Admin function!!!");
+        }
+
+
         [HttpPost("register")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
