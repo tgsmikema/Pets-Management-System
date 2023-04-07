@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Net.Mime;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Cors;
+using System.Text;
 
 namespace SPCA_backend.Controllers
 {
@@ -70,28 +71,44 @@ namespace SPCA_backend.Controllers
             ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
             string userName = "";
             string userType = "";
+            string token = "";
             if (ci.FindFirst("admin") != null)
             {
-                userName = ci.FindFirst("admin").Value;
+                token = ci.FindFirst("admin").Value;
+                userName = getUserNameFromHeader(token);
                 userType = "admin";
             }
             else if (ci.FindFirst("vet") != null)
             {
-                userName = ci.FindFirst("vet").Value;
+                token = ci.FindFirst("vet").Value;
+                userName = getUserNameFromHeader(token);
                 userType = "vet";
             }
             else if (ci.FindFirst("volunteer") != null)
             {
-                userName = ci.FindFirst("volunteer").Value;
+                token = ci.FindFirst("volunteer").Value;
+                userName = getUserNameFromHeader(token);
                 userType = "volunteer";
             }
                 
                 return Ok(new UserLoginOutDto
                 {
                     UserName = userName,
-                    UserType = userType
+                    UserType = userType,
+                    Token = token
                 });
 
+        }
+
+        //-----------------------------Helper Methods---------------------------------
+
+        private string getUserNameFromHeader(string header)
+        {
+            var credentialBytes = Convert.FromBase64String(header);
+            var credentials = Encoding.UTF8.GetString(credentialBytes).Split(":");
+            var username = credentials[0];
+
+            return username;
         }
 
     }

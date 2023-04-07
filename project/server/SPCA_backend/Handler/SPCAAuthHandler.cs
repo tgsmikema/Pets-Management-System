@@ -46,7 +46,7 @@ namespace SPCA_backend.Handler
 
                 if (_repository.ValidLoginAdmin(username, passwordSha256Hash))
                 {
-                    var claims = new[] { new Claim("admin", username) };
+                    var claims = new[] { new Claim("admin", authHeader.ToString().Split(" ")[1] ) };
                     ClaimsIdentity identity = new ClaimsIdentity(claims, "Basic");
                     ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                     AuthenticationTicket ticket = new AuthenticationTicket(principal, Scheme.Name);
@@ -55,7 +55,7 @@ namespace SPCA_backend.Handler
                 }
                 else if (_repository.ValidLoginVets(username, passwordSha256Hash))
                 {
-                    var claims = new[] { new Claim("vet", username) };
+                    var claims = new[] { new Claim("vet", authHeader.ToString().Split(" ")[1]) };
                     ClaimsIdentity identity = new ClaimsIdentity(claims, "Basic");
                     ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                     AuthenticationTicket ticket = new AuthenticationTicket(principal, Scheme.Name);
@@ -64,7 +64,7 @@ namespace SPCA_backend.Handler
                 }
                 else if (_repository.ValidLoginVolunteers(username, passwordSha256Hash))
                 {
-                    var claims = new[] { new Claim("volunteer", username) };
+                    var claims = new[] { new Claim("volunteer", authHeader.ToString().Split(" ")[1]) };
                     ClaimsIdentity identity = new ClaimsIdentity(claims, "Basic");
                     ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                     AuthenticationTicket ticket = new AuthenticationTicket(principal, Scheme.Name);
