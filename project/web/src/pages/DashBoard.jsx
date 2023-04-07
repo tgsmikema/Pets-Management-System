@@ -1,13 +1,19 @@
 import { Box, useTheme } from "@mui/material";
-import Footer from "../components/Footer.jsx";
 import TopBar from "../components/TopBar.jsx";
-import LoginForm from "../components/LoginForm.jsx";
+import Footer from "../components/Footer.jsx";
+import { useEffect } from "react";
+import { useAuth } from "../providers/AuthProvider.jsx";
+import axios from "axios";
 
-const LoginPage = () => {
+const DashBoard = () => {
   const theme = useTheme();
+  const { user, token } = useAuth();
+
+  useEffect(() => {}, []);
+
   return (
     <Box height={"100vh"}>
-      <TopBar isLogin={true} />
+      <TopBar isLogin={false} />
       <Box
         height={"84%"}
         width={"100%"}
@@ -18,11 +24,11 @@ const LoginPage = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <LoginForm />
+        this is dashboard
       </Box>
       <Footer />
     </Box>
   );
 };
 
-export default LoginPage;
+export default DashBoard;
