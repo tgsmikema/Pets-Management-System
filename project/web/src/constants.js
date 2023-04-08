@@ -1,3 +1,3 @@
 export const constants = {
-    backend: "http://localhost:8000" // will be changed later
-}
+  backend: "http://electronicnz-001-site1.ftempurl.com/api", // will be changed later
+};

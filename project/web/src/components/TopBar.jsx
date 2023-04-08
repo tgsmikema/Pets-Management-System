@@ -5,11 +5,12 @@ import HomeIcon from "@mui/icons-material/Home";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import ChatIcon from "@mui/icons-material/Chat";
 import PersonIcon from "@mui/icons-material/Person";
-import { useState } from "react";
+import { useUtilProvider } from "../providers/UtilProvider.jsx";
 
+//this is the top, we set the navigation item in it, if this is login page, these navigation item will hidden
 const TopBar = ({ isLogin }) => {
   const theme = useTheme();
-  const [selected, setSelected] = useState("Home");
+  const { selected, setSelected } = useUtilProvider();
   return (
     <Box
       height={"8%"}

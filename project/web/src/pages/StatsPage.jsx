@@ -2,12 +2,12 @@ import { Box } from "@mui/material";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
 import { useEffect } from "react";
 
-const HomePage = () => {
+const StatsPage = () => {
   const { setSelected } = useUtilProvider();
   useEffect(() => {
-    setSelected("Home");
+    setSelected("Stats");
   });
-  return <Box>This is Home page</Box>;
+  return <Box>this is statistic page</Box>;
 };
 
-export default HomePage;
+export default StatsPage;

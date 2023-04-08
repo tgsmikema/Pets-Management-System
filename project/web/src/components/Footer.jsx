@@ -1,5 +1,6 @@
 import { Box, useTheme } from "@mui/material";
 
+//this is component is used for footer
 const Footer = () => {
   const theme = useTheme();
   return (

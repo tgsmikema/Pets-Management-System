@@ -6,8 +6,7 @@ import DashBoard from "./pages/DashBoard.jsx";
 
 function App() {
   const { user } = useAuth();
-  const theme = useTheme();
-  const colors = customColor;
+  //if the user is null, we will show the login pages, otherwise we will redirect to dashboard page
   return user === null ? <LoginPage /> : <DashBoard />;
 }
 

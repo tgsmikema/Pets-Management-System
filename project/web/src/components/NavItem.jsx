@@ -1,17 +1,17 @@
 import { Box, Button, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+//this is navigation item in the top bar, which is home,stats,chat,profile
 const NavItem = ({ icon, to, name, selected, setSelected }) => {
   const navigate = useNavigate();
-  const theme = useTheme();
   return (
     <Box>
       <Button
         variant={"text"}
         startIcon={icon}
         onClick={() => {
-          navigate(to);
           setSelected(name);
+          navigate(to);
         }}
         color={"success"}
         sx={{

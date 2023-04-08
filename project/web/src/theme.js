@@ -19,7 +19,7 @@ export const theme = createTheme({
   },
 });
 
-//you can add this color later
+//you can add the colors you want in here
 export const customColor = {
   grey: "#eee",
   textBlack: "000",
