@@ -1,28 +1,13 @@
-import {Box, useTheme} from "@mui/material";
-import {useAuth} from "./providers/AuthProvider.jsx";
-import {customColor} from "./theme.js";
+import { Box, useTheme } from "@mui/material";
+import { useAuth } from "./providers/AuthProvider.jsx";
+import { customColor } from "./theme.js";
+import LoginPage from "./pages/LoginPage.jsx";
+import DashBoard from "./pages/DashBoard.jsx";
 
 function App() {
-    const {user} = useAuth()
-    const theme = useTheme()
-    const colors = customColor
-    return (
-        user === null ?
-            (
-                <Box
-                    sx={{
-                        color: colors.grey
-                    }}
-                >
-                    The user has not logged in
-                </Box>
-            ) :
-            (
-                <Box>
-                    The user has logged in
-                </Box>
-            )
-    )
+  const { user } = useAuth();
+  //if the user is null, we will show the login pages, otherwise we will redirect to dashboard page
+  return user === null ? <LoginPage /> : <DashBoard />;
 }
 
-export default App
+export default App;
