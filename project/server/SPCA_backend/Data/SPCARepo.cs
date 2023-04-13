@@ -386,6 +386,11 @@ namespace SPCA_backend.Data
             }
         }
 
+        public IEnumerable<Scale> ListAllScales() {
+            IEnumerable<Scale> listOfScales = _dbContext.Scales.ToList();
+            return listOfScales;
+        }
+
         public bool AddNewCentre(string name)
         {
             Centre existingCentre = _dbContext.Centres.FirstOrDefault(e => e.Name == name);

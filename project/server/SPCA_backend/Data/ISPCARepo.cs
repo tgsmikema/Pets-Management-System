@@ -31,6 +31,7 @@ namespace SPCA_backend.Data
         //Util Methods
         public bool AddNewScale(ScaleInDTO scale);
         public bool DeleteScale(int scaleId);
+        public IEnumerable<Scale> ListAllScales();
         public bool AddNewCentre(string name);
         public bool DeleteCentre(int centreId);
         public IEnumerable<Centre> ListAllCentres();

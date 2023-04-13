@@ -43,6 +43,15 @@ namespace SPCA_backend.Controllers
 
         }
 
+        [HttpPost("listAllScales")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult listAllScales()
+        {
+            IEnumerable<Scale> allScales = _repository.ListAllScales();
+            return Ok(allScales);
+        }
+
         [HttpPost("deleteScale")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
