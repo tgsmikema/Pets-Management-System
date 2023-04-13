@@ -31,5 +31,6 @@ namespace SPCA_backend.Data
         //Util Methods
         public void AddNewScale(ScaleInDTO scale);
         public bool AddNewCentre(string name);
+        public IEnumerable<Centre> ListAllCentres();
     }
 }

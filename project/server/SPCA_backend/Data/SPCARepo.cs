@@ -309,35 +309,6 @@ namespace SPCA_backend.Data
             }   
         }
 
-        // Util Methods
-        public void AddNewScale(ScaleInDTO scaleDTO)
-        {
-            Scale scale = new Scale
-            {
-                Name = scaleDTO.Name,
-                CentreId = scaleDTO.CentreId,
-            };
-            _dbContext.Add(scale);
-            _dbContext.SaveChanges();
-            return;
-        }
-
-        public bool AddNewCentre(string name)
-        {
-            Centre existingCentre = _dbContext.Centres.FirstOrDefault(e => e.Name == name);
-            if (existingCentre == null)
-            {
-                Centre centre = new Centre { Name = name };
-                _dbContext.Add(centre);
-                _dbContext.SaveChanges();
-                return true;
-            }
-            else{
-                return false;
-            }
-            
-        }
-
         public bool toggleDogFlag(int dogId)
         {
             Dog dog = _dbContext.Dogs.FirstOrDefault(e => e.Id == dogId);
@@ -345,7 +316,7 @@ namespace SPCA_backend.Data
             if (dog == null)
             {
                 return false;
-            } 
+            }
             else
             {
                 dog.isFlag = !dog.isFlag;
@@ -377,5 +348,41 @@ namespace SPCA_backend.Data
 
             }
         }
+
+        // Util Methods
+        public void AddNewScale(ScaleInDTO scaleDTO)
+        {
+            Scale scale = new Scale
+            {
+                Name = scaleDTO.Name,
+                CentreId = scaleDTO.CentreId,
+            };
+            _dbContext.Add(scale);
+            _dbContext.SaveChanges();
+            return;
+        }
+
+        public bool AddNewCentre(string name)
+        {
+            Centre existingCentre = _dbContext.Centres.FirstOrDefault(e => e.Name == name);
+            if (existingCentre == null)
+            {
+                Centre centre = new Centre { Name = name };
+                _dbContext.Add(centre);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            else{
+                return false;
+            }
+            
+        }
+
+        public IEnumerable<Centre> ListAllCentres() {
+            IEnumerable<Centre> listOfCentres = _dbContext.Centres.ToList();
+            return listOfCentres;
+        }
+
+        
     }
 }

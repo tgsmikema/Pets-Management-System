@@ -53,5 +53,14 @@ namespace SPCA_backend.Controllers
 
         }
 
+        [HttpPost("listAllCentres")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult listAllCentres()
+        {
+            IEnumerable<Centre> listOfCentres = _repository.ListAllCentres();
+            return Ok(listOfCentres);
+        }
+
     }
 }
