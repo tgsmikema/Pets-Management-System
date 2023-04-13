@@ -14,7 +14,7 @@ const DashBoard = () => {
   const { user, token } = useAuth();
 
   return (
-    <Box height={"100vh"}>
+    <Box height={"100vh"} width={"100vw"}>
       <TopBar isLogin={false} />
       <Box
         height={"84%"}
@@ -22,9 +22,6 @@ const DashBoard = () => {
         sx={{
           backgroundColor: theme.palette.secondary.main,
         }}
-        display={"flex"}
-        // alignItems={"center"}
-        // justifyContent={"center"}
       >
         <Routes>
           <Route index element={<Navigate to={"/home"} />} />
