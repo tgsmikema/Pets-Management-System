@@ -378,6 +378,23 @@ namespace SPCA_backend.Data
             
         }
 
+        public bool DeleteCentre(int centreId)
+        {
+            Centre existingCentre = _dbContext.Centres.FirstOrDefault(e => e.Id == centreId);
+            if (existingCentre == null)
+            {
+                return false;
+            }
+            else
+            {
+                _dbContext.Remove(existingCentre);
+                _dbContext.SaveChanges();
+                return true;
+            }
+
+        }
+
+
         public IEnumerable<Centre> ListAllCentres() {
             IEnumerable<Centre> listOfCentres = _dbContext.Centres.ToList();
             return listOfCentres;

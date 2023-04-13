@@ -62,5 +62,22 @@ namespace SPCA_backend.Controllers
             return Ok(listOfCentres);
         }
 
+        [HttpPost("deleteCentre")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminOnly")]
+        public ActionResult deleteCentre(int id)
+        {
+            bool checkExisting = _repository.DeleteCentre(id);
+            if (checkExisting)
+            {
+                return Ok("Centre deleted");
+            }
+            else
+            {
+                return NotFound("Centre with " + id + "does not exist");
+            }
+
+        }
+
     }
 }
