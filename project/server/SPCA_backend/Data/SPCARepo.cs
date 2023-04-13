@@ -233,7 +233,7 @@ namespace SPCA_backend.Data
             return AllDogs;
         }
 
-        public DogOutDTO GetDog(int dogId)
+        public DogOutDTO GetDogInformationAllCentres(int dogId)
         {
             Dog dog = _dbContext.Dogs.FirstOrDefault(e => e.Id == dogId);
             if (dog == null)

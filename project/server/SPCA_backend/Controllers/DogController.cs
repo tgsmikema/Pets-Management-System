@@ -117,11 +117,11 @@ namespace SPCA_backend.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Authentication")]
-        [Authorize(Policy = "AllUser")]
+        [Authorize(Policy = "Admin")]
         [HttpGet("getDog")]
-        public ActionResult<DogOutDTO> GetDog(int dogId)
+        public ActionResult<DogOutDTO> GetDogInformationAllCentres(int dogId)
         {
-            DogOutDTO dogDTO = _repository.GetDog(dogId);
+            DogOutDTO dogDTO = _repository.GetDogInformationAllCentres(dogId);
             if (dogDTO.Id == -1){
                 return NotFound("No Dog found with that Id");
             }
