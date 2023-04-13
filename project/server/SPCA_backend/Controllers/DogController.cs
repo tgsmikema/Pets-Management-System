@@ -118,11 +118,41 @@ namespace SPCA_backend.Controllers
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "Admin")]
-        [HttpGet("getDog")]
+        [HttpGet("getDogAllCentres")]
         public ActionResult<DogOutDTO> GetDogInformationAllCentres(int dogId)
         {
             DogOutDTO dogDTO = _repository.GetDogInformationAllCentres(dogId);
             if (dogDTO.Id == -1){
+                return NotFound("No Dog found with that Id");
+            }
+            return Ok(dogDTO);
+        }
+
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        [HttpGet("getDog")]
+        public ActionResult<DogOutDTO> GetDogInformationOwnCentre(int dogId)
+        {
+            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
+            string userName = "";
+            if (ci.FindFirst("admin") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("admin").Value);
+            }
+            else if (ci.FindFirst("vet") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("vet").Value);
+            }
+            else if (ci.FindFirst("volunteer") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("volunteer").Value);
+            }
+            int userCentreId = _repository.GetUserInfo(userName).CentreId;
+
+            DogOutDTO dogDTO = _repository.GetDogInformationOwnCentre(dogId, userCentreId);
+
+            if (dogDTO.Id == -1)
+            {
                 return NotFound("No Dog found with that Id");
             }
             return Ok(dogDTO);

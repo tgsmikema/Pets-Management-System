@@ -250,6 +250,23 @@ namespace SPCA_backend.Data
             return ConvertToDogOutDTO(dog);
         }
 
+        public DogOutDTO GetDogInformationOwnCentre(int dogId, int centreId)
+        {
+            Dog dog = _dbContext.Dogs.FirstOrDefault(e => e.Id == dogId && e.CentreId == centreId);
+            if (dog == null)
+            {
+                return new DogOutDTO
+                {
+                    Id = -1,
+                    Name = "",
+                    Breed = "",
+                    CentreId = 0,
+                };
+
+            }
+            return ConvertToDogOutDTO(dog);
+        }
+
         public DogOutDTO ConvertToDogOutDTO(Dog dog)
         {
             DogOutDTO dogOutDto = new DogOutDTO
