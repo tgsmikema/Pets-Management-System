@@ -12,7 +12,7 @@ const LoginPage = () => {
     navigate("/");
   }, []);
   return (
-    <Box height={"100vh"}>
+    <Box height={"100vh"} width={"100vw"}>
       <TopBar isLogin={true} />
       <Box
         height={"84%"}
