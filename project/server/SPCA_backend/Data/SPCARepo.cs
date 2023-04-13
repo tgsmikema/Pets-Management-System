@@ -148,6 +148,35 @@ namespace SPCA_backend.Data
             }
         }
 
+        // Dog Methods
+        public bool AddNewDog(DogInDTO dogInfo)
+        {
+            Dog dog = new Dog
+            {
+                Name = dogInfo.Name,
+                Breed = dogInfo.Breed,
+                CentreId = dogInfo.CentreId,
+            };
+            _dbContext.Add(dog);
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public bool DeleteDog(int dogId)
+        {
+            Dog dog = _dbContext.Dogs.FirstOrDefault(e => e.Id == dogId);
+            if (dog == null)
+            {
+                return false;
+            }
+            else
+            {
+                _dbContext.Dogs.Remove(dog);
+                _dbContext.SaveChanges();
+                return true;
+            }
+        }
+
         public int getUserIdFromUserName(string username)
         {
             User user = _dbContext.Users.FirstOrDefault(e => e.UserName == username);
