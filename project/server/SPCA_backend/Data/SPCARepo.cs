@@ -147,5 +147,19 @@ namespace SPCA_backend.Data
                 return true;
             }
         }
+
+        // Dog Methods
+        public bool AddNewDog(DogInDTO dogInfo)
+        {
+            Dog dog = new Dog
+            {
+                Name = dogInfo.Name,
+                Breed = dogInfo.Breed,
+                CentreId = dogInfo.CentreId,
+            };
+            _dbContext.Add(dog);
+            _dbContext.SaveChanges();
+            return true;
+        }
     }
 }

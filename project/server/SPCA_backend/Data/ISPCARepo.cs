@@ -5,6 +5,7 @@ namespace SPCA_backend.Data
 {
     public interface ISPCARepo
     {
+        // User Methods
         public bool ValidLoginAdmin(string username, string passwordSha256Hash);
         public bool ValidLoginVets(string username, string passwordSha256Hash);
         public bool ValidLoginVolunteers(string username, string passwordSha256Hash);
@@ -13,5 +14,8 @@ namespace SPCA_backend.Data
         public bool DeleteUser(int userId);
         public bool EditExistingUserAccessLevel(UserAccessInDto userAccessInDto);
         public IEnumerable<UserOutDto> GetAllUsers();
+
+        //Dog Methods
+        public bool AddNewDog(DogInDTO dogInfo);
     }
 }
