@@ -106,7 +106,7 @@ namespace SPCA_backend.Controllers
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("delete")]
-        public ActionResult<UserOutDto> userDelete(int userId)
+        public ActionResult userDelete(int userId)
         {
             bool valid = _repository.DeleteUser(userId);
             if (valid)
@@ -116,6 +116,23 @@ namespace SPCA_backend.Controllers
             else
             {
                 return NotFound("User ID does not exist");
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost("editUserAccessLevel")]
+
+        public ActionResult editUserAccessLevel(UserAccessInDto userAccessInDto)
+        {
+            bool valid = _repository.EditExistingUserAccessLevel(userAccessInDto);
+            if (valid)
+            {
+                return Ok("Successfully changed the selected user access level");
+            }
+            else
+            {
+                return NotFound("An Error Occured, please try again!");
             }
         }
 

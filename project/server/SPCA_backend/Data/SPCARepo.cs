@@ -116,5 +116,23 @@ namespace SPCA_backend.Data
                 return true;
             }
         }
+
+        public bool EditExistingUserAccessLevel(UserAccessInDto userAccessInDto)
+        {
+            User user = _dbContext.Users.FirstOrDefault(e => e.Id == userAccessInDto.UserId);
+            if (user == null)
+            {
+                return false;
+            }
+            else
+            {
+                user.UserType = userAccessInDto.UserType;
+                EntityEntry<User> e = _dbContext.Users.Update(user);
+                User userEntity = e.Entity;
+                _dbContext.SaveChanges();
+
+                return true;
+            }
+        }
     }
 }
