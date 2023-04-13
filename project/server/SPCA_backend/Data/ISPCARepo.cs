@@ -25,6 +25,8 @@ namespace SPCA_backend.Data
         public DogOutDTO GetDogInformationAllCentres(int dogId);
         public DogOutDTO GetDogInformationOwnCentre(int dogId, int userCentreId);
         public bool EditDogInformation(DogEditInDto dogEditInDto);
+        public bool toggleDogFlag(int dogId);
+        public bool toggleDogAlert(int dogId);
 
         //Util Methods
         public void AddNewScale(ScaleInDTO scale);

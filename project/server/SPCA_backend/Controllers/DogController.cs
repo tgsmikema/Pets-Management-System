@@ -150,6 +150,41 @@ namespace SPCA_backend.Controllers
             }
         }
 
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminAndVetOnly")]
+        [HttpGet("toggleFlag")]
+        public ActionResult toggleFlag(int dogId)
+        {
+            bool isValid = _repository.toggleDogFlag(dogId);
+
+            if (isValid)
+            {
+                return Ok("Dog Flag successfully toggled.");
+            }
+            else
+            {
+                return NotFound("Dog of the requested ID does not exist");
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminAndVetOnly")]
+        [HttpGet("toggleAlert")]
+        public ActionResult toggleAlert(int dogId)
+        {
+            bool isValid = _repository.toggleDogAlert(dogId);
+
+            if (isValid)
+            {
+                return Ok("Dog Alert successfully toggled.");
+            }
+            else
+            {
+                return NotFound("Dog of the requested ID does not exist");
+            }
+        }
+
+
 
         //-----------------------------Helper Methods---------------------------------
 

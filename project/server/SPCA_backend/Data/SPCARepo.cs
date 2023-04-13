@@ -321,5 +321,45 @@ namespace SPCA_backend.Data
             _dbContext.SaveChanges();
             return;
         }
+
+        public bool toggleDogFlag(int dogId)
+        {
+            Dog dog = _dbContext.Dogs.FirstOrDefault(e => e.Id == dogId);
+
+            if (dog == null)
+            {
+                return false;
+            } 
+            else
+            {
+                dog.isFlag = !dog.isFlag;
+                EntityEntry<Dog> e = _dbContext.Dogs.Update(dog);
+                Dog dogEntity = e.Entity;
+                _dbContext.SaveChanges();
+
+                return true;
+
+            }
+        }
+
+        public bool toggleDogAlert(int dogId)
+        {
+            Dog dog = _dbContext.Dogs.FirstOrDefault(e => e.Id == dogId);
+
+            if (dog == null)
+            {
+                return false;
+            }
+            else
+            {
+                dog.isAlert = !dog.isAlert;
+                EntityEntry<Dog> e = _dbContext.Dogs.Update(dog);
+                Dog dogEntity = e.Entity;
+                _dbContext.SaveChanges();
+
+                return true;
+
+            }
+        }
     }
 }
