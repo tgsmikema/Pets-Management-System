@@ -279,6 +279,28 @@ namespace SPCA_backend.Data
             return dogOutDto;
         }
 
+        public bool EditDogInformation(Dog dog)
+        {
+            Dog dogToBeChanged = _dbContext.Dogs.FirstOrDefault(e => e.Id == dog.Id);
+
+            if (dogToBeChanged == null)
+            {
+                return false;
+            }
+            else
+            {
+                dogToBeChanged.CentreId = dog.CentreId;
+                dogToBeChanged.Breed = dog.Breed;
+                dogToBeChanged.Name = dog.Name;
+
+                EntityEntry<Dog> e = _dbContext.Dogs.Update(dogToBeChanged);
+                Dog dogEntity = e.Entity;
+                _dbContext.SaveChanges();
+
+                return true;
+            }   
+        }
+
         // Util Methods
         public void AddNewScale(ScaleInDTO scaleDTO)
         {
