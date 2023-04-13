@@ -13,7 +13,7 @@ namespace SPCA_backend.Controllers
     // controller class, that can be thought of sub-route of the node+express.
     // enable CORS for this controller
     [EnableCors("_myAllowSpecificOrigins")]
-    [Route("api")]
+    [Route("user")]
     [ApiController]
     public class SPCAController : Controller
     {
