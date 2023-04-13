@@ -80,5 +80,17 @@ namespace SPCA_backend.Controllers
             return Ok(_repository.ListAllDogsInACentre(centreId));
         }
 
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        [HttpGet("getDog")]
+        public ActionResult<DogOutDTO> GetDog(int dogId)
+        {
+            DogOutDTO dogDTO = _repository.GetDog(dogId);
+            if (dogDTO.Id == -1){
+                return NotFound("No Dog found with that Id");
+            }
+            return Ok(dogDTO);
+        }
+
     }
 }

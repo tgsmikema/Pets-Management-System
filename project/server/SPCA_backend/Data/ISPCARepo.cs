@@ -22,5 +22,6 @@ namespace SPCA_backend.Data
         public bool DeleteDog(int dogId);
         public IEnumerable<DogOutDTO> ListAllDogsAllCentres();
         public IEnumerable<DogOutDTO> ListAllDogsInACentre(int centreId);
+        public DogOutDTO GetDog(int dogId);
     }
 }
