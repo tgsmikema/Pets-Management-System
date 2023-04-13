@@ -176,5 +176,25 @@ namespace SPCA_backend.Data
                 return true;
             }
         }
+
+        public IEnumerable<DogOutDTO> ListAllDogsAllCentres()
+        {
+            List<DogOutDTO> AllDogs = new List<DogOutDTO>();
+            IEnumerable<Dog> dogs = _dbContext.Dogs.ToList();
+            foreach (Dog dog in dogs) { AllDogs.Add(ConvertToDogOutDTO(dog)); }
+            return AllDogs;
+        }
+
+        public DogOutDTO ConvertToDogOutDTO(Dog dog)
+        {
+            DogOutDTO dogOutDto = new DogOutDTO
+            {
+                Id = dog.Id,
+                Name = dog.Name,
+                Breed = dog.Breed,
+                CentreId = dog.CentreId,
+            };
+            return dogOutDto;
+        }
     }
 }

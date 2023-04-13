@@ -63,5 +63,13 @@ namespace SPCA_backend.Controllers
                 return NotFound("Dog of the requested ID does not exist");
             }
         }
+
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet("getAllDogsAllCentres")]
+        public ActionResult<IEnumerable<UserOutDto>> getAllDogsAllCentres()
+        {
+            return Ok(_repository.ListAllDogsAllCentres());
+        }
     }
 }

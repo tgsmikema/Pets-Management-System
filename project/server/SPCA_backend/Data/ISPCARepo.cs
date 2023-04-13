@@ -18,5 +18,6 @@ namespace SPCA_backend.Data
         //Dog Methods
         public bool AddNewDog(DogInDTO dogInfo);
         public bool DeleteDog(int dogId);
+        public IEnumerable<DogOutDTO> ListAllDogsAllCentres();
     }
 }
