@@ -33,7 +33,7 @@ namespace SPCA_backend.Controllers
             return Ok("Dog successfully registered.");
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         public ActionResult deleteDog(int dogId)

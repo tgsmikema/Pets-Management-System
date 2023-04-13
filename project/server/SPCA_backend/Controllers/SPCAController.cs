@@ -106,7 +106,7 @@ namespace SPCA_backend.Controllers
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
-        [HttpGet("delete")]
+        [HttpDelete("delete")]
         public ActionResult userDelete(int userId)
         {
             bool valid = _repository.DeleteUser(userId);

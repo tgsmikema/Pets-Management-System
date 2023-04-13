@@ -43,7 +43,7 @@ namespace SPCA_backend.Controllers
 
         }
 
-        [HttpPost("listAllScales")]
+        [HttpGet("listAllScales")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
         public ActionResult listAllScales()
@@ -52,7 +52,7 @@ namespace SPCA_backend.Controllers
             return Ok(allScales);
         }
 
-        [HttpPost("deleteScale")]
+        [HttpDelete("deleteScale")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         public ActionResult deleteScale(int id)
@@ -86,7 +86,7 @@ namespace SPCA_backend.Controllers
 
         }
 
-        [HttpPost("listAllCentres")]
+        [HttpGet("listAllCentres")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
         public ActionResult listAllCentres()
@@ -95,7 +95,7 @@ namespace SPCA_backend.Controllers
             return Ok(listOfCentres);
         }
 
-        [HttpPost("deleteCentre")]
+        [HttpDelete("deleteCentre")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         public ActionResult deleteCentre(int id)
