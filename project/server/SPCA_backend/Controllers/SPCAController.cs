@@ -103,6 +103,22 @@ namespace SPCA_backend.Controllers
 
         }
 
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet("delete")]
+        public ActionResult<UserOutDto> userDelete(int userId)
+        {
+            bool valid = _repository.DeleteUser(userId);
+            if (valid)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound("User ID does not exist");
+            }
+        }
+
         //-----------------------------Helper Methods---------------------------------
 
         private string getUserNameFromHeader(string header)

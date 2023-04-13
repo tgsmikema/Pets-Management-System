@@ -101,5 +101,20 @@ namespace SPCA_backend.Data
 
             return userOutDto;
         }
+
+        public bool DeleteUser(int userId)
+        {
+            User user = _dbContext.Users.FirstOrDefault(e => e.Id == userId);
+            if (user == null)
+            {
+                return false;
+            }
+            else
+            {
+                _dbContext.Remove(user);
+                _dbContext.SaveChanges();
+                return true;
+            }
+        }
     }
 }

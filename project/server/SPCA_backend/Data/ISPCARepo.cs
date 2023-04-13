@@ -10,5 +10,6 @@ namespace SPCA_backend.Data
         public bool ValidLoginVolunteers(string username, string passwordSha256Hash);
         public bool AddNewUser(UserInDto userLoginInDto);
         public UserOutDto GetUserInfo(string username);
+        public bool DeleteUser(int userId);
     }
 }
