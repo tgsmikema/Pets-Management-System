@@ -90,7 +90,7 @@ namespace SPCA_backend.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Authentication")]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet("getDogAllCentres")]
         public ActionResult<DogOutDTO> GetDogInformationAllCentres(int dogId)
         {
@@ -104,7 +104,7 @@ namespace SPCA_backend.Controllers
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
-        [HttpGet("getDog")]
+        [HttpGet("getDogFromOwnCentre")]
         public ActionResult<DogOutDTO> GetDogInformationOwnCentre(int dogId)
         {
             ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
@@ -136,9 +136,9 @@ namespace SPCA_backend.Controllers
         [HttpPost("editDogInfo")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
-        public ActionResult editADogInfo(Dog dog)
+        public ActionResult editADogInfo(DogEditInDto dogEditInDto)
         {
-            bool isValid = _repository.EditDogInformation(dog);
+            bool isValid = _repository.EditDogInformation(dogEditInDto);
 
             if (isValid)
             {

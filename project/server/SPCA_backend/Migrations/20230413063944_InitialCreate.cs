@@ -31,7 +31,9 @@ namespace SPCA_backend.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CentreId = table.Column<int>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Breed = table.Column<string>(type: "TEXT", nullable: false)
+                    Breed = table.Column<string>(type: "TEXT", nullable: false),
+                    isFlag = table.Column<bool>(type: "INTEGER", nullable: false),
+                    isAlert = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

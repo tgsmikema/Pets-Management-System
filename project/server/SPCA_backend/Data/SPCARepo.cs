@@ -156,6 +156,8 @@ namespace SPCA_backend.Data
                 Name = dogInfo.Name,
                 Breed = dogInfo.Breed,
                 CentreId = dogInfo.CentreId,
+                isFlag = false,
+                isAlert = false,
             };
             _dbContext.Add(dog);
             _dbContext.SaveChanges();
@@ -244,6 +246,8 @@ namespace SPCA_backend.Data
                     Name = "",
                     Breed = "",
                     CentreId = 0,
+                    isFlag = false,
+                    isAlert = false,
                 };
 
             }
@@ -261,6 +265,8 @@ namespace SPCA_backend.Data
                     Name = "",
                     Breed = "",
                     CentreId = 0,
+                    isFlag = false,
+                    isAlert = false,
                 };
 
             }
@@ -275,11 +281,13 @@ namespace SPCA_backend.Data
                 Name = dog.Name,
                 Breed = dog.Breed,
                 CentreId = dog.CentreId,
+                isFlag = dog.isFlag,
+                isAlert = dog.isAlert,
             };
             return dogOutDto;
         }
 
-        public bool EditDogInformation(Dog dog)
+        public bool EditDogInformation(DogEditInDto dog)
         {
             Dog dogToBeChanged = _dbContext.Dogs.FirstOrDefault(e => e.Id == dog.Id);
 
