@@ -7,6 +7,7 @@ using System.Net.Mime;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Cors;
 using System.Text;
+using System;
 
 namespace SPCA_backend.Controllers
 {
@@ -142,6 +143,40 @@ namespace SPCA_backend.Controllers
             {
                 return NotFound("An Error Occured, please try again!");
             }
+        }
+
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        [HttpPost("changePassword")]
+        public ActionResult changePasswordForCurrentUser(UserChangePasswordInDto userChangePasswordInDto)
+        {
+            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
+            string userName = "";
+            if (ci.FindFirst("admin") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("admin").Value);
+            }
+            else if (ci.FindFirst("vet") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("vet").Value);
+            }
+            else if (ci.FindFirst("volunteer") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("volunteer").Value);
+            }
+            int userId = _repository.getUserIdFromUserName(userName);
+
+            bool isValid = _repository.ChangePasswordForCurrentUser(userId, userChangePasswordInDto);
+
+            if (isValid)
+            {
+                return Ok("Successfully changed the password for the current user.");
+            }
+            else
+            {
+                return NotFound("An Error Occured, please try again!");
+            }
+
         }
 
         //-----------------------------Helper Methods---------------------------------
