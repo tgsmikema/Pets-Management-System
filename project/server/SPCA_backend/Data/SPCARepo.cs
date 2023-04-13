@@ -278,5 +278,18 @@ namespace SPCA_backend.Data
             };
             return dogOutDto;
         }
+
+        // Util Methods
+        public void AddNewScale(ScaleInDTO scaleDTO)
+        {
+            Scale scale = new Scale
+            {
+                Name = scaleDTO.Name,
+                CentreId = scaleDTO.CentreId,
+            };
+            _dbContext.Add(scale);
+            _dbContext.SaveChanges();
+            return;
+        }
     }
 }

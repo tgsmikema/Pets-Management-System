@@ -24,5 +24,8 @@ namespace SPCA_backend.Data
         public IEnumerable<DogOutDTO> ListAllDogsInACentre(int centreId);
         public DogOutDTO GetDogInformationAllCentres(int dogId);
         public DogOutDTO GetDogInformationOwnCentre(int dogId, int userCentreId);
+
+        //Util Methods
+        public void AddNewScale(ScaleInDTO scale);
     }
 }
