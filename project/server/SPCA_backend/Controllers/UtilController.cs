@@ -31,8 +31,32 @@ namespace SPCA_backend.Controllers
         [Authorize(Policy = "AdminOnly")]
         public ActionResult addNewScale(ScaleInDTO scale)
         {
-            _repository.AddNewScale(scale);
-            return Ok("User successfully registered.");
+            bool checkNotExisting = _repository.AddNewScale(scale);
+            if (checkNotExisting)
+            {
+                return Ok("Scale successfully created.");
+            }
+            else
+            {
+                return BadRequest("Scale already exists");
+            }
+
+        }
+
+        [HttpPost("deleteScale")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminOnly")]
+        public ActionResult deleteScale(int id)
+        {
+            bool checkExisting = _repository.DeleteScale(id);
+            if (checkExisting)
+            {
+                return Ok("Scale successfully deleted.");
+            }
+            else
+            {
+                return NotFound("Scale with id " + id + " not found");
+            }
 
         }
 
@@ -74,7 +98,7 @@ namespace SPCA_backend.Controllers
             }
             else
             {
-                return NotFound("Centre with " + id + "does not exist");
+                return NotFound("Centre with id " + id + " does not exist");
             }
 
         }

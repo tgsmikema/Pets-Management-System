@@ -350,16 +350,40 @@ namespace SPCA_backend.Data
         }
 
         // Util Methods
-        public void AddNewScale(ScaleInDTO scaleDTO)
+        public bool AddNewScale(ScaleInDTO scaleDTO)
         {
-            Scale scale = new Scale
+            Scale existing = _dbContext.Scales.FirstOrDefault(s => s.Name == scaleDTO.Name && s.CentreId == scaleDTO.CentreId);
+            if (existing == null)
             {
-                Name = scaleDTO.Name,
-                CentreId = scaleDTO.CentreId,
-            };
-            _dbContext.Add(scale);
-            _dbContext.SaveChanges();
-            return;
+                Scale scale = new Scale
+                {
+                    Name = scaleDTO.Name,
+                    CentreId = scaleDTO.CentreId,
+                };
+                _dbContext.Add(scale);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+
+        public bool DeleteScale(int scaleId)
+        {
+            Scale scale = _dbContext.Scales.FirstOrDefault(e => e.Id == scaleId);
+            if (scale == null)
+            {
+                return false;
+            }
+            else
+            {
+                _dbContext.Remove(scale);
+                _dbContext.SaveChanges();
+                return true;
+            }
         }
 
         public bool AddNewCentre(string name)

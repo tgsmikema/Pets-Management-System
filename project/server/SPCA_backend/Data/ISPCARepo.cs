@@ -29,7 +29,8 @@ namespace SPCA_backend.Data
         public bool toggleDogAlert(int dogId);
 
         //Util Methods
-        public void AddNewScale(ScaleInDTO scale);
+        public bool AddNewScale(ScaleInDTO scale);
+        public bool DeleteScale(int scaleId);
         public bool AddNewCentre(string name);
         public bool DeleteCentre(int centreId);
         public IEnumerable<Centre> ListAllCentres();
