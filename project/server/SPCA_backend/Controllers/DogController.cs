@@ -71,5 +71,14 @@ namespace SPCA_backend.Controllers
         {
             return Ok(_repository.ListAllDogsAllCentres());
         }
+
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet("getAllDogsInACentre")]
+        public ActionResult<IEnumerable<UserOutDto>> listAllDogsInACentre(int centreId)
+        {
+            return Ok(_repository.ListAllDogsInACentre(centreId));
+        }
+
     }
 }

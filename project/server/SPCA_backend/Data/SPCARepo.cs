@@ -225,6 +225,14 @@ namespace SPCA_backend.Data
             return AllDogs;
         }
 
+        public IEnumerable<DogOutDTO> ListAllDogsInACentre(int centreId)
+        {
+            List<DogOutDTO> AllDogs = new List<DogOutDTO>();
+            IEnumerable<Dog> dogs = _dbContext.Dogs.Where(e => e.CentreId == centreId);
+            foreach (Dog dog in dogs) { AllDogs.Add(ConvertToDogOutDTO(dog)); }
+            return AllDogs;
+        }
+
         public DogOutDTO ConvertToDogOutDTO(Dog dog)
         {
             DogOutDTO dogOutDto = new DogOutDTO
