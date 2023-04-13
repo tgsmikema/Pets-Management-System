@@ -177,6 +177,46 @@ namespace SPCA_backend.Data
             }
         }
 
+        public int getUserIdFromUserName(string username)
+        {
+            User user = _dbContext.Users.FirstOrDefault(e => e.UserName == username);
+            if (user == null)
+            {
+                return -1;
+            }
+            else
+            {
+                return user.Id;
+            }
+        }
+
+        public bool ChangePasswordForCurrentUser(int UserId, UserChangePasswordInDto userChangePasswordInDto)
+        {
+            User user = _dbContext.Users.FirstOrDefault(e => e.Id == UserId);
+
+            if (user == null)
+            {
+                return false;
+            }
+            else
+            {
+                if(user.PasswordSha256Hash != SPCAAuthHandler.getSha256Hash(userChangePasswordInDto.OldPassword))
+                {
+                    return false;
+                } 
+                else
+                {
+                    user.PasswordSha256Hash = SPCAAuthHandler.getSha256Hash(userChangePasswordInDto.NewPassword);
+
+                    EntityEntry<User> e = _dbContext.Users.Update(user);
+                    User userEntity = e.Entity;
+                    _dbContext.SaveChanges();
+
+                    return true;
+                }
+            }
+        }
+
         public IEnumerable<DogOutDTO> ListAllDogsAllCentres()
         {
             List<DogOutDTO> AllDogs = new List<DogOutDTO>();
