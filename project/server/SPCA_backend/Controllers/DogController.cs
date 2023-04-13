@@ -67,17 +67,53 @@ namespace SPCA_backend.Controllers
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("getAllDogsAllCentres")]
-        public ActionResult<IEnumerable<UserOutDto>> getAllDogsAllCentres()
+        public ActionResult<IEnumerable<DogOutDTO>> getAllDogsAllCentres()
         {
             return Ok(_repository.ListAllDogsAllCentres());
         }
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
-        [HttpGet("getAllDogsInACentre")]
-        public ActionResult<IEnumerable<UserOutDto>> listAllDogsInACentre(int centreId)
+        [HttpGet("getAllDogsInACentreAdmin")]
+        public ActionResult<IEnumerable<DogOutDTO>> listAllDogsInACentre(int centreId)
         {
             return Ok(_repository.ListAllDogsInACentre(centreId));
+        }
+
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        [HttpGet("getAllDogsInOwnCentre")]
+        public ActionResult<IEnumerable<DogOutDTO>> listAllDogsInOwnCentre()
+        {
+            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
+            string userName = "";
+            if (ci.FindFirst("admin") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("admin").Value);
+            }
+            else if (ci.FindFirst("vet") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("vet").Value);
+            }
+            else if (ci.FindFirst("volunteer") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("volunteer").Value);
+            }
+            int userCentreId = _repository.GetUserInfo(userName).CentreId;
+
+            return Ok(_repository.ListAllDogsInACentre(userCentreId));
+        }
+
+
+        //-----------------------------Helper Methods---------------------------------
+
+        private string getUserNameFromHeader(string header)
+        {
+            var credentialBytes = Convert.FromBase64String(header);
+            var credentials = Encoding.UTF8.GetString(credentialBytes).Split(":");
+            var username = credentials[0];
+
+            return username;
         }
 
     }
