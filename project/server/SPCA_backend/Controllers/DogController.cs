@@ -40,26 +40,27 @@ namespace SPCA_backend.Controllers
 
 
         [HttpPost("register")]
-        /*[Authorize(AuthenticationSchemes = "Authentication")]
-        [Authorize(Policy = "AllUser")]*/
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
         public ActionResult dogRegister(DogInDTO dogInDto)
         {
             bool isRegisterSuccessful = _repository.AddNewDog(dogInDto);
             return Ok("Dog successfully registered.");
         }
 
-        [HttpPost("register2")]
-        public ActionResult userRegister2(UserInDto userLoginInDto)
+        [HttpPost("delete")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminOnly")]
+        public ActionResult deleteDog(int dogId)
         {
-            bool isRegisterSuccessful = _repository.AddNewUser(userLoginInDto);
-
-            if (isRegisterSuccessful)
+            bool isDeleteSuccessful = _repository.DeleteDog(dogId);
+            if (isDeleteSuccessful)
             {
-                return Ok("User successfully registered.");
+                return Ok("Dog successfully deleted.");
             }
             else
             {
-                return Ok("Username not available. Please Try again.");
+                return NotFound("Dog of the requested ID does not exist");
             }
         }
     }

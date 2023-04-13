@@ -161,5 +161,20 @@ namespace SPCA_backend.Data
             _dbContext.SaveChanges();
             return true;
         }
+
+        public bool DeleteDog(int dogId)
+        {
+            Dog dog = _dbContext.Dogs.FirstOrDefault(e => e.Id == dogId);
+            if (dog == null)
+            {
+                return false;
+            }
+            else
+            {
+                _dbContext.Dogs.Remove(dog);
+                _dbContext.SaveChanges();
+                return true;
+            }
+        }
     }
 }
