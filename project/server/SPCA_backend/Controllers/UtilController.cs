@@ -29,23 +29,28 @@ namespace SPCA_backend.Controllers
         [HttpPost("addNewScale")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
-        public ActionResult scaleRegister(ScaleInDTO scale)
+        public ActionResult addNewScale(ScaleInDTO scale)
         {
             _repository.AddNewScale(scale);
             return Ok("User successfully registered.");
 
         }
 
-
-        //-----------------------------Helper Methods---------------------------------
-
-        private string getUserNameFromHeader(string header)
+        [HttpPost("addNewCentre")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminOnly")]
+        public ActionResult addNewCentre(string name)
         {
-            var credentialBytes = Convert.FromBase64String(header);
-            var credentials = Encoding.UTF8.GetString(credentialBytes).Split(":");
-            var username = credentials[0];
+            bool checkNotExisting = _repository.AddNewCentre(name);
+            if (checkNotExisting)
+            {
+                return Ok("Centre created");
+            }
+            else
+            {
+                return BadRequest("Centre already exists");
+            }
 
-            return username;
         }
 
     }

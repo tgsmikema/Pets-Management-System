@@ -322,6 +322,22 @@ namespace SPCA_backend.Data
             return;
         }
 
+        public bool AddNewCentre(string name)
+        {
+            Centre existingCentre = _dbContext.Centres.FirstOrDefault(e => e.Name == name);
+            if (existingCentre == null)
+            {
+                Centre centre = new Centre { Name = name };
+                _dbContext.Add(centre);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            else{
+                return false;
+            }
+            
+        }
+
         public bool toggleDogFlag(int dogId)
         {
             Dog dog = _dbContext.Dogs.FirstOrDefault(e => e.Id == dogId);
