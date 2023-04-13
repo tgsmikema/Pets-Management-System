@@ -216,9 +216,14 @@ const HomePage = () => {
             onClick={handleAddDogClick}
             variant="contained"
             color="primary"
-            sx={{ borderRadius: "50%", minWidth: 0, width: 48, height: 48 }}
+            sx={{
+              borderRadius: "50%",
+              minWidth: 0,
+              width: 48,
+              height: 48,
+            }}
           >
-            <AddIcon sx={{ fontSize: 28, color: "black" }} />
+            <AddIcon sx={{ fontSize: 28, color: "#fff" }} />
           </Button>
         </Box>
       </Box>
@@ -229,6 +234,8 @@ const HomePage = () => {
         width={"95%"}
         sx={{
           backgroundColor: "#fff",
+          borderRadius: "13px",
+          boxShadow: 3,
         }}
       >
         <DataGrid
@@ -250,8 +257,7 @@ const HomePage = () => {
         open={openAddDog}
         onClose={handleAddDogClose}
         maxWidth="xs"
-        fullWidth="true"
-        PaperProps={{ sx: { borderRadius: "30px", height: "70%" } }}
+        PaperProps={{ sx: { borderRadius: "20px", height: "70%" } }}
       >
         <AddDog onClose={handleAddDogClose} />
       </Dialog>
