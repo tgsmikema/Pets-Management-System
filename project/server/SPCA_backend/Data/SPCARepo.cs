@@ -88,17 +88,7 @@ namespace SPCA_backend.Data
         public UserOutDto GetUserInfo(string username)
         {
             User user = _dbContext.Users.FirstOrDefault(e => e.UserName == username);
-
-            UserOutDto userOutDto = new UserOutDto
-            {
-                UserName = username,
-                UserType = user.UserType,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                CentreId = user.CentreId,
-                Token = "",
-            };
-
+            UserOutDto userOutDto = ConvertToUserOutDTO(user);
             return userOutDto;
         }
 
@@ -115,6 +105,29 @@ namespace SPCA_backend.Data
                 _dbContext.SaveChanges();
                 return true;
             }
+        }
+
+        public IEnumerable<UserOutDto> GetAllUsers()
+        {
+            List<UserOutDto> AllUsers = new List<UserOutDto>();
+            IEnumerable<User> users = _dbContext.Users.ToList();
+            foreach(User user in users) { AllUsers.Add(ConvertToUserOutDTO(user)); }
+            return AllUsers;
+        }
+
+        public UserOutDto ConvertToUserOutDTO(User user)
+        {
+            UserOutDto userOutDto = new UserOutDto
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                UserType = user.UserType,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                CentreId = user.CentreId,
+                Token = "",
+            };
+            return userOutDto;
         }
     }
 }

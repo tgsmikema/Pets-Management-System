@@ -119,6 +119,14 @@ namespace SPCA_backend.Controllers
             }
         }
 
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet("getAllUsers")]
+        public ActionResult<IEnumerable<UserOutDto>> getAllUsers()
+        {
+            return Ok(_repository.GetAllUsers());
+        }
+
         //-----------------------------Helper Methods---------------------------------
 
         private string getUserNameFromHeader(string header)
