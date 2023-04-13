@@ -16,7 +16,7 @@ namespace SPCA_backend.Data
 
         public bool ValidLoginAdmin(string username, string passwordSha256Hash)
         {
-            UserLogin userLogin = _dbContext.UserLogins.FirstOrDefault
+            User userLogin = _dbContext.Users.FirstOrDefault
                (e => e.UserName == username && e.PasswordSha256Hash == passwordSha256Hash && e.UserType == "admin");
 
             if (userLogin == null)
@@ -31,7 +31,7 @@ namespace SPCA_backend.Data
 
         public bool ValidLoginVets(string username, string passwordSha256Hash)
         {
-            UserLogin userLogin = _dbContext.UserLogins.FirstOrDefault
+            User userLogin = _dbContext.Users.FirstOrDefault
                (e => e.UserName == username && e.PasswordSha256Hash == passwordSha256Hash && e.UserType == "vet");
 
             if (userLogin == null)
@@ -46,7 +46,7 @@ namespace SPCA_backend.Data
 
         public bool ValidLoginVolunteers(string username, string passwordSha256Hash)
         {
-            UserLogin userLogin = _dbContext.UserLogins.FirstOrDefault
+            User userLogin = _dbContext.Users.FirstOrDefault
                (e => e.UserName == username && e.PasswordSha256Hash == passwordSha256Hash && e.UserType == "volunteer");
 
             if (userLogin == null)
@@ -59,20 +59,23 @@ namespace SPCA_backend.Data
             }
         }
 
-        public bool AddNewUser(UserLoginInDto userLoginInDto)
+        public bool AddNewUser(UserInDto userInDto)
         {
-            UserLogin userCheck = _dbContext.UserLogins.FirstOrDefault(e => e.UserName == userLoginInDto.UserName);
+            User userCheck = _dbContext.Users.FirstOrDefault(e => e.UserName == userInDto.UserName);
 
             if (userCheck == null)
             {
-                UserLogin newUser = new UserLogin
+                User newUser = new User
                 {
-                    UserName = userLoginInDto.UserName,
-                    PasswordSha256Hash = SPCAAuthHandler.getSha256Hash(userLoginInDto.Password),
-                    UserType = userLoginInDto.UserType
+                    UserName = userInDto.UserName,
+                    PasswordSha256Hash = SPCAAuthHandler.getSha256Hash(userInDto.Password),
+                    UserType = userInDto.UserType,
+                    FirstName = userInDto.FirstName,
+                    LastName = userInDto.LastName,
+                    CentreId = userInDto.CentreId,
                 };
 
-                EntityEntry<UserLogin> e = _dbContext.UserLogins.Add(newUser);
+                EntityEntry<User> e = _dbContext.Users.Add(newUser);
                 _dbContext.SaveChanges();
                 return true;
             }
@@ -80,6 +83,23 @@ namespace SPCA_backend.Data
             {
                 return false;
             }
+        }
+
+        public UserOutDto GetUserInfo(string username)
+        {
+            User user = _dbContext.Users.FirstOrDefault(e => e.UserName == username);
+
+            UserOutDto userOutDto = new UserOutDto
+            {
+                UserName = username,
+                UserType = user.UserType,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                CentreId = user.CentreId,
+                Token = "",
+            };
+
+            return userOutDto;
         }
     }
 }

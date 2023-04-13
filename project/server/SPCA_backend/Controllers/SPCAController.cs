@@ -42,7 +42,7 @@ namespace SPCA_backend.Controllers
         [HttpPost("register")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
-        public ActionResult userRegister(UserLoginInDto userLoginInDto)
+        public ActionResult userRegister(UserInDto userLoginInDto)
         {
             bool isRegisterSuccessful = _repository.AddNewUser(userLoginInDto);
 
@@ -57,7 +57,7 @@ namespace SPCA_backend.Controllers
         }
 
         [HttpPost("register2")]
-        public ActionResult userRegister2(UserLoginInDto userLoginInDto)
+        public ActionResult userRegister2(UserInDto userLoginInDto)
         {
             bool isRegisterSuccessful = _repository.AddNewUser(userLoginInDto);
 
@@ -75,7 +75,7 @@ namespace SPCA_backend.Controllers
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
         [HttpGet("login")]
-        public ActionResult<UserLoginOutDto> userLogin()
+        public ActionResult<UserOutDto> userLogin()
         {
             ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
             string userName = "";
@@ -85,27 +85,21 @@ namespace SPCA_backend.Controllers
             {
                 token = ci.FindFirst("admin").Value;
                 userName = getUserNameFromHeader(token);
-                userType = "admin";
             }
             else if (ci.FindFirst("vet") != null)
             {
                 token = ci.FindFirst("vet").Value;
                 userName = getUserNameFromHeader(token);
-                userType = "vet";
             }
             else if (ci.FindFirst("volunteer") != null)
             {
                 token = ci.FindFirst("volunteer").Value;
                 userName = getUserNameFromHeader(token);
-                userType = "volunteer";
             }
-                
-                return Ok(new UserLoginOutDto
-                {
-                    UserName = userName,
-                    UserType = userType,
-                    Token = token
-                });
+            UserOutDto userOutDto = _repository.GetUserInfo(userName);
+            userOutDto.Token = token;
+
+            return Ok(userOutDto);
 
         }
 
