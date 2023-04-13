@@ -24,21 +24,6 @@ namespace SPCA_backend.Controllers
             _repository = repository;
         }
 
-        [HttpGet("testing")]
-        public ActionResult demoFunction()
-        {
-            return Ok("This is a 770 Team 2 Hosted backend API, you are connected if you can see this message! :-) Other API endpoints are being built right now....");
-        }
-
-        [HttpGet("testing2")]
-        [Authorize(AuthenticationSchemes = "Authentication")]
-        [Authorize(Policy = "AdminOnly")]
-        public ActionResult demoFunction2()
-        {
-            return Ok("Admin function!!!");
-        }
-
-
         [HttpPost("register")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
@@ -104,25 +89,14 @@ namespace SPCA_backend.Controllers
             return Ok(_repository.ListAllDogsInACentre(userCentreId));
         }
 
-
-        //-----------------------------Helper Methods---------------------------------
-
-        private string getUserNameFromHeader(string header)
-        {
-            var credentialBytes = Convert.FromBase64String(header);
-            var credentials = Encoding.UTF8.GetString(credentialBytes).Split(":");
-            var username = credentials[0];
-
-            return username;
-        }
-
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "Admin")]
         [HttpGet("getDogAllCentres")]
         public ActionResult<DogOutDTO> GetDogInformationAllCentres(int dogId)
         {
             DogOutDTO dogDTO = _repository.GetDogInformationAllCentres(dogId);
-            if (dogDTO.Id == -1){
+            if (dogDTO.Id == -1)
+            {
                 return NotFound("No Dog found with that Id");
             }
             return Ok(dogDTO);
@@ -157,6 +131,38 @@ namespace SPCA_backend.Controllers
             }
             return Ok(dogDTO);
         }
+
+
+        [HttpPost("editDogInfo")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult editADogInfo(Dog dog)
+        {
+            bool isValid = _repository.EditDogInformation(dog);
+
+            if (isValid)
+            {
+                return Ok("Dog Information successfully edited.");
+            }
+            else
+            {
+                return NotFound("Dog of the requested ID does not exist");
+            }
+        }
+
+
+        //-----------------------------Helper Methods---------------------------------
+
+        private string getUserNameFromHeader(string header)
+        {
+            var credentialBytes = Convert.FromBase64String(header);
+            var credentials = Encoding.UTF8.GetString(credentialBytes).Split(":");
+            var username = credentials[0];
+
+            return username;
+        }
+
+       
 
     }
 }
