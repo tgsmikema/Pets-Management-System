@@ -519,10 +519,10 @@ namespace SPCA_backend.Data
 
         private Request addNewRequestHelper(RequestInDto requestInDto)
         {
-            // remove expired requests---
+            // remove expired requests--- (only delete the current scale stale requests)
             int currentTimeStampInSecond = (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
-            IEnumerable<Request> listOfRequests = _dbContext.Requests.ToList();
+            IEnumerable<Request> listOfRequests = _dbContext.Requests.ToList().Where(e => e.ScaleId == requestInDto.ScaleId);
 
             foreach (Request request in listOfRequests)
             {
