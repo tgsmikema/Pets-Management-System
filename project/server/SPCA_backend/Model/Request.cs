@@ -14,6 +14,8 @@ namespace SPCA_backend.Model
         public int ScaleId { get; set; }
         [Required]
         public double DogWeight { get; set; }
+        [Required]
+        public string TimeStamp { get; set; }
        
     }
 }

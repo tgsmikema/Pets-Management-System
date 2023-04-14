@@ -65,7 +65,8 @@ namespace SPCA_backend.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     DogId = table.Column<int>(type: "INTEGER", nullable: false),
                     ScaleId = table.Column<int>(type: "INTEGER", nullable: false),
-                    DogWeight = table.Column<double>(type: "REAL", nullable: false)
+                    DogWeight = table.Column<double>(type: "REAL", nullable: false),
+                    TimeStamp = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -8,6 +8,10 @@ namespace SPCA_backend.Data
 {
     public class SPCARepo : ISPCARepo
     {
+        //constants
+        public static int REQUEST_EXPIRING_MINUTES = 2;
+
+
         private readonly SPCA_DBContext _dbContext;
         public SPCARepo(SPCA_DBContext dbContext)
         {
@@ -357,6 +361,22 @@ namespace SPCA_backend.Data
 
         private Request addNewRequestHelper(RequestInDto requestInDto)
         {
+            // remove expired requests-----------------------
+            int currentTimeStampInSecond = (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+            IEnumerable<Request> listOfRequests = _dbContext.Requests.ToList();
+
+            foreach (Request request in listOfRequests)
+            {
+                if (int.Parse(request.TimeStamp) + REQUEST_EXPIRING_MINUTES * 60 < currentTimeStampInSecond)
+                {
+                    _dbContext.Remove(request);
+                    _dbContext.SaveChanges();
+                }
+            }
+            //-----------------------------------------------
+
+
             Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.ScaleId == requestInDto.ScaleId && e.DogId == requestInDto.DogId);
 
             if (requestCheck == null)
@@ -366,7 +386,8 @@ namespace SPCA_backend.Data
                     ScaleId = requestInDto.ScaleId,
                     DogId = requestInDto.DogId,
                     DogWeight = 0.0,
-                };
+                    TimeStamp = Convert.ToString((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds),
+            };
 
                 EntityEntry<Request> e = _dbContext.Requests.Add(newRequest);
                 _dbContext.SaveChanges();
@@ -375,6 +396,7 @@ namespace SPCA_backend.Data
             else
             {
                 requestCheck.DogWeight = 0.0;
+                requestCheck.TimeStamp = Convert.ToString((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
 
                 EntityEntry<Request> e = _dbContext.Requests.Update(requestCheck);
                 Request requestEntity = e.Entity;

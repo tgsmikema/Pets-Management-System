@@ -10,7 +10,7 @@ using SPCA_backend.Data;
 namespace SPCA_backend.Migrations
 {
     [DbContext(typeof(SPCA_DBContext))]
-    [Migration("20230413063944_InitialCreate")]
+    [Migration("20230414005000_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -104,6 +104,10 @@ namespace SPCA_backend.Migrations
 
                     b.Property<int>("ScaleId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("TimeStamp")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

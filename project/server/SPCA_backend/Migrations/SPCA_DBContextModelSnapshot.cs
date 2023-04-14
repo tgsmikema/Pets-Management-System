@@ -102,6 +102,10 @@ namespace SPCA_backend.Migrations
                     b.Property<int>("ScaleId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("TimeStamp")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Requests");
