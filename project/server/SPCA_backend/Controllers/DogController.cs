@@ -217,6 +217,23 @@ namespace SPCA_backend.Controllers
             }
         }
 
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        [HttpGet("getCurrentWeightFromScale")]
+        public ActionResult<DogWeightRequestOutDto> getCurrentWeightFromScale(int dogId)
+        {
+            DogWeightRequestOutDto dogWeightRequestOutDto = _repository.getCurrentDogRequestWeight(dogId);
+            
+            if (dogWeightRequestOutDto == null)
+            {
+                return NotFound("Dog Not being weighted!");
+            } 
+            else
+            {
+                return Ok(dogWeightRequestOutDto);
+            }
+        }
+
 
         //-----------------------------Helper Methods---------------------------------
 

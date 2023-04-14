@@ -359,6 +359,27 @@ namespace SPCA_backend.Data
             return true;
         }
 
+        public DogWeightRequestOutDto getCurrentDogRequestWeight(int dogId)
+        {
+            Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.DogId == dogId);
+
+            if (requestCheck == null)
+            {
+                return null;
+
+            } else
+            {
+                DogWeightRequestOutDto currentDogRequestWeight = new DogWeightRequestOutDto
+                {
+                    DogId = dogId,
+                    Weight = requestCheck.DogWeight,
+                };
+
+                return currentDogRequestWeight;
+            }
+
+        }
+
         private Request addNewRequestHelper(RequestInDto requestInDto)
         {
             // remove expired requests-----------------------

@@ -29,6 +29,7 @@ namespace SPCA_backend.Data
         public bool toggleDogAlert(int dogId);
         public bool addNewRequest(RequestInDto requestInDto);
         public bool addWeightFromScaleToRequest(ScaleWeightRequestInDto scaleWeightRequestInDto);
+        public DogWeightRequestOutDto getCurrentDogRequestWeight(int dogId);
 
         //Util Methods
         public bool AddNewScale(ScaleInDTO scale);
