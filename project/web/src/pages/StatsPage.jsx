@@ -124,7 +124,7 @@ const StatsPage = () => {
       flexDirection={"column"}
       alignItems={"center"}
     >
-      <Box width={"95%"} p={1}>
+      <Box width={"95%"} p={1.3}>
         <Button
           variant={"text"}
           onClick={handleClick}
@@ -168,7 +168,7 @@ const StatsPage = () => {
       </Box>
 
       <Box
-        height={"85%"}
+        height={"88%"}
         width={"95%"}
         display={"flex"}
         justifyContent={"space-between"}
@@ -180,19 +180,22 @@ const StatsPage = () => {
           flexDirection={"column"}
           alignItems={"center"}
         >
-          <Box mb={1}>
+          <Box mb={1.5}>
             <Typography
-              variant={"body2"}
-              fontWeight={"500"}
+              variant={"body1"}
+              fontWeight={"550"}
               fontSize={"1rem"}
-              textAlign={"center"}
+              // textAlign={"center"}
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"center"}
             >
               This Week
             </Typography>
           </Box>
 
           <Box
-            height={"90%"}
+            height={"85%"}
             width={"100%"}
             display={"flex"}
             flexDirection={"column"}
@@ -228,8 +231,8 @@ const StatsPage = () => {
           </Box>
         </Box>
 
-        <Box height={"93%"} width={"70%"}>
-          <Box display={"flex"} justifyContent={"space-between"} mb={1}>
+        <Box height={"100%"} width={"72%"}>
+          <Box display={"flex"} justifyContent={"space-between"}>
             <Stack direction={"row"} spacing={1}>
               <IconButton>
                 <KeyboardArrowLeftIcon />
@@ -250,6 +253,7 @@ const StatsPage = () => {
                 variant={"contained"}
                 size={"small"}
                 sx={{
+                  height: "80%",
                   "&:hover": {
                     color: "#fff",
                   },
@@ -261,6 +265,7 @@ const StatsPage = () => {
                 variant={"contained"}
                 size={"small"}
                 sx={{
+                  height: "80%",
                   "&:hover": {
                     color: "#fff",
                   },
@@ -271,7 +276,7 @@ const StatsPage = () => {
             </Stack>
           </Box>
           <Box
-            height={"92%"}
+            height={"85%"}
             width={"100%"}
             sx={{
               backgroundColor: "#fff",
