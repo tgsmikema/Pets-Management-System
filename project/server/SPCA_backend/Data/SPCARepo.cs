@@ -388,6 +388,13 @@ namespace SPCA_backend.Data
 
         }
 
+        public IEnumerable<Weight> GetWeightHistoryForADog(int dogId)
+        {
+            IEnumerable<Weight> weightHistory = _dbContext.Weights.Where(e => e.DogId == dogId).OrderByDescending(e => e.TimeStamp);
+
+            return weightHistory;
+        }
+
         // -------------------------------------------------------------------------Util-----------------------------------------------------------------------
         public bool AddNewScale(ScaleInDTO scaleDTO)
         {

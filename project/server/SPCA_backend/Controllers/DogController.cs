@@ -194,7 +194,13 @@ namespace SPCA_backend.Controllers
 
 
 
-
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AdminAndVetOnly")]
+        [HttpGet("getWeightHistory")]
+        public ActionResult<IEnumerable<Weight>> getWeightHistory(int dogId)
+        {
+            return Ok(_repository.GetWeightHistoryForADog(dogId));
+        }
 
         //----------------------------------------------------Helper Methods-----------------------------------------------------------------------------
 

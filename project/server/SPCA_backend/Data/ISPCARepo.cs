@@ -31,6 +31,7 @@ namespace SPCA_backend.Data
         public bool AddWeightFromScaleToRequest(ScaleWeightRequestInDto scaleWeightRequestInDto);
         public DogWeightRequestOutDto GetCurrentDogRequestWeight(int dogId);
         public bool SaveCurrentWeight(int dogId);
+        public IEnumerable<Weight> GetWeightHistoryForADog(int dogId);
 
         //----------------------Util Methods-----------------------------
         public bool AddNewScale(ScaleInDTO scale);
