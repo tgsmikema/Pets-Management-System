@@ -257,6 +257,7 @@ const HomePage = () => {
         open={openAddDog}
         onClose={handleAddDogClose}
         maxWidth="xs"
+        fullWidth={true}
         PaperProps={{ sx: { borderRadius: "20px", height: "70%" } }}
       >
         <AddDog onClose={handleAddDogClose} />

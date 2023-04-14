@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const LoginForm = () => {
   const theme = useTheme();
-  const { login, setUser, setToken } = useAuth();
+  const { login, setUser } = useAuth();
   const [userName, setName] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -79,11 +79,7 @@ const LoginForm = () => {
               } else {
                 try {
                   const res = await login(userName, password);
-                  setUser({
-                    useName: res.data.userName,
-                    useType: res.data.userType,
-                  });
-                  setToken(res.data.token);
+                  setUser(res.data);
                 } catch (e) {
                   setMessage("Username or password is incorrect");
                 }

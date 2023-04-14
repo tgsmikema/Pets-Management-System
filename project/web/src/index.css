@@ -12,20 +12,20 @@ h2 {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #e0e0e0;
+  background: #eeeeee;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #caddec;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #8BB6D8;
 }
