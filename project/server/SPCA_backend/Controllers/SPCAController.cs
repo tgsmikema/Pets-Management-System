@@ -18,6 +18,9 @@ namespace SPCA_backend.Controllers
     [ApiController]
     public class SPCAController : Controller
     {
+        private static bool USER_NAME = true;
+        private static bool TOKEN = false;
+
        private readonly ISPCARepo _repository;
 
        public SPCAController(ISPCARepo repository)
@@ -30,16 +33,7 @@ namespace SPCA_backend.Controllers
         {
             return Ok("This is a 770 Team 2 Hosted backend API, you are connected if you can see this message! :-) Other API endpoints are being built right now....");
         }
-
-        [HttpGet("testing2")]
-        [Authorize(AuthenticationSchemes = "Authentication")]
-        [Authorize(Policy = "AdminOnly")]
-        public ActionResult demoFunction2()
-        {
-            return Ok("Admin function!!!");
-        }
-
-
+        
         [HttpPost("register")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
@@ -53,7 +47,7 @@ namespace SPCA_backend.Controllers
             }
             else
             {
-                return Ok("Username not available. Please Try again.");
+                return NotFound("Username not available. Please Try again.");
             }
         }
 
@@ -68,7 +62,7 @@ namespace SPCA_backend.Controllers
             }
             else
             {
-                return Ok("Username not available. Please Try again.");
+                return NotFound("Username not available. Please Try again.");
             }
         }
 
@@ -78,27 +72,8 @@ namespace SPCA_backend.Controllers
         [HttpGet("login")]
         public ActionResult<UserOutDto> userLogin()
         {
-            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
-            string userName = "";
-            string userType = "";
-            string token = "";
-            if (ci.FindFirst("admin") != null)
-            {
-                token = ci.FindFirst("admin").Value;
-                userName = getUserNameFromHeader(token);
-            }
-            else if (ci.FindFirst("vet") != null)
-            {
-                token = ci.FindFirst("vet").Value;
-                userName = getUserNameFromHeader(token);
-            }
-            else if (ci.FindFirst("volunteer") != null)
-            {
-                token = ci.FindFirst("volunteer").Value;
-                userName = getUserNameFromHeader(token);
-            }
-            UserOutDto userOutDto = _repository.GetUserInfo(userName);
-            userOutDto.Token = token;
+            UserOutDto userOutDto = _repository.GetUserInfo(getLoggedInUserUserNameOrToken(USER_NAME));
+            userOutDto.Token = getLoggedInUserUserNameOrToken(TOKEN);
 
             return Ok(userOutDto);
 
@@ -150,21 +125,7 @@ namespace SPCA_backend.Controllers
         [HttpPost("changePassword")]
         public ActionResult changePasswordForCurrentUser(UserChangePasswordInDto userChangePasswordInDto)
         {
-            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
-            string userName = "";
-            if (ci.FindFirst("admin") != null)
-            {
-                userName = getUserNameFromHeader(ci.FindFirst("admin").Value);
-            }
-            else if (ci.FindFirst("vet") != null)
-            {
-                userName = getUserNameFromHeader(ci.FindFirst("vet").Value);
-            }
-            else if (ci.FindFirst("volunteer") != null)
-            {
-                userName = getUserNameFromHeader(ci.FindFirst("volunteer").Value);
-            }
-            int userId = _repository.getUserIdFromUserName(userName);
+            int userId = _repository.getUserIdFromUserName(getLoggedInUserUserNameOrToken(USER_NAME));
 
             bool isValid = _repository.ChangePasswordForCurrentUser(userId, userChangePasswordInDto);
 
@@ -179,7 +140,7 @@ namespace SPCA_backend.Controllers
 
         }
 
-        //-----------------------------Helper Methods---------------------------------
+        //---------------------------------------------------------Helper Methods-------------------------------------------------------------
 
         private string getUserNameFromHeader(string header)
         {
@@ -188,6 +149,57 @@ namespace SPCA_backend.Controllers
             var username = credentials[0];
 
             return username;
+        }
+
+        private string retrieveUserNameOfLoggedInUser()
+        {
+            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
+            string userName = "";
+            if (ci.FindFirst("admin") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("admin").Value);
+            }
+            else if (ci.FindFirst("vet") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("vet").Value);
+            }
+            else if (ci.FindFirst("volunteer") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("volunteer").Value);
+            }
+            return userName;
+        }
+
+        private string retrieveTokenOfLoggedInUser()
+        {
+            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
+            string token = "";
+            if (ci.FindFirst("admin") != null)
+            {
+                token = ci.FindFirst("admin").Value;
+            }
+            else if (ci.FindFirst("vet") != null)
+            {
+                token = ci.FindFirst("vet").Value;
+            }
+            else if (ci.FindFirst("volunteer") != null)
+            {
+                token = ci.FindFirst("volunteer").Value;
+            }
+
+            return token;
+        }
+
+        private string getLoggedInUserUserNameOrToken(bool isUserName)
+        {
+            if (isUserName)
+            {
+                return retrieveUserNameOfLoggedInUser();
+            }
+            else
+            {
+                return retrieveTokenOfLoggedInUser();
+            }
         }
 
     }

@@ -70,21 +70,7 @@ namespace SPCA_backend.Controllers
         [HttpGet("getAllDogsInOwnCentre")]
         public ActionResult<IEnumerable<DogOutDTO>> listAllDogsInOwnCentre()
         {
-            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
-            string userName = "";
-            if (ci.FindFirst("admin") != null)
-            {
-                userName = getUserNameFromHeader(ci.FindFirst("admin").Value);
-            }
-            else if (ci.FindFirst("vet") != null)
-            {
-                userName = getUserNameFromHeader(ci.FindFirst("vet").Value);
-            }
-            else if (ci.FindFirst("volunteer") != null)
-            {
-                userName = getUserNameFromHeader(ci.FindFirst("volunteer").Value);
-            }
-            int userCentreId = _repository.GetUserInfo(userName).CentreId;
+            int userCentreId = _repository.GetUserInfo(retrieveUserNameOfLoggedInUser()).CentreId;
 
             return Ok(_repository.ListAllDogsInACentre(userCentreId));
         }
@@ -106,22 +92,8 @@ namespace SPCA_backend.Controllers
         [Authorize(Policy = "AllUser")]
         [HttpGet("getDogFromOwnCentre")]
         public ActionResult<DogOutDTO> GetDogInformationOwnCentre(int dogId)
-        {
-            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
-            string userName = "";
-            if (ci.FindFirst("admin") != null)
-            {
-                userName = getUserNameFromHeader(ci.FindFirst("admin").Value);
-            }
-            else if (ci.FindFirst("vet") != null)
-            {
-                userName = getUserNameFromHeader(ci.FindFirst("vet").Value);
-            }
-            else if (ci.FindFirst("volunteer") != null)
-            {
-                userName = getUserNameFromHeader(ci.FindFirst("volunteer").Value);
-            }
-            int userCentreId = _repository.GetUserInfo(userName).CentreId;
+        { 
+            int userCentreId = _repository.GetUserInfo(retrieveUserNameOfLoggedInUser()).CentreId;
 
             DogOutDTO dogDTO = _repository.GetDogInformationOwnCentre(dogId, userCentreId);
 
@@ -261,6 +233,26 @@ namespace SPCA_backend.Controllers
             var username = credentials[0];
 
             return username;
+        }
+
+        private string retrieveUserNameOfLoggedInUser()
+        {
+            ClaimsIdentity ci = HttpContext.User.Identities.FirstOrDefault();
+            string userName = "";
+            if (ci.FindFirst("admin") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("admin").Value);
+            }
+            else if (ci.FindFirst("vet") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("vet").Value);
+            }
+            else if (ci.FindFirst("volunteer") != null)
+            {
+                userName = getUserNameFromHeader(ci.FindFirst("volunteer").Value);
+            }
+
+            return userName;
         }
 
        
