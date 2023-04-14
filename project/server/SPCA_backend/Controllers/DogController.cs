@@ -53,7 +53,7 @@ namespace SPCA_backend.Controllers
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
-        [HttpGet("getAllDogsAllCentres")]
+        [HttpGet("adminListAllCentres")]
         public ActionResult<IEnumerable<DogOutDTO>> getAllDogsAllCentres()
         {
             return Ok(_repository.ListAllDogsAllCentres());
@@ -64,7 +64,7 @@ namespace SPCA_backend.Controllers
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
-        [HttpGet("getAllDogsInACentreAdmin")]
+        [HttpGet("adminListOneCentre")]
         public ActionResult<IEnumerable<DogOutDTO>> listAllDogsInACentre(int centreId)
         {
             return Ok(_repository.ListAllDogsInACentre(centreId));
@@ -75,7 +75,7 @@ namespace SPCA_backend.Controllers
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
-        [HttpGet("getAllDogsInOwnCentre")]
+        [HttpGet("userListOwnCentre")]
         public ActionResult<IEnumerable<DogOutDTO>> listAllDogsInOwnCentre()
         {
             int userCentreId = _repository.GetUserInfo(retrieveUserNameOfLoggedInUser()).CentreId;
@@ -87,7 +87,7 @@ namespace SPCA_backend.Controllers
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
-        [HttpGet("getDogAllCentres")]
+        [HttpGet("detailFromAllCentre")]
         public ActionResult<DogOutDTO> GetDogInformationAllCentres(int dogId)
         {
             DogOutDTO dogDTO = _repository.GetDogInformationAllCentres(dogId);
@@ -100,7 +100,7 @@ namespace SPCA_backend.Controllers
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
-        [HttpGet("getDogFromOwnCentre")]
+        [HttpGet("detailFromOwnCentre")]
         public ActionResult<DogOutDTO> GetDogInformationOwnCentre(int dogId)
         { 
             int userCentreId = _repository.GetUserInfo(retrieveUserNameOfLoggedInUser()).CentreId;
@@ -112,7 +112,7 @@ namespace SPCA_backend.Controllers
 
 
 
-        [HttpPost("editDogInfo")]
+        [HttpPost("edit")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
         public ActionResult editADogInfo(DogEditInDto dogEditInDto)

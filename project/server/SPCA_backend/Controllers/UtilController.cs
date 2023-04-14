@@ -26,22 +26,19 @@ namespace SPCA_backend.Controllers
         }
 
 
+
+
         [HttpPost("addNewScale")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         public ActionResult addNewScale(ScaleInDTO scale)
         {
             bool checkNotExisting = _repository.AddNewScale(scale);
-            if (checkNotExisting)
-            {
-                return Ok("Scale successfully created.");
-            }
-            else
-            {
-                return BadRequest("Scale already exists");
-            }
-
+            return (checkNotExisting ? Ok("Scale successfully created.") : BadRequest("Scale already exists"));
         }
+
+
+
 
         [HttpGet("listAllScales")]
         [Authorize(AuthenticationSchemes = "Authentication")]
@@ -52,22 +49,20 @@ namespace SPCA_backend.Controllers
             return Ok(allScales);
         }
 
+
+
+
         [HttpDelete("deleteScale")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         public ActionResult deleteScale(int id)
         {
             bool checkExisting = _repository.DeleteScale(id);
-            if (checkExisting)
-            {
-                return Ok("Scale successfully deleted.");
-            }
-            else
-            {
-                return NotFound("Scale with id " + id + " not found");
-            }
-
+            return (checkExisting ? Ok("Scale successfully deleted.") : NotFound("Scale with id " + id + " not found"));
         }
+
+
+
 
         [HttpPost("addNewCentre")]
         [Authorize(AuthenticationSchemes = "Authentication")]
@@ -75,16 +70,11 @@ namespace SPCA_backend.Controllers
         public ActionResult addNewCentre(string name)
         {
             bool checkNotExisting = _repository.AddNewCentre(name);
-            if (checkNotExisting)
-            {
-                return Ok("Centre created");
-            }
-            else
-            {
-                return BadRequest("Centre already exists");
-            }
-
+            return (checkNotExisting ? Ok("Centre created") : BadRequest("Centre already exists"));
         }
+
+
+
 
         [HttpGet("listAllCentres")]
         [Authorize(AuthenticationSchemes = "Authentication")]
@@ -95,21 +85,16 @@ namespace SPCA_backend.Controllers
             return Ok(listOfCentres);
         }
 
+
+
+
         [HttpDelete("deleteCentre")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         public ActionResult deleteCentre(int id)
         {
             bool checkExisting = _repository.DeleteCentre(id);
-            if (checkExisting)
-            {
-                return Ok("Centre deleted");
-            }
-            else
-            {
-                return NotFound("Centre with id " + id + " does not exist");
-            }
-
+            return (checkExisting ? Ok("Centre deleted") : NotFound("Centre with id " + id + " does not exist"));
         }
 
     }
