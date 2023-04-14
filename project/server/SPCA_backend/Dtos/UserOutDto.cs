@@ -2,6 +2,7 @@
 {
     public class UserOutDto
     {
+        public int Id {  get; set; }
         public string UserName { get; set; }
         public string UserType { get; set; }
         public string FirstName { get; set; }

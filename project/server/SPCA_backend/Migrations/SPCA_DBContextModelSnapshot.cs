@@ -48,6 +48,12 @@ namespace SPCA_backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("isAlert")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("isFlag")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("Dogs");
@@ -95,6 +101,10 @@ namespace SPCA_backend.Migrations
 
                     b.Property<int>("ScaleId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("TimeStamp")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
