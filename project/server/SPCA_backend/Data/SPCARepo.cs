@@ -351,6 +351,12 @@ namespace SPCA_backend.Data
 
         public bool addNewRequest(RequestInDto requestInDto)
         {
+            addNewRequestHelper(requestInDto);
+            return true;
+        }
+
+        private Request addNewRequestHelper(RequestInDto requestInDto)
+        {
             Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.ScaleId == requestInDto.ScaleId && e.DogId == requestInDto.DogId);
 
             if (requestCheck == null)
@@ -364,7 +370,7 @@ namespace SPCA_backend.Data
 
                 EntityEntry<Request> e = _dbContext.Requests.Add(newRequest);
                 _dbContext.SaveChanges();
-                return true;
+                return newRequest;
             }
             else
             {
@@ -374,8 +380,29 @@ namespace SPCA_backend.Data
                 Request requestEntity = e.Entity;
                 _dbContext.SaveChanges();
 
+                return requestCheck;
+            }
+        }
+
+        public bool addWeightFromScaleToRequest(ScaleWeightRequestInDto scaleWeightRequestInDto)
+        {
+            Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.ScaleId == scaleWeightRequestInDto.ScaleId);
+
+            if (requestCheck == null)
+            {
+                return false;
+            }
+            else
+            {
+                requestCheck.DogWeight = scaleWeightRequestInDto.Weight;
+
+                EntityEntry<Request> e = _dbContext.Requests.Update(requestCheck);
+                Request requestEntity = e.Entity;
+                _dbContext.SaveChanges();
+
                 return true;
             }
+            
         }
 
         // Util Methods
