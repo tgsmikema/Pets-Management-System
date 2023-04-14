@@ -185,10 +185,27 @@ namespace SPCA_backend.Controllers
         }
 
 
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        [HttpPost("invokeScaleRequest")]
+        public ActionResult invokeScaleRequest(RequestInDto requestInDto)
+        {
+            bool isValid = _repository.addNewRequest(requestInDto);
 
-        //-----------------------------Helper Methods---------------------------------
+            if (isValid)
+            {
+                return Ok("Request has been added");
+            }
+            else
+            {
+                return NotFound("An error occured, please try again!");
+            }
+        }
 
-        private string getUserNameFromHeader(string header)
+
+            //-----------------------------Helper Methods---------------------------------
+
+            private string getUserNameFromHeader(string header)
         {
             var credentialBytes = Convert.FromBase64String(header);
             var credentials = Encoding.UTF8.GetString(credentialBytes).Split(":");

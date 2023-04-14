@@ -349,6 +349,35 @@ namespace SPCA_backend.Data
             }
         }
 
+        public bool addNewRequest(RequestInDto requestInDto)
+        {
+            Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.ScaleId == requestInDto.ScaleId && e.DogId == requestInDto.DogId);
+
+            if (requestCheck == null)
+            {
+                Request newRequest = new Request
+                {
+                    ScaleId = requestInDto.ScaleId,
+                    DogId = requestInDto.DogId,
+                    DogWeight = 0.0,
+                };
+
+                EntityEntry<Request> e = _dbContext.Requests.Add(newRequest);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                requestCheck.DogWeight = 0.0;
+
+                EntityEntry<Request> e = _dbContext.Requests.Update(requestCheck);
+                Request requestEntity = e.Entity;
+                _dbContext.SaveChanges();
+
+                return true;
+            }
+        }
+
         // Util Methods
         public bool AddNewScale(ScaleInDTO scaleDTO)
         {
@@ -429,6 +458,5 @@ namespace SPCA_backend.Data
             return listOfCentres;
         }
 
-        
     }
 }

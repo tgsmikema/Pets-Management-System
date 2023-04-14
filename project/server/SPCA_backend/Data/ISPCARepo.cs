@@ -27,6 +27,7 @@ namespace SPCA_backend.Data
         public bool EditDogInformation(DogEditInDto dogEditInDto);
         public bool toggleDogFlag(int dogId);
         public bool toggleDogAlert(int dogId);
+        public bool addNewRequest(RequestInDto requestInDto);
 
         //Util Methods
         public bool AddNewScale(ScaleInDTO scale);
