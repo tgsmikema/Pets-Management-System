@@ -6,17 +6,24 @@ import {
   Typography,
   InputAdornment,
   Stack,
+  IconButton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import moment from "moment";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
 import SendIcon from "@mui/icons-material/Send";
 import { useAuth } from "../providers/AuthProvider.jsx";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import ChatUserItem from "../components/ChatUserItem.jsx";
 
 const ChatPage = () => {
   const { setSelected } = useUtilProvider();
   useEffect(() => {
     setSelected("Chat");
     console.log(user.userName);
+    console.log(
+      moment(parseInt(1672141137 * 1000)).format("YYYY-MM-DD HH:mm:ss")
+    );
   });
 
   const { user } = useAuth();
@@ -168,7 +175,9 @@ const ChatPage = () => {
 
     {
       id: 1,
-      date: "04/09/2022 19:36",
+      date: `${moment(parseInt(1672141137 * 1000)).format(
+        "YYYY-MM-DD HH:mm:ss"
+      )}`,
       messageContent:
         "Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omniss",
       ToUser: { id: 1, name: "mike" },
@@ -207,29 +216,13 @@ const ChatPage = () => {
         <Divider />
 
         {useList.map((it, index) => (
-          <Box sx={{ textTransform: "capitalize" }}>
-            <Box
-              p={1.2}
-              onClick={() => {
-                console.log(it.name);
-                setSelectUser(index);
-              }}
-              sx={{
-                cursor: "pointer",
-                backgroundColor:
-                  selectUser === index ? "#CADDEC" : "transparent",
-                "&:hover": {
-                  backgroundColor: "#e8effa",
-                },
-              }}
-            >
-              <Typography variant={"h5"} fontWeight={"600"}>
-                {it.name}
-              </Typography>
-              <Typography variant={"body1"}>{it.type}</Typography>
-            </Box>
-            <Divider />
-          </Box>
+          <ChatUserItem
+            name={it.name}
+            type={it.type}
+            index={index}
+            selectUser={selectUser}
+            setSelectUser={setSelectUser}
+          />
         ))}
       </Box>
       {/* the chat message */}
