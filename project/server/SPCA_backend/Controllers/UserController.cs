@@ -116,7 +116,7 @@ namespace SPCA_backend.Controllers
         [HttpPost("changePassword")]
         public ActionResult changePasswordForCurrentUser(UserChangePasswordInDto userChangePasswordInDto)
         {
-            int userId = _repository.getUserIdFromUserName(getLoggedInUserUserNameOrToken(USER_NAME));
+            int userId = _repository.GetUserIdFromUserName(getLoggedInUserUserNameOrToken(USER_NAME));
             bool isValid = _repository.ChangePasswordForCurrentUser(userId, userChangePasswordInDto);
             return (isValid ? Ok("Successfully changed the password for the current user.") : NotFound("An Error Occured, please try again!"));
         }

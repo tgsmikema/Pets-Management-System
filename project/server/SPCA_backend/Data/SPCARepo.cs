@@ -20,49 +20,28 @@ namespace SPCA_backend.Data
             _dbContext = dbContext;
         }
 
+
+
+        // ------------------------------------------------------------------User------------------------------------------------------------------
         public bool ValidLoginAdmin(string username, string passwordSha256Hash)
         {
             User userLogin = _dbContext.Users.FirstOrDefault
                (e => e.UserName == username && e.PasswordSha256Hash == passwordSha256Hash && e.UserType == "admin");
-
-            if (userLogin == null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return userLogin != null;
         }
 
         public bool ValidLoginVets(string username, string passwordSha256Hash)
         {
             User userLogin = _dbContext.Users.FirstOrDefault
                (e => e.UserName == username && e.PasswordSha256Hash == passwordSha256Hash && e.UserType == "vet");
-
-            if (userLogin == null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return userLogin != null;
         }
 
         public bool ValidLoginVolunteers(string username, string passwordSha256Hash)
         {
             User userLogin = _dbContext.Users.FirstOrDefault
                (e => e.UserName == username && e.PasswordSha256Hash == passwordSha256Hash && e.UserType == "volunteer");
-
-            if (userLogin == null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return userLogin != null;
         }
 
         public bool AddNewUser(UserInDto userInDto)
@@ -121,21 +100,6 @@ namespace SPCA_backend.Data
             return AllUsers;
         }
 
-        public UserOutDto ConvertToUserOutDTO(User user)
-        {
-            UserOutDto userOutDto = new UserOutDto
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                UserType = user.UserType,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                CentreId = user.CentreId,
-                Token = "",
-            };
-            return userOutDto;
-        }
-
         public bool EditExistingUserAccessLevel(UserAccessInDto userAccessInDto)
         {
             User user = _dbContext.Users.FirstOrDefault(e => e.Id == userAccessInDto.UserId);
@@ -154,7 +118,48 @@ namespace SPCA_backend.Data
             }
         }
 
-        // Dog Methods
+        public int GetUserIdFromUserName(string username)
+        {
+            User user = _dbContext.Users.FirstOrDefault(e => e.UserName == username);
+            if (user == null)
+            {
+                return -1;
+            }
+            else
+            {
+                return user.Id;
+            }
+        }
+
+        public bool ChangePasswordForCurrentUser(int UserId, UserChangePasswordInDto userChangePasswordInDto)
+        {
+            User user = _dbContext.Users.FirstOrDefault(e => e.Id == UserId);
+
+            if (user == null)
+            {
+                return false;
+            }
+            else
+            {
+                if (user.PasswordSha256Hash != SPCAAuthHandler.getSha256Hash(userChangePasswordInDto.OldPassword))
+                {
+                    return false;
+                }
+                else
+                {
+                    user.PasswordSha256Hash = SPCAAuthHandler.getSha256Hash(userChangePasswordInDto.NewPassword);
+
+                    EntityEntry<User> e = _dbContext.Users.Update(user);
+                    User userEntity = e.Entity;
+                    _dbContext.SaveChanges();
+
+                    return true;
+                }
+            }
+        }
+
+
+        // ------------------------------------------------------------------Dog------------------------------------------------------------------
         public bool AddNewDog(DogInDTO dogInfo)
         {
             Dog dog = new Dog
@@ -185,46 +190,7 @@ namespace SPCA_backend.Data
             }
         }
 
-        public int getUserIdFromUserName(string username)
-        {
-            User user = _dbContext.Users.FirstOrDefault(e => e.UserName == username);
-            if (user == null)
-            {
-                return -1;
-            }
-            else
-            {
-                return user.Id;
-            }
-        }
-
-        public bool ChangePasswordForCurrentUser(int UserId, UserChangePasswordInDto userChangePasswordInDto)
-        {
-            User user = _dbContext.Users.FirstOrDefault(e => e.Id == UserId);
-
-            if (user == null)
-            {
-                return false;
-            }
-            else
-            {
-                if(user.PasswordSha256Hash != SPCAAuthHandler.getSha256Hash(userChangePasswordInDto.OldPassword))
-                {
-                    return false;
-                } 
-                else
-                {
-                    user.PasswordSha256Hash = SPCAAuthHandler.getSha256Hash(userChangePasswordInDto.NewPassword);
-
-                    EntityEntry<User> e = _dbContext.Users.Update(user);
-                    User userEntity = e.Entity;
-                    _dbContext.SaveChanges();
-
-                    return true;
-                }
-            }
-        }
-
+        
         public IEnumerable<DogOutDTO> ListAllDogsAllCentres()
         {
             List<DogOutDTO> AllDogs = new List<DogOutDTO>();
@@ -279,19 +245,6 @@ namespace SPCA_backend.Data
             return ConvertToDogOutDTO(dog);
         }
 
-        public DogOutDTO ConvertToDogOutDTO(Dog dog)
-        {
-            DogOutDTO dogOutDto = new DogOutDTO
-            {
-                Id = dog.Id,
-                Name = dog.Name,
-                Breed = dog.Breed,
-                CentreId = dog.CentreId,
-                isFlag = dog.isFlag,
-                isAlert = dog.isAlert,
-            };
-            return dogOutDto;
-        }
 
         public bool EditDogInformation(DogEditInDto dog)
         {
@@ -315,7 +268,7 @@ namespace SPCA_backend.Data
             }   
         }
 
-        public bool toggleDogFlag(int dogId)
+        public bool ToggleDogFlag(int dogId)
         {
             Dog dog = _dbContext.Dogs.FirstOrDefault(e => e.Id == dogId);
 
@@ -335,7 +288,7 @@ namespace SPCA_backend.Data
             }
         }
 
-        public bool toggleDogAlert(int dogId)
+        public bool ToggleDogAlert(int dogId)
         {
             Dog dog = _dbContext.Dogs.FirstOrDefault(e => e.Id == dogId);
 
@@ -355,13 +308,34 @@ namespace SPCA_backend.Data
             }
         }
 
-        public bool addNewRequest(RequestInDto requestInDto)
+        public bool AddNewRequest(RequestInDto requestInDto)
         {
             addNewRequestHelper(requestInDto);
             return true;
         }
 
-        public DogWeightRequestOutDto getCurrentDogRequestWeight(int dogId)
+        public bool AddWeightFromScaleToRequest(ScaleWeightRequestInDto scaleWeightRequestInDto)
+        {
+            Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.ScaleId == scaleWeightRequestInDto.ScaleId);
+
+            if (requestCheck == null)
+            {
+                return false;
+            }
+            else
+            {
+                requestCheck.DogWeight = scaleWeightRequestInDto.Weight;
+
+                EntityEntry<Request> e = _dbContext.Requests.Update(requestCheck);
+                Request requestEntity = e.Entity;
+                _dbContext.SaveChanges();
+
+                return true;
+            }
+
+        }
+
+        public DogWeightRequestOutDto GetCurrentDogRequestWeight(int dogId)
         {
             Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.DogId == dogId);
 
@@ -381,74 +355,7 @@ namespace SPCA_backend.Data
             }
 
         }
-
-        private Request addNewRequestHelper(RequestInDto requestInDto)
-        {
-            // remove expired requests-----------------------
-            int currentTimeStampInSecond = (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-
-            IEnumerable<Request> listOfRequests = _dbContext.Requests.ToList();
-
-            foreach (Request request in listOfRequests)
-            {
-                if (int.Parse(request.TimeStamp) + REQUEST_EXPIRING_MINUTES * 60 < currentTimeStampInSecond)
-                {
-                    _dbContext.Remove(request);
-                    _dbContext.SaveChanges();
-                }
-            }
-            //-----------------------------------------------
-
-
-            Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.ScaleId == requestInDto.ScaleId && e.DogId == requestInDto.DogId);
-
-            if (requestCheck == null)
-            {
-                Request newRequest = new Request
-                {
-                    ScaleId = requestInDto.ScaleId,
-                    DogId = requestInDto.DogId,
-                    DogWeight = 0.0,
-                    TimeStamp = Convert.ToString((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds),
-            };
-
-                EntityEntry<Request> e = _dbContext.Requests.Add(newRequest);
-                _dbContext.SaveChanges();
-                return newRequest;
-            }
-            else
-            {
-                requestCheck.DogWeight = 0.0;
-                requestCheck.TimeStamp = Convert.ToString((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
-
-                EntityEntry<Request> e = _dbContext.Requests.Update(requestCheck);
-                Request requestEntity = e.Entity;
-                _dbContext.SaveChanges();
-
-                return requestCheck;
-            }
-        }
-
-        public bool addWeightFromScaleToRequest(ScaleWeightRequestInDto scaleWeightRequestInDto)
-        {
-            Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.ScaleId == scaleWeightRequestInDto.ScaleId);
-
-            if (requestCheck == null)
-            {
-                return false;
-            }
-            else
-            {
-                requestCheck.DogWeight = scaleWeightRequestInDto.Weight;
-
-                EntityEntry<Request> e = _dbContext.Requests.Update(requestCheck);
-                Request requestEntity = e.Entity;
-                _dbContext.SaveChanges();
-
-                return true;
-            }
-            
-        }
+ 
 
         public bool SaveCurrentWeight(int dogId)
         {
@@ -468,7 +375,6 @@ namespace SPCA_backend.Data
                 };
 
                 _dbContext.Remove(requestCheck);
-
                 _dbContext.Add(weight);
                 _dbContext.SaveChanges();
 
@@ -478,7 +384,7 @@ namespace SPCA_backend.Data
 
         }
 
-        // Util Methods
+        // -------------------------------------------------------------------------Util-----------------------------------------------------------------------
         public bool AddNewScale(ScaleInDTO scaleDTO)
         {
             Scale existing = _dbContext.Scales.FirstOrDefault(s => s.Name == scaleDTO.Name && s.CentreId == scaleDTO.CentreId);
@@ -556,6 +462,90 @@ namespace SPCA_backend.Data
         public IEnumerable<Centre> ListAllCentres() {
             IEnumerable<Centre> listOfCentres = _dbContext.Centres.ToList();
             return listOfCentres;
+        }
+
+
+
+
+        //---------------------------------------------------------------------Helper Methods----------------------------------------------------------------
+
+
+
+
+        private UserOutDto ConvertToUserOutDTO(User user)
+        {
+            UserOutDto userOutDto = new UserOutDto
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                UserType = user.UserType,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                CentreId = user.CentreId,
+                Token = "",
+            };
+            return userOutDto;
+        }
+
+        private DogOutDTO ConvertToDogOutDTO(Dog dog)
+        {
+            DogOutDTO dogOutDto = new DogOutDTO
+            {
+                Id = dog.Id,
+                Name = dog.Name,
+                Breed = dog.Breed,
+                CentreId = dog.CentreId,
+                isFlag = dog.isFlag,
+                isAlert = dog.isAlert,
+            };
+            return dogOutDto;
+        }
+
+        private Request addNewRequestHelper(RequestInDto requestInDto)
+        {
+            // remove expired requests-----------------------
+            int currentTimeStampInSecond = (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+            IEnumerable<Request> listOfRequests = _dbContext.Requests.ToList();
+
+            foreach (Request request in listOfRequests)
+            {
+                if (int.Parse(request.TimeStamp) + REQUEST_EXPIRING_MINUTES * 60 < currentTimeStampInSecond)
+                {
+                    _dbContext.Remove(request);
+                    _dbContext.SaveChanges();
+                }
+            }
+            //-----------------------------------------------
+
+
+            Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.ScaleId == requestInDto.ScaleId && e.DogId == requestInDto.DogId);
+
+            if (requestCheck == null)
+            {
+                Request newRequest = new Request
+                {
+                    ScaleId = requestInDto.ScaleId,
+                    DogId = requestInDto.DogId,
+                    DogWeight = 0.0,
+                    TimeStamp = Convert.ToString((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds),
+                };
+
+                EntityEntry<Request> e = _dbContext.Requests.Add(newRequest);
+                _dbContext.SaveChanges();
+                return newRequest;
+            }
+            else
+            {
+                requestCheck.DogWeight = 0.0;
+                requestCheck.TimeStamp = Convert.ToString((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+
+                EntityEntry<Request> e = _dbContext.Requests.Update(requestCheck);
+                Request requestEntity = e.Entity;
+                _dbContext.SaveChanges();
+
+                return requestCheck;
+            }
         }
 
     }

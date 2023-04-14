@@ -129,7 +129,7 @@ namespace SPCA_backend.Controllers
         [HttpGet("toggleFlag")]
         public ActionResult toggleFlag(int dogId)
         {
-            bool isValid = _repository.toggleDogFlag(dogId);
+            bool isValid = _repository.ToggleDogFlag(dogId);
             return (isValid ? Ok("Dog Flag successfully toggled.") : NotFound("Dog of the requested ID does not exist"));
         }
 
@@ -141,7 +141,7 @@ namespace SPCA_backend.Controllers
         [HttpGet("toggleAlert")]
         public ActionResult toggleAlert(int dogId)
         {
-            bool isValid = _repository.toggleDogAlert(dogId);
+            bool isValid = _repository.ToggleDogAlert(dogId);
             return (isValid ? Ok("Dog Alert successfully toggled.") : NotFound("Dog of the requested ID does not exist"));
         }
 
@@ -153,7 +153,7 @@ namespace SPCA_backend.Controllers
         [HttpPost("invokeScaleRequest")]
         public ActionResult invokeScaleRequest(RequestInDto requestInDto)
         {
-            bool isValid = _repository.addNewRequest(requestInDto);
+            bool isValid = _repository.AddNewRequest(requestInDto);
             return (isValid ? Ok("Request has been added") : NotFound("An error occured, please try again!"));
         }
 
@@ -163,7 +163,7 @@ namespace SPCA_backend.Controllers
         [HttpPost("addWeightFromScale")]
         public ActionResult addWeightFromScale(ScaleWeightRequestInDto scaleWeightRequestInDto)
         {
-            bool isValid = _repository.addWeightFromScaleToRequest(scaleWeightRequestInDto);
+            bool isValid = _repository.AddWeightFromScaleToRequest(scaleWeightRequestInDto);
             return (isValid ? Ok("Weight has been added to the request.") : NotFound("An error occured, please try again!"));
         }
 
@@ -175,7 +175,7 @@ namespace SPCA_backend.Controllers
         [HttpGet("getCurrentWeightFromScale")]
         public ActionResult<DogWeightRequestOutDto> getCurrentWeightFromScale(int dogId)
         {
-            DogWeightRequestOutDto dogWeightRequestOutDto = _repository.getCurrentDogRequestWeight(dogId);
+            DogWeightRequestOutDto dogWeightRequestOutDto = _repository.GetCurrentDogRequestWeight(dogId);
             return (dogWeightRequestOutDto == null ? NotFound("Dog Not being weighted!") : Ok(dogWeightRequestOutDto));
         }
 
