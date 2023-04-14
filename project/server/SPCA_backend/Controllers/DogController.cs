@@ -24,6 +24,9 @@ namespace SPCA_backend.Controllers
             _repository = repository;
         }
 
+
+
+
         [HttpPost("register")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
@@ -33,21 +36,20 @@ namespace SPCA_backend.Controllers
             return Ok("Dog successfully registered.");
         }
 
+
+
+
         [HttpDelete("delete")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         public ActionResult deleteDog(int dogId)
         {
             bool isDeleteSuccessful = _repository.DeleteDog(dogId);
-            if (isDeleteSuccessful)
-            {
-                return Ok("Dog successfully deleted.");
-            }
-            else
-            {
-                return NotFound("Dog of the requested ID does not exist");
-            }
+            return (isDeleteSuccessful ? Ok("Dog successfully deleted.") : NotFound("Dog of the requested ID does not exist"));
         }
+
+
+
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
@@ -57,6 +59,9 @@ namespace SPCA_backend.Controllers
             return Ok(_repository.ListAllDogsAllCentres());
         }
 
+
+
+
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("getAllDogsInACentreAdmin")]
@@ -65,15 +70,20 @@ namespace SPCA_backend.Controllers
             return Ok(_repository.ListAllDogsInACentre(centreId));
         }
 
+
+
+
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
         [HttpGet("getAllDogsInOwnCentre")]
         public ActionResult<IEnumerable<DogOutDTO>> listAllDogsInOwnCentre()
         {
             int userCentreId = _repository.GetUserInfo(retrieveUserNameOfLoggedInUser()).CentreId;
-
             return Ok(_repository.ListAllDogsInACentre(userCentreId));
         }
+
+
+
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
@@ -81,12 +91,12 @@ namespace SPCA_backend.Controllers
         public ActionResult<DogOutDTO> GetDogInformationAllCentres(int dogId)
         {
             DogOutDTO dogDTO = _repository.GetDogInformationAllCentres(dogId);
-            if (dogDTO.Id == -1)
-            {
-                return NotFound("No Dog found with that Id");
-            }
+            if (dogDTO.Id == -1) { return NotFound("No Dog found with that Id"); }
             return Ok(dogDTO);
         }
+
+
+
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
@@ -94,15 +104,12 @@ namespace SPCA_backend.Controllers
         public ActionResult<DogOutDTO> GetDogInformationOwnCentre(int dogId)
         { 
             int userCentreId = _repository.GetUserInfo(retrieveUserNameOfLoggedInUser()).CentreId;
-
             DogOutDTO dogDTO = _repository.GetDogInformationOwnCentre(dogId, userCentreId);
-
-            if (dogDTO.Id == -1)
-            {
-                return NotFound("No Dog found with that Id");
-            }
+            if (dogDTO.Id == -1) { return NotFound("No Dog found with that Id"); }
             return Ok(dogDTO);
         }
+
+
 
 
         [HttpPost("editDogInfo")]
@@ -111,16 +118,11 @@ namespace SPCA_backend.Controllers
         public ActionResult editADogInfo(DogEditInDto dogEditInDto)
         {
             bool isValid = _repository.EditDogInformation(dogEditInDto);
-
-            if (isValid)
-            {
-                return Ok("Dog Information successfully edited.");
-            }
-            else
-            {
-                return NotFound("Dog of the requested ID does not exist");
-            }
+            return (isValid ? Ok("Dog Information successfully edited.") : NotFound("Dog of the requested ID does not exist"));
         }
+
+
+
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminAndVetOnly")]
@@ -128,16 +130,11 @@ namespace SPCA_backend.Controllers
         public ActionResult toggleFlag(int dogId)
         {
             bool isValid = _repository.toggleDogFlag(dogId);
-
-            if (isValid)
-            {
-                return Ok("Dog Flag successfully toggled.");
-            }
-            else
-            {
-                return NotFound("Dog of the requested ID does not exist");
-            }
+            return (isValid ? Ok("Dog Flag successfully toggled.") : NotFound("Dog of the requested ID does not exist"));
         }
+
+
+
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminAndVetOnly")]
@@ -145,16 +142,10 @@ namespace SPCA_backend.Controllers
         public ActionResult toggleAlert(int dogId)
         {
             bool isValid = _repository.toggleDogAlert(dogId);
-
-            if (isValid)
-            {
-                return Ok("Dog Alert successfully toggled.");
-            }
-            else
-            {
-                return NotFound("Dog of the requested ID does not exist");
-            }
+            return (isValid ? Ok("Dog Alert successfully toggled.") : NotFound("Dog of the requested ID does not exist"));
         }
+
+
 
 
         [Authorize(AuthenticationSchemes = "Authentication")]
@@ -163,31 +154,21 @@ namespace SPCA_backend.Controllers
         public ActionResult invokeScaleRequest(RequestInDto requestInDto)
         {
             bool isValid = _repository.addNewRequest(requestInDto);
-
-            if (isValid)
-            {
-                return Ok("Request has been added");
-            }
-            else
-            {
-                return NotFound("An error occured, please try again!");
-            }
+            return (isValid ? Ok("Request has been added") : NotFound("An error occured, please try again!"));
         }
+
+
+
 
         [HttpPost("addWeightFromScale")]
         public ActionResult addWeightFromScale(ScaleWeightRequestInDto scaleWeightRequestInDto)
         {
             bool isValid = _repository.addWeightFromScaleToRequest(scaleWeightRequestInDto);
-
-            if (isValid)
-            {
-                return Ok("Weight has been added to the request.");
-            }
-            else
-            {
-                return NotFound("An error occured, please try again!");
-            }
+            return (isValid ? Ok("Weight has been added to the request.") : NotFound("An error occured, please try again!"));
         }
+
+
+
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
@@ -195,16 +176,11 @@ namespace SPCA_backend.Controllers
         public ActionResult<DogWeightRequestOutDto> getCurrentWeightFromScale(int dogId)
         {
             DogWeightRequestOutDto dogWeightRequestOutDto = _repository.getCurrentDogRequestWeight(dogId);
-            
-            if (dogWeightRequestOutDto == null)
-            {
-                return NotFound("Dog Not being weighted!");
-            } 
-            else
-            {
-                return Ok(dogWeightRequestOutDto);
-            }
+            return (dogWeightRequestOutDto == null ? NotFound("Dog Not being weighted!") : Ok(dogWeightRequestOutDto));
         }
+
+
+
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
@@ -212,26 +188,26 @@ namespace SPCA_backend.Controllers
         public ActionResult saveCurrentWeight(int dogId)
         {
             bool isValid = _repository.SaveCurrentWeight(dogId);
-
-            if (isValid)
-            {
-                return Ok("Weight has been added to the database.");
-            }
-            else
-            {
-                return NotFound("No weight has been recorded or dog is not currently being weighted!");
-            }
+            return (isValid ? Ok("Weight has been added to the database.") : NotFound("No weight has been recorded or dog is not currently being weighted!"));
         }
 
 
-        //-----------------------------Helper Methods---------------------------------
+
+
+
+
+        //----------------------------------------------------Helper Methods-----------------------------------------------------------------------------
+
+
+
+
+
 
         private string getUserNameFromHeader(string header)
         {
             var credentialBytes = Convert.FromBase64String(header);
             var credentials = Encoding.UTF8.GetString(credentialBytes).Split(":");
             var username = credentials[0];
-
             return username;
         }
 
@@ -251,7 +227,6 @@ namespace SPCA_backend.Controllers
             {
                 userName = getUserNameFromHeader(ci.FindFirst("volunteer").Value);
             }
-
             return userName;
         }
 

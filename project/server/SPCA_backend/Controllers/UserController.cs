@@ -16,55 +16,50 @@ namespace SPCA_backend.Controllers
     [EnableCors("_myAllowSpecificOrigins")]
     [Route("user")]
     [ApiController]
-    public class SPCAController : Controller
+    public class UserController : Controller
     {
         private static bool USER_NAME = true;
         private static bool TOKEN = false;
 
        private readonly ISPCARepo _repository;
 
-       public SPCAController(ISPCARepo repository)
+       public UserController(ISPCARepo repository)
         {
             _repository = repository;
         }
 
+
+
+
         [HttpGet("testing")]
         public ActionResult demoFunction()
         {
-            return Ok("This is a 770 Team 2 Hosted backend API, you are connected if you can see this message! :-) Other API endpoints are being built right now....");
+            return Ok("This is a 770 Team 2 Hosted backend API");
         }
         
+
+
+
         [HttpPost("register")]
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
         public ActionResult userRegister(UserInDto userLoginInDto)
         {
             bool isRegisterSuccessful = _repository.AddNewUser(userLoginInDto);
-
-            if (isRegisterSuccessful)
-            {
-                return Ok("User successfully registered.");
-            }
-            else
-            {
-                return NotFound("Username not available. Please Try again.");
-            }
+            return (isRegisterSuccessful ? Ok("User successfully registered.") : NotFound("Username not available. Please Try again."));
         }
+
+
+
 
         [HttpPost("register2")]
         public ActionResult userRegister2(UserInDto userLoginInDto)
         {
             bool isRegisterSuccessful = _repository.AddNewUser(userLoginInDto);
-
-            if (isRegisterSuccessful)
-            {
-                return Ok("User successfully registered.");
-            }
-            else
-            {
-                return NotFound("Username not available. Please Try again.");
-            }
+            return (isRegisterSuccessful ? Ok("User successfully registered.") : NotFound("Username not available. Please Try again."));
         }
+
+
 
 
         [Authorize(AuthenticationSchemes = "Authentication")]
@@ -74,10 +69,12 @@ namespace SPCA_backend.Controllers
         {
             UserOutDto userOutDto = _repository.GetUserInfo(getLoggedInUserUserNameOrToken(USER_NAME));
             userOutDto.Token = getLoggedInUserUserNameOrToken(TOKEN);
-
             return Ok(userOutDto);
 
         }
+
+
+
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
@@ -85,15 +82,11 @@ namespace SPCA_backend.Controllers
         public ActionResult userDelete(int userId)
         {
             bool valid = _repository.DeleteUser(userId);
-            if (valid)
-            {
-                return Ok();
-            }
-            else
-            {
-                return NotFound("User ID does not exist");
-            }
+            return (valid ? Ok() : NotFound("User ID does not exist"));
         }
+
+
+
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
@@ -103,22 +96,20 @@ namespace SPCA_backend.Controllers
             return Ok(_repository.GetAllUsers());
         }
 
+
+
+
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AdminOnly")]
-        [HttpPost("editUserAccessLevel")]
-
+        [HttpPost("editUserAccess")]
         public ActionResult editUserAccessLevel(UserAccessInDto userAccessInDto)
         {
             bool valid = _repository.EditExistingUserAccessLevel(userAccessInDto);
-            if (valid)
-            {
-                return Ok("Successfully changed the selected user access level");
-            }
-            else
-            {
-                return NotFound("An Error Occured, please try again!");
-            }
+            return (valid ? Ok("Successfully changed the selected user access level") : NotFound("An Error Occured, please try again!"));
         }
+
+
+
 
         [Authorize(AuthenticationSchemes = "Authentication")]
         [Authorize(Policy = "AllUser")]
@@ -126,21 +117,19 @@ namespace SPCA_backend.Controllers
         public ActionResult changePasswordForCurrentUser(UserChangePasswordInDto userChangePasswordInDto)
         {
             int userId = _repository.getUserIdFromUserName(getLoggedInUserUserNameOrToken(USER_NAME));
-
             bool isValid = _repository.ChangePasswordForCurrentUser(userId, userChangePasswordInDto);
-
-            if (isValid)
-            {
-                return Ok("Successfully changed the password for the current user.");
-            }
-            else
-            {
-                return NotFound("An Error Occured, please try again!");
-            }
-
+            return (isValid ? Ok("Successfully changed the password for the current user.") : NotFound("An Error Occured, please try again!"));
         }
 
+
+
+
+
         //---------------------------------------------------------Helper Methods-------------------------------------------------------------
+
+
+
+
 
         private string getUserNameFromHeader(string header)
         {
