@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SPCA_backend.Dtos;
 using SPCA_backend.Model;
 using SPCA_backend.Handler;
+using Azure.Core;
+using Request = SPCA_backend.Model.Request;
 
 namespace SPCA_backend.Data
 {
@@ -446,6 +448,34 @@ namespace SPCA_backend.Data
                 return true;
             }
             
+        }
+
+        public bool SaveCurrentWeight(int dogId)
+        {
+            Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.DogId == dogId);
+
+            if (requestCheck == null || requestCheck.DogWeight == 0)
+            {
+                return false;
+            }
+            else
+            {
+                Weight weight = new Weight
+                {
+                    DogId = dogId,
+                    DogWeight = requestCheck.DogWeight,
+                    TimeStamp = Convert.ToString((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds),
+                };
+
+                _dbContext.Remove(requestCheck);
+
+                _dbContext.Add(weight);
+                _dbContext.SaveChanges();
+
+                return true;
+
+            }
+
         }
 
         // Util Methods

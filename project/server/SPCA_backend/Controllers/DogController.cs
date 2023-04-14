@@ -234,6 +234,23 @@ namespace SPCA_backend.Controllers
             }
         }
 
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        [HttpGet("saveCurrentWeight")]
+        public ActionResult saveCurrentWeight(int dogId)
+        {
+            bool isValid = _repository.SaveCurrentWeight(dogId);
+
+            if (isValid)
+            {
+                return Ok("Weight has been added to the database.");
+            }
+            else
+            {
+                return NotFound("No weight has been recorded or dog is not currently being weighted!");
+            }
+        }
+
 
         //-----------------------------Helper Methods---------------------------------
 
