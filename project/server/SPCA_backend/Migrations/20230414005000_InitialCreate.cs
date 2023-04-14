@@ -31,7 +31,9 @@ namespace SPCA_backend.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CentreId = table.Column<int>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Breed = table.Column<string>(type: "TEXT", nullable: false)
+                    Breed = table.Column<string>(type: "TEXT", nullable: false),
+                    isFlag = table.Column<bool>(type: "INTEGER", nullable: false),
+                    isAlert = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,7 +65,8 @@ namespace SPCA_backend.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     DogId = table.Column<int>(type: "INTEGER", nullable: false),
                     ScaleId = table.Column<int>(type: "INTEGER", nullable: false),
-                    DogWeight = table.Column<double>(type: "REAL", nullable: false)
+                    DogWeight = table.Column<double>(type: "REAL", nullable: false),
+                    TimeStamp = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

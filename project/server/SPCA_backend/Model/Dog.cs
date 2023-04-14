@@ -14,6 +14,10 @@ namespace SPCA_backend.Model
         public string Name { get; set; }
         [Required]
         public string Breed { get; set; }
+        [Required]
+        public bool isFlag { get; set; }
+        [Required]
+        public bool isAlert { get; set; }
 
     }
 }
