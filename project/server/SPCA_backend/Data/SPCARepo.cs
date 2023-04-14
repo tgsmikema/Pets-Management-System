@@ -220,6 +220,8 @@ namespace SPCA_backend.Data
                     CentreId = 0,
                     isFlag = false,
                     isAlert = false,
+                    LastCheckInTimeStamp = "0",
+                    LastCheckInWeight = 0,
                 };
 
             }
@@ -239,6 +241,8 @@ namespace SPCA_backend.Data
                     CentreId = 0,
                     isFlag = false,
                     isAlert = false,
+                    LastCheckInTimeStamp = "0",
+                    LastCheckInWeight = 0,
                 };
 
             }
@@ -489,6 +493,16 @@ namespace SPCA_backend.Data
 
         private DogOutDTO ConvertToDogOutDTO(Dog dog)
         {
+            Weight dogWeight = _dbContext.Weights.Where(e => e.DogId == dog.Id).OrderByDescending(e => e.TimeStamp).FirstOrDefault();
+            if (dogWeight == null)
+            {
+                dogWeight = new Weight
+                {
+                    TimeStamp = "0",
+                    DogWeight = 0,
+                };
+            }
+
             DogOutDTO dogOutDto = new DogOutDTO
             {
                 Id = dog.Id,
@@ -497,13 +511,15 @@ namespace SPCA_backend.Data
                 CentreId = dog.CentreId,
                 isFlag = dog.isFlag,
                 isAlert = dog.isAlert,
+                LastCheckInTimeStamp = dogWeight.TimeStamp,
+                LastCheckInWeight = dogWeight.DogWeight,
             };
             return dogOutDto;
         }
 
         private Request addNewRequestHelper(RequestInDto requestInDto)
         {
-            // remove expired requests-----------------------
+            // remove expired requests---
             int currentTimeStampInSecond = (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
             IEnumerable<Request> listOfRequests = _dbContext.Requests.ToList();
@@ -516,7 +532,7 @@ namespace SPCA_backend.Data
                     _dbContext.SaveChanges();
                 }
             }
-            //-----------------------------------------------
+            //-----------------------------
 
 
             Request requestCheck = _dbContext.Requests.FirstOrDefault(e => e.ScaleId == requestInDto.ScaleId && e.DogId == requestInDto.DogId);
