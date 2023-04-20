@@ -177,6 +177,11 @@
                 android:orientation="horizontal"
                 >
 
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/week_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
             </LinearLayout>
 
 
@@ -248,6 +253,11 @@
                 android:elevation="3dp"
                 android:orientation="horizontal"
                 >
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/month_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 
