@@ -5,21 +5,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screen.message.MessageFragment" >
-
-    <TextView
-        android:id="@+id/text_message"
+    tools:context=".screen.message.MessageFragment"
+    android:background="@color/background_200"
+    android:padding="@dimen/layout_margin_top">
+    
+    <Button
+        android:id="@+id/button_new_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:text="this is message page"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:background="@drawable/blue_round_button"
+        android:textAlignment="center"
+        android:paddingHorizontal="60dp"
+        android:drawableStart="@drawable/add_36dp"
+        android:text="New Message"
+        android:textSize="20sp"
+        android:shadowColor="#888"
+        android:elevation="5dp"
+        />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_user_recyclerview"
+        android:nestedScrollingEnabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/button_new_message"
+        android:layout_marginTop="@dimen/layout_margin_top"
+        android:paddingBottom="120dp"
+        />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

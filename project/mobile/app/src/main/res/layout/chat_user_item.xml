@@ -1,0 +1,32 @@
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/layout_margin_top"
+        android:background="@drawable/blue_background_card"
+        android:orientation="vertical"
+        android:elevation="6dp"
+        android:layout_marginBottom="24dp"
+        >
+
+        <TextView
+            android:id="@+id/text_chat_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Anna Verdi"
+            android:textColor="@color/black"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/text_chat_userType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="admin"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            />
+
+    </LinearLayout>
