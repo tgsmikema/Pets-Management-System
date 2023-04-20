@@ -21,8 +21,8 @@ const TopBar = ({ isLogin }) => {
         backgroundColor: `${theme.palette.primary.light}`,
       }}
     >
-      <Box height={"100%"} ml={2}>
-        <img src={Logo} style={{ height: "100%" }} />
+      <Box height={"100%"} ml={2} marginBottom={1} marginTop={1}>
+        <img src={Logo} style={{ height: "80%" }} />
       </Box>
 
       {!isLogin && (

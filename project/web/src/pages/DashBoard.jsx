@@ -7,6 +7,7 @@ import HomePage from "./HomePage.jsx";
 import StatsPage from "./StatsPage.jsx";
 import ChatPage from "./ChatPage.jsx";
 import ProfilePage from "./ProfilePage.jsx";
+import DogPage from "./DogPage.jsx";
 
 //the dahsboard pages is used for router controller, the functionality is same as the pageLayout
 const DashBoard = () => {
@@ -29,6 +30,7 @@ const DashBoard = () => {
           <Route path="/stats" element={<StatsPage />} />
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/dogs/:id" element={<DogPage />} />
         </Routes>
       </Box>
       <Footer />
