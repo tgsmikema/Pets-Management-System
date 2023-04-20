@@ -19,7 +19,9 @@ import androidx.fragment.app.Fragment;
 import com.example.mobile.databinding.FragmentStatistBinding;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -144,13 +146,21 @@ public class StatistFragment extends Fragment{
 
         Description description = new Description();
         description.setText("week statistic");
+        description.setTextSize(13);
         weekLineChart.setDescription(description);
+        Legend legend = weekLineChart.getLegend();
+        legend.setTextSize(12);
 
         weekLineChart.setNoDataText("No data available");
 
         XAxis xAxis = weekLineChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(new String[] {"Mon","Tue","Wed","Thur","Fri","Sat","Sun"}));
         xAxis.setGranularity(1);
+        xAxis.setTextSize(13);
+        YAxis yAxis = weekLineChart.getAxisLeft();
+        yAxis.setTextSize(13);
+        YAxis yAxisRight = weekLineChart.getAxisRight();
+        yAxisRight.setTextSize(13);
         List<LineChartData> dataObjects = new ArrayList<>(Arrays.asList(new LineChartData(0,123),
                 new LineChartData(1,56),
                 new LineChartData(2,89),
@@ -181,16 +191,16 @@ public class StatistFragment extends Fragment{
             entries1.add(new Entry(data.getIdx(), data.getAmount()));
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "weight"); // add entries to dataset
+        LineDataSet dataSet = new LineDataSet(entries, "weighted"); // add entries to dataset
         dataSet.setColor(Color.rgb(255,192,203));
         dataSet.setLineWidth(2);
-        dataSet.setValueTextSize(10);
+        dataSet.setValueTextSize(13);
         dataSet.setCircleColor(Color.RED);
 
-        LineDataSet dataSet1 = new LineDataSet(entries1, "unweight"); // add entries to dataset
+        LineDataSet dataSet1 = new LineDataSet(entries1, "unweighted"); // add entries to dataset
         dataSet1.setColor(Color.rgb(173,216,230));
         dataSet1.setLineWidth(2);
-        dataSet1.setValueTextSize(10);
+        dataSet1.setValueTextSize(13);
         dataSet1.setCircleColor(Color.RED);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
@@ -206,6 +216,7 @@ public class StatistFragment extends Fragment{
     public void initMonthLineChart(){
         Description description = new Description();
         description.setText("month statistic");
+        description.setTextSize(13);
         monthLineChart.setDescription(description);
 
         monthLineChart.setNoDataText("No data available");
@@ -213,6 +224,15 @@ public class StatistFragment extends Fragment{
         XAxis xAxis = monthLineChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(new String[] {"4.1","4.5","4.9","4.13","4.17","4.22","4.27"}));
         xAxis.setGranularity(1);
+        xAxis.setTextSize(13);
+        YAxis yAxis = monthLineChart.getAxisLeft();
+        yAxis.setTextSize(13);
+        YAxis yAxisRight = monthLineChart.getAxisRight();
+        yAxisRight.setTextSize(13);
+
+        Legend legend = monthLineChart.getLegend();
+        legend.setTextSize(13);
+
         List<LineChartData> dataObjects = new ArrayList<>(Arrays.asList(new LineChartData(0,123),
                 new LineChartData(1,56),
                 new LineChartData(2,89),
@@ -243,16 +263,16 @@ public class StatistFragment extends Fragment{
             entries1.add(new Entry(data.getIdx(), data.getAmount()));
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "weight"); // add entries to dataset
+        LineDataSet dataSet = new LineDataSet(entries, "weighted"); // add entries to dataset
         dataSet.setColor(Color.rgb(255,192,203));
         dataSet.setLineWidth(2);
-        dataSet.setValueTextSize(10);
+        dataSet.setValueTextSize(13);
         dataSet.setCircleColor(Color.RED);
 
-        LineDataSet dataSet1 = new LineDataSet(entries1, "unweight"); // add entries to dataset
+        LineDataSet dataSet1 = new LineDataSet(entries1, "unweighted"); // add entries to dataset
         dataSet1.setColor(Color.rgb(173,216,230));
         dataSet1.setLineWidth(2);
-        dataSet1.setValueTextSize(10);
+        dataSet1.setValueTextSize(13);
         dataSet1.setCircleColor(Color.RED);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
