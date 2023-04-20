@@ -36,20 +36,20 @@ const StatsPage = () => {
 
   const data = [
     {
-      id: "Weighted",
-      label: "Weighted",
+      id: "Weighed",
+      label: "Weighed",
       value: 152,
     },
     {
-      id: "Unweighted",
-      label: "Unweighted",
+      id: "Unweighed",
+      label: "Unweighed",
       value: 32,
     },
   ];
 
   const dataForLine = [
     {
-      id: "weighted",
+      id: "weighed",
       data: [
         {
           x: "Monday",
@@ -212,13 +212,13 @@ const StatsPage = () => {
               justifyContent={"space-evenly"}
             >
               <Typography variant={"body1"} textAlign={"center"}>
-                Weighted
+                Weighed
               </Typography>
               <Typography variant={"h5"} fontWeight={600} textAlign={"center"}>
                 152
               </Typography>
               <Typography variant={"body1"} textAlign={"center"}>
-                Unweighted
+                Unweighed
               </Typography>
               <Typography variant={"h5"} fontWeight={600} textAlign={"center"}>
                 45

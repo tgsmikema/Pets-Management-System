@@ -9,6 +9,7 @@ import FlagCircleIcon from "@mui/icons-material/FlagCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import AddIcon from "@mui/icons-material/Add";
 import AddDog from "../components/AddDog.jsx";
+import { useNavigate } from "react-router-dom";
 
 const StyledButton = styled(Button)({
   padding: "2% 2%",
@@ -20,10 +21,25 @@ const StyledButton = styled(Button)({
 
 //control row click
 //TODO: route to dog page
-const handleViewClick = (params) => {
-  const dogId = params;
-  console.log("viewing " + dogId);
-};
+
+
+function ViewButton(params) {
+  const id = params.params;
+  const navigate = useNavigate();
+  const handleViewClick = () => {
+    console.log("viewing " + id);
+    navigate(`/dogs/${id}`);
+  };
+  return (
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => handleViewClick()}
+    >
+      View
+    </Button>
+  );
+}
 
 //TODO: replace hardcoded values with db
 const rows = [
@@ -134,13 +150,7 @@ const columns = [
     headerName: " ",
     flex: 1,
     renderCell: (params) => (
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => handleViewClick(params.row.id)}
-      >
-        View
-      </Button>
+      <ViewButton params={params.row.id} />
     ),
   },
 ];
