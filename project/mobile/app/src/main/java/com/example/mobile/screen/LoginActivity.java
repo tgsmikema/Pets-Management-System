@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView textViewErrorMessage;
 
+    //used to show the loading dialogs
     private MaterialDialog dialogs;
 
     private SPCAService spcaService;
@@ -55,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = binding.buttonLogin;
         textViewErrorMessage = binding.errorMessage;
 
+        //setOnClickLister for the login button
         loginButton.setOnClickListener((event) -> {
             onLoginClick();
         });
@@ -76,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                     dialogs.dismiss();
                     if (response.isSuccessful()) {
                         User user = response.body();
-                        // Do something with the user object
+                        //set the global current user
                         SPCApplication.currentUser = user;
                         textViewErrorMessage.setText("");
                         goToMainActivity();
@@ -96,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    //show the error message, as we will process the UI thread, we will use runOnUiThread method
     public void showErrorMessage(String message) {
         runOnUiThread(() -> textViewErrorMessage.setText(message));
     }
