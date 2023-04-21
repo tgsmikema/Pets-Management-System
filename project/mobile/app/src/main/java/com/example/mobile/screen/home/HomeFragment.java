@@ -84,7 +84,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AddDog addDog = new AddDog();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container,addDog).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container,addDog).addToBackStack(null).commit();
+
             }
         });
 

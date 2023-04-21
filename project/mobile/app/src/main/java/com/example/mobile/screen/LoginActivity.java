@@ -2,7 +2,9 @@ package com.example.mobile.screen;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -42,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         initialView();
         spcaService = new SPCAService();
         dialogs = new MaterialDialog.Builder(this).content("Please wait").progress(true, 0).cancelable(false).build();
+        checkUserInfo();
     }
 
     @Override
@@ -70,31 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if (password.equals("")) {
             Toast.makeText(getApplicationContext(), "Please enter your password", Toast.LENGTH_SHORT).show();
         } else {
-            dialogs.show();
-            Call<User> call = spcaService.login(username, password);
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    dialogs.dismiss();
-                    if (response.isSuccessful()) {
-                        User user = response.body();
-                        //set the global current user
-                        SPCApplication.currentUser = user;
-                        textViewErrorMessage.setText("");
-                        goToMainActivity();
-                    } else {
-                        // Handle error
-                        showErrorMessage("Your username or password is invalid");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    // Handle error
-                    dialogs.dismiss();
-                    showErrorMessage(t.toString());
-                }
-            });
+            userLogin(username,password,false);
         }
     }
 
@@ -104,9 +83,59 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void goToMainActivity() {
-        Intent intent = new Intent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.setClass(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(this,MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    public void userLogin(String username,String password,boolean hasInfo){
+        dialogs.show();
+        Call<User> call = spcaService.login(username, password);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                dialogs.dismiss();
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    //set the global current user
+                    SPCApplication.currentUser = user;
+                    textViewErrorMessage.setText("");
+                    editTextUserName.setText("");
+                    editTextPassword.setText("");
+                    if(!hasInfo){
+                        saveUserInfo(username,password);
+                    }
+                    goToMainActivity();
+                } else {
+                    // Handle error
+                    showErrorMessage("Your username or password is invalid");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                // Handle error
+                dialogs.dismiss();
+                showErrorMessage(t.toString());
+            }
+        });
+    }
+
+    public void saveUserInfo(String username,String password){
+        SharedPreferences sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("username", username);
+        editor.putString("password", password);
+        editor.apply();
+    }
+
+    public void checkUserInfo(){
+        SharedPreferences sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        String password = sharedPref.getString("password", null);
+
+        if (username != null && password != null) {
+            userLogin(username,password,true);
+        }
     }
 }
