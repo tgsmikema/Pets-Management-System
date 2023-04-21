@@ -9,12 +9,14 @@ import {
 } from "@mui/material";
 import { customColor } from "../theme.js";
 
-const EditUser = ({ onClose, selectedRow }) => {
-  const name = selectedRow ? selectedRow.name : "";
-  const job = selectedRow ? selectedRow.job : "";
-  const accessLevel = selectedRow ? selectedRow.accessLevel : "";
-  const id = selectedRow ? selectedRow.id : "";
+const Weight = ({ onClose, id }) => {
   const theme = useTheme();
+  //TODO: replace hardcoded values with db
+    const name = "Oliver";
+
+    const handleCancel = () => {
+    onClose();
+  };
 
   return (
     <Box
@@ -30,53 +32,33 @@ const EditUser = ({ onClose, selectedRow }) => {
       justifyContent={"space-evenly"}
     >
       <Typography variant={"h3"} fontWeight={"700"} paddingBottom={"5px"}>
-        Edit User
+        Add Weight
       </Typography>
-      <Box>
-        <Typography variant={"h5"} fontWeight={"700"}>
-          Name:
-        </Typography>
-      </Box>
-      <Box>
-        <TextField
-          fullWidth
-          defaultValue={name}
-          size={"small"}
-          sx={{
-            backgroundColor: theme.palette.secondary.main,
-          }}
-        />
-      </Box>
-      <Box>
-        <Typography variant={"h5"} fontWeight={"700"}>
-          Job:
-        </Typography>
-      </Box>
-      <Box>
-        <TextField
-          fullWidth
-          size={"small"}
-          defaultValue={job}
-          sx={{
-            backgroundColor: theme.palette.secondary.main,
-          }}
-        />
-      </Box>
-      <Box>
-        <Typography variant={"h5"} fontWeight={"700"}>
-          Access Level:
-        </Typography>
-      </Box>
+      <Typography variant={"h5"} fontWeight={"700"}>
+        Place {name} on the scales
+      </Typography>
       <Box>
         <Select
           fullWidth="true"
           sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
         >
-          <MenuItem value={"Volunteer"}>Volunteer</MenuItem>
-          <MenuItem value={"Vet"}>Vet</MenuItem>
-          <MenuItem value={"Admin"}>Admin</MenuItem>
+          <MenuItem value={"a"}>a</MenuItem>
+          <MenuItem value={"b"}>b</MenuItem>
+          <MenuItem value={"c"}>c</MenuItem>
         </Select>
       </Box>
+      <Box>
+        <TextField
+          fullWidth
+          size={"large"}
+          sx={{
+            backgroundColor: theme.palette.secondary.main,
+          }}
+        />
+      </Box>
+      <Typography variant={"h6"} fontWeight={"600"} style={{textAlign: 'center'}}>
+        18/03/13
+    </Typography>
       <Box
         display={"flex"}
         justifyContent={"space-between"}
@@ -87,14 +69,13 @@ const EditUser = ({ onClose, selectedRow }) => {
           sx={{
             fontWeight: "700",
             fontSize: "0.8rem",
-            backgroundColor: theme.palette.error.main,
             "&:hover": {
               backgroundColor: theme.palette.primary.main,
             },
           }}
-        //   TODO: add onClick to delete user
+          onClick={handleCancel}
         >
-          DELETE
+          CANCEL
         </Button>
         <Button
           variant={"contained"}
@@ -105,13 +86,13 @@ const EditUser = ({ onClose, selectedRow }) => {
               backgroundColor: theme.palette.primary.main,
             },
           }}
-          // TODO: add onClick to update user
+          // TODO: add onClick to update db
         >
-          SAVE
+          CREATE
         </Button>
       </Box>
     </Box>
   );
 };
 
-export default EditUser;
+export default Weight;

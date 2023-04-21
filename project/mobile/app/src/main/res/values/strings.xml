@@ -10,4 +10,21 @@
     <string name="title_statist">Statist</string>
     <string name="title_message">Message</string>
     <string name="title_profile">Profile</string>
+    <string name="kg">kg</string>
+    <string name="name">name</string>
+    <string name="last_check_in">last check-in</string>
+    <string name="flagged">flagged</string>
+    <string name="alert">alert</string>
+    <string name="new_dog">New Dog</string>
+    <string name="name_enter">name:</string>
+    <string name="breed_enter">breed:</string>
+    <string name="location_enter">location:</string>
+    <string name="create">CREATE</string>
+    <string name="cancel">CANCEL</string>
+
+    <string-array name="centers_list">
+        <item>All Centers</item>
+        <item>Manukau</item>
+        <item>Papakura</item>
+    </string-array>
 </resources>

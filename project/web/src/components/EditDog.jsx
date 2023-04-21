@@ -9,12 +9,11 @@ import {
 } from "@mui/material";
 import { customColor } from "../theme.js";
 
-const EditUser = ({ onClose, selectedRow }) => {
-  const name = selectedRow ? selectedRow.name : "";
-  const job = selectedRow ? selectedRow.job : "";
-  const accessLevel = selectedRow ? selectedRow.accessLevel : "";
-  const id = selectedRow ? selectedRow.id : "";
+const EditDog = ({ onClose, id }) => {
   const theme = useTheme();
+  //TODO: replace hardcoded values with db
+    const name = "name";
+    const breed = "breed";
 
   return (
     <Box
@@ -30,7 +29,7 @@ const EditUser = ({ onClose, selectedRow }) => {
       justifyContent={"space-evenly"}
     >
       <Typography variant={"h3"} fontWeight={"700"} paddingBottom={"5px"}>
-        Edit User
+        Edit Dog
       </Typography>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
@@ -49,14 +48,14 @@ const EditUser = ({ onClose, selectedRow }) => {
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Job:
+          Breed:
         </Typography>
       </Box>
       <Box>
         <TextField
           fullWidth
           size={"small"}
-          defaultValue={job}
+          defaultValue={breed}
           sx={{
             backgroundColor: theme.palette.secondary.main,
           }}
@@ -64,7 +63,7 @@ const EditUser = ({ onClose, selectedRow }) => {
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Access Level:
+          Location:
         </Typography>
       </Box>
       <Box>
@@ -72,9 +71,9 @@ const EditUser = ({ onClose, selectedRow }) => {
           fullWidth="true"
           sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
         >
-          <MenuItem value={"Volunteer"}>Volunteer</MenuItem>
-          <MenuItem value={"Vet"}>Vet</MenuItem>
-          <MenuItem value={"Admin"}>Admin</MenuItem>
+          <MenuItem value={"a"}>a</MenuItem>
+          <MenuItem value={"b"}>b</MenuItem>
+          <MenuItem value={"c"}>c</MenuItem>
         </Select>
       </Box>
       <Box
@@ -92,7 +91,7 @@ const EditUser = ({ onClose, selectedRow }) => {
               backgroundColor: theme.palette.primary.main,
             },
           }}
-        //   TODO: add onClick to delete user
+        //   TODO: add onClick to delete dog
         >
           DELETE
         </Button>
@@ -105,7 +104,7 @@ const EditUser = ({ onClose, selectedRow }) => {
               backgroundColor: theme.palette.primary.main,
             },
           }}
-          // TODO: add onClick to update user
+          // TODO: add onClick to update dog
         >
           SAVE
         </Button>
@@ -114,4 +113,4 @@ const EditUser = ({ onClose, selectedRow }) => {
   );
 };
 
-export default EditUser;
+export default EditDog;
