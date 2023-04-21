@@ -1,0 +1,29 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/layout_margin_top"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/chat_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10:01 14/03/2022"
+        android:layout_gravity="end"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/chat_content"
+        android:layout_width="230dp"
+        android:padding="8dp"
+        android:layout_gravity="end"
+        android:textColor="@color/black"
+        android:background="@drawable/shadow"
+        android:layout_height="wrap_content"
+        android:text="Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi opti"
+        />
+
+</LinearLayout>

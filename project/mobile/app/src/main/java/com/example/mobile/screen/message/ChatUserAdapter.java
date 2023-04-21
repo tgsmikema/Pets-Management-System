@@ -1,6 +1,7 @@
 package com.example.mobile.screen.message;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import java.util.List;
 public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserViewHolder> {
 
     private List<User> chatUserList;
+    private OnItemClickListener listener;
 
     public ChatUserAdapter(List<User> chatUserList) {
         this.chatUserList = chatUserList;
@@ -34,10 +36,22 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserViewHolder> {
          User user = chatUserList.get(position);
          holder.setUserName(user.getUserName());
          holder.setUserType(user.getUserType());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onItemClick(user);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return chatUserList.size();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 }

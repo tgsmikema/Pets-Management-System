@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobile.databinding.ChatUserItemBinding;
 
-public class ChatUserViewHolder extends RecyclerView.ViewHolder {
+public class ChatUserViewHolder extends RecyclerView.ViewHolder{
 
     private ChatUserItemBinding binding;
 
