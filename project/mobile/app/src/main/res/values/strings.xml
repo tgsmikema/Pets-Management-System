@@ -21,10 +21,24 @@
     <string name="location_enter">location:</string>
     <string name="create">CREATE</string>
     <string name="cancel">CANCEL</string>
+    <string name="change_password">Change Password</string>
+    <string name="log_out">Log out</string>
+    <string name="new_user">New User</string>
+    <string name="job_enter">job:</string>
+    <string name="access_level">Access Level:</string>
+    <string name="delete">DELETE</string>
+    <string name="save">SAVE</string>
+    <string name="edit_user">Edit User</string>
 
     <string-array name="centers_list">
         <item>All Centers</item>
         <item>Manukau</item>
         <item>Papakura</item>
+    </string-array>
+
+    <string-array name="access_level_list">
+        <item>Admin</item>
+        <item>Vet</item>
+        <item>Volunteer</item>
     </string-array>
 </resources>

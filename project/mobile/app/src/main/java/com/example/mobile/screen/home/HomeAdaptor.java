@@ -1,4 +1,4 @@
-package com.example.mobile.adaptor;
+package com.example.mobile.screen.home;
 
 import android.view.LayoutInflater;
 import android.view.View;

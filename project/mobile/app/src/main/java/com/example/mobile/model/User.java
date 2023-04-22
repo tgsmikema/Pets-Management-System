@@ -9,11 +9,21 @@ public class User {
     private String lastName;
     private int centreId;
     private String token;
+    private String job;
 
     public User(){
 
     }
 
+    public User(String userName, String job, String userType) {
+        this.userName = userName;
+        this.job = job;
+        this.userType = userType;
+    }
+
+    public String getJob() {
+        return job;
+    }
     public User(String userName, String userType){
          this.userName = userName;
          this.userType = userType;
