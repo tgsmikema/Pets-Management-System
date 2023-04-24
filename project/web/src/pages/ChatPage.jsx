@@ -7,6 +7,7 @@ import {
   InputAdornment,
   Stack,
   IconButton,
+  useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import moment from "moment";
@@ -29,6 +30,8 @@ const ChatPage = () => {
   const { user } = useAuth();
 
   const [selectUser, setSelectUser] = useState(-1);
+
+  const theme = useTheme();
 
   const useList = [
     {
@@ -186,7 +189,14 @@ const ChatPage = () => {
   ];
 
   return (
-    <Box height={"100%"} width={"100%"} display={"flex"}>
+    <Box
+      height={"84%"}
+      width={"100%"}
+      display={"flex"}
+      sx={{
+        backgroundColor: theme.palette.secondary.main,
+      }}
+    >
       {/* left sidebar */}
       <Box
         height={"100%"}

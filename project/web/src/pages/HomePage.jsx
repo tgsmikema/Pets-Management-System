@@ -1,4 +1,12 @@
-import { Box, Menu, MenuItem, Button, Typography, Dialog } from "@mui/material";
+import {
+  Box,
+  Menu,
+  MenuItem,
+  Button,
+  Typography,
+  Dialog,
+  useTheme,
+} from "@mui/material";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -21,7 +29,6 @@ const StyledButton = styled(Button)({
 
 //control row click
 //TODO: route to dog page
-
 
 function ViewButton(params) {
   const id = params.params;
@@ -149,14 +156,13 @@ const columns = [
     field: "view",
     headerName: " ",
     flex: 1,
-    renderCell: (params) => (
-      <ViewButton params={params.row.id} />
-    ),
+    renderCell: (params) => <ViewButton params={params.row.id} />,
   },
 ];
 
 const HomePage = () => {
   const { setSelected } = useUtilProvider();
+  const theme = useTheme();
   useEffect(() => {
     setSelected("Home");
   });
@@ -187,6 +193,9 @@ const HomePage = () => {
       display={"flex"}
       flexDirection={"column"}
       alignItems={"center"}
+      sx={{
+        backgroundColor: theme.palette.secondary.main,
+      }}
     >
       <Box
         sx={{ display: "flex", justifyContent: "space-between", width: "95%" }}

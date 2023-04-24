@@ -6,6 +6,7 @@ import {
   MenuItem,
   Stack,
   IconButton,
+  useTheme,
 } from "@mui/material";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
 import { useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import PieChart from "../components/PieChart.jsx";
 import LineChart from "../components/LineChart.jsx";
 
 const StatsPage = () => {
+  const theme = useTheme();
   const { setSelected } = useUtilProvider();
   useEffect(() => {
     setSelected("Stats");
@@ -123,6 +125,9 @@ const StatsPage = () => {
       display={"flex"}
       flexDirection={"column"}
       alignItems={"center"}
+      sx={{
+        backgroundColor: theme.palette.secondary.main,
+      }}
     >
       <Box width={"95%"} p={1.3}>
         <Button

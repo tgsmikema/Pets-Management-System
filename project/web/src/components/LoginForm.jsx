@@ -5,10 +5,11 @@ import { useState } from "react";
 
 const LoginForm = () => {
   const theme = useTheme();
-  const { login, setUser } = useAuth();
+  const { login, setUser, loading } = useAuth();
   const [userName, setName] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [messageColor, setMessageColor] = useState(theme.palette.error.main);
 
   return (
     <Box
@@ -57,7 +58,7 @@ const LoginForm = () => {
       </Box>
       <Box display={"flex"} justifyContent={"space-between"}>
         <Box>
-          <Typography variant={"body2"} color={theme.palette.error.main}>
+          <Typography variant={"body2"} color={messageColor}>
             {message}
           </Typography>
         </Box>
@@ -74,13 +75,20 @@ const LoginForm = () => {
             onClick={async () => {
               if (userName === "") {
                 setMessage("Please enter your username");
+                setMessageColor(theme.palette.error.main);
               } else if (password === "") {
                 setMessage("Please enter your password");
+                setMessageColor(theme.palette.error.main);
               } else {
+                setMessage("Loading...");
+                setMessageColor("black");
                 try {
                   const res = await login(userName, password);
                   setUser(res.data);
+                  setMessageColor("green");
+                  setMessage("Login Successfully");
                 } catch (e) {
+                  setMessageColor(theme.palette.error.main);
                   setMessage("Username or password is incorrect");
                 }
               }
