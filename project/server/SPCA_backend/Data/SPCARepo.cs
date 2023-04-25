@@ -491,7 +491,7 @@ namespace SPCA_backend.Data
             List<Dog> selectedDogs = new List<Dog>();
             List<Weight> weights = new List<Weight>();
 
-            if (centerId == -1)
+            if (centerId == 0)
             {
                 selectedDogs = _dbContext.Dogs.ToList().ToList();
                 // return weights from all centers.
