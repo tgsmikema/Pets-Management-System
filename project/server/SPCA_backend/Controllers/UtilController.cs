@@ -109,5 +109,17 @@ namespace SPCA_backend.Controllers
             return Ok(statsOutDTO);
         }
 
+
+
+
+        [HttpPost("weeklyStats")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<IEnumerable<StatsOutDTO>> getWeeklyStats(StatsInDTO statsInDTO)
+        {
+            IEnumerable<StatsOutDTO> statsOutDTOList = _repository.getWeeklyStats(statsInDTO);
+            return Ok(statsOutDTOList);
+        }
+
     }
 }

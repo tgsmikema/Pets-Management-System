@@ -486,62 +486,29 @@ namespace SPCA_backend.Data
         {
             string startOfTheWeekMondayTimeStamp = convertDateTimeToTimestamp(DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday));
             int startOfWeek = int.Parse(startOfTheWeekMondayTimeStamp);
+            int rightNow = (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
-
-            List<Dog> selectedDogs = new List<Dog>();
-            List<Weight> weights = new List<Weight>();
-
-            if (centerId == 0)
-            {
-                selectedDogs = _dbContext.Dogs.ToList().ToList();
-                // return weights from all centers.
-                IEnumerable<Weight> allWeightsTemp = _dbContext.Weights.ToList(); //.Where(e => int.Parse(e.TimeStamp) >= startOfWeek);
-                foreach (Weight w in allWeightsTemp)
-                {
-                    if (int.Parse(w.TimeStamp) >= startOfWeek)
-                    {
-                        weights.Add(w);
-                    }
-                }
-            } else
-            {
-                IEnumerable<Dog> allDogsFromCurrentCenter = _dbContext.Dogs.Where(e => e.CentreId == centerId);
-                selectedDogs = allDogsFromCurrentCenter.ToList();
-                List<int> allDogIdFromCurrentCenter = new List<int>();
-                foreach (Dog dog in allDogsFromCurrentCenter)
-                {
-                    allDogIdFromCurrentCenter.Add(dog.Id);
-                }
-                IEnumerable<Weight> allWeightsTemp = _dbContext.Weights.ToList();
-                List<Weight> weightsTemp = new List<Weight>();
-                foreach (Weight w in allWeightsTemp)
-                {
-                    if (int.Parse(w.TimeStamp) >= startOfWeek)
-                    {
-                        weightsTemp.Add(w);
-                    }
-                }
-                weights = weightsTemp.Where(e => allDogIdFromCurrentCenter.Contains(e.DogId)).ToList();
-            }
-
-            HashSet<int> dogIdWeighted = new HashSet<int>();
-
-            foreach(Weight w in weights)
-            {
-                dogIdWeighted.Add(w.DogId);
-            }
-
-            int weighted = dogIdWeighted.Count();
-            int unweighted = selectedDogs.Count() - weighted;
-
-            StatsOutDTO statsOutDTO = new StatsOutDTO
-            {
-                TimeStamp = "0",
-                NoOfDogsWeighted = weighted,
-                NoOfDogsUnweighted = unweighted
-            };
-
+            StatsOutDTO statsOutDTO = getStatsFromTimestampRangeAndCenterId(startOfWeek, rightNow, centerId);
             return statsOutDTO;
+
+        }
+
+
+        public IEnumerable<StatsOutDTO> getWeeklyStats(StatsInDTO statsInDTO)
+        {
+            int minTimestamp = int.Parse(statsInDTO.minTimestamp);
+            int maxTimestamp = int.Parse(statsInDTO.maxTimestamp);
+            int centerId = statsInDTO.centerId;
+
+            List<StatsOutDTO> list = new List<StatsOutDTO>();
+
+            for (int i = minTimestamp; i < maxTimestamp; i+= 86400)
+            {
+                list.Add(getStatsFromTimestampRangeAndCenterId(i, i + 86400, centerId));
+            }
+
+            return list.AsEnumerable();
+
         }
 
         // ------------------------------------------------------------------Message------------------------------------------------------------------
@@ -567,6 +534,65 @@ namespace SPCA_backend.Data
 
 
         //---------------------------------------------------------------------Helper Methods----------------------------------------------------------------
+
+        private StatsOutDTO getStatsFromTimestampRangeAndCenterId (int minTimestamp, int maxTimestamp, int centerId)
+        {
+            List<Dog> selectedDogs = new List<Dog>();
+            List<Weight> weights = new List<Weight>();
+
+            if (centerId == 0)
+            {
+                selectedDogs = _dbContext.Dogs.ToList().ToList();
+                // return weights from all centers.
+                IEnumerable<Weight> allWeightsTemp = _dbContext.Weights.ToList(); //.Where(e => int.Parse(e.TimeStamp) >= startOfWeek);
+                foreach (Weight w in allWeightsTemp)
+                {
+                    if (int.Parse(w.TimeStamp) >= minTimestamp && int.Parse(w.TimeStamp) <= maxTimestamp)
+                    {
+                        weights.Add(w);
+                    }
+                }
+            }
+            else
+            {
+                IEnumerable<Dog> allDogsFromCurrentCenter = _dbContext.Dogs.Where(e => e.CentreId == centerId);
+                selectedDogs = allDogsFromCurrentCenter.ToList();
+                List<int> allDogIdFromCurrentCenter = new List<int>();
+                foreach (Dog dog in allDogsFromCurrentCenter)
+                {
+                    allDogIdFromCurrentCenter.Add(dog.Id);
+                }
+                IEnumerable<Weight> allWeightsTemp = _dbContext.Weights.ToList();
+                List<Weight> weightsTemp = new List<Weight>();
+                foreach (Weight w in allWeightsTemp)
+                {
+                    if (int.Parse(w.TimeStamp) >= minTimestamp && int.Parse(w.TimeStamp) <= maxTimestamp)
+                    {
+                        weightsTemp.Add(w);
+                    }
+                }
+                weights = weightsTemp.Where(e => allDogIdFromCurrentCenter.Contains(e.DogId)).ToList();
+            }
+
+            HashSet<int> dogIdWeighted = new HashSet<int>();
+
+            foreach (Weight w in weights)
+            {
+                dogIdWeighted.Add(w.DogId);
+            }
+
+            int weighted = dogIdWeighted.Count();
+            int unweighted = selectedDogs.Count() - weighted;
+
+            StatsOutDTO statsOutDTO = new StatsOutDTO
+            {
+                TimeStamp = Convert.ToString(minTimestamp),
+                NoOfDogsWeighted = weighted,
+                NoOfDogsUnweighted = unweighted
+            };
+
+            return statsOutDTO;
+        }
 
         private string convertDateTimeToTimestamp(DateTime datetime)
         {
