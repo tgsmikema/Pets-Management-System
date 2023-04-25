@@ -588,6 +588,44 @@ namespace SPCA_backend.Data
             return usersOut.AsEnumerable();
         }
 
+        public IEnumerable<UserOutDto> getNeverMessagedPeopleList(int currentUserId)
+        {
+            HashSet<int> peopleId = new HashSet<int>();
+            IEnumerable<Message> allRelatedMessages = _dbContext.Messages.Where(e => (e.ToUserId == currentUserId || e.FromUserId == currentUserId));
+
+            foreach (Message m in allRelatedMessages)
+            {
+                peopleId.Add(m.FromUserId);
+                peopleId.Add(m.ToUserId);
+            }
+
+            peopleId.Remove(currentUserId);
+
+            IEnumerable<User> allUsers = _dbContext.Users.Where(u => u.Id != currentUserId);
+            List<UserOutDto> usersOut = new List<UserOutDto>();
+
+            foreach (User u in allUsers)
+            {
+                if (!peopleId.Contains(u.Id))
+                {
+                    UserOutDto uOut = new UserOutDto
+                    {
+                        Id = u.Id,
+                        UserName = u.UserName,
+                        UserType = u.UserType,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName,
+                        Email = u.Email,
+                        CentreId = u.CentreId,
+                        Token = "hidden"
+                    };
+                    usersOut.Add(uOut);
+                }
+            }
+
+            return usersOut.AsEnumerable();
+        }
+
 
         //---------------------------------------------------------------------Helper Methods----------------------------------------------------------------
 

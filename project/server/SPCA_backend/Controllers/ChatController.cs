@@ -44,5 +44,14 @@ namespace SPCA_backend.Controllers
             return Ok(allPeople);
         }
 
+        [HttpGet("getNeverMessagedPeopleList")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<IEnumerable<UserOutDto>> getNeverMessagedPeopleList(int currentUserId)
+        {
+            IEnumerable<UserOutDto> allPeople = _repository.getNeverMessagedPeopleList(currentUserId);
+            return Ok(allPeople);
+        }
+
     }
 }

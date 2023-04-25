@@ -47,7 +47,7 @@ namespace SPCA_backend.Data
         //-------------------------Message Methods--------------------------
 
         public Task AddNewMessage(MessageInDto messageInDto);
-
         public IEnumerable<UserOutDto> getAlreadyMessagedPeopleList(int currentUserId);
+        public IEnumerable<UserOutDto> getNeverMessagedPeopleList(int currentUserId);
     }
 }
