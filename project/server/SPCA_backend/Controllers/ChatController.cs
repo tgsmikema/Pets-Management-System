@@ -35,5 +35,14 @@ namespace SPCA_backend.Controllers
             return Ok("Message Sent.");
         }
 
+        [HttpGet("getAlreadyMessagedPeopleList")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<IEnumerable<UserOutDto>> getAlreadyMessagedPeopleList(int currentUserId)
+        {
+            IEnumerable<UserOutDto> allPeople = _repository.getAlreadyMessagedPeopleList(currentUserId);
+            return Ok(allPeople);
+        }
+
     }
 }
