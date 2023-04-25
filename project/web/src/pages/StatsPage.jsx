@@ -17,22 +17,24 @@ import PieChart from "../components/PieChart.jsx";
 import LineChart from "../components/LineChart.jsx";
 import { useWebService } from "../providers/WebServiceProvider.jsx";
 import { useAuth } from "../providers/AuthProvider.jsx";
-import ProcessLoading from "../components/ProcessLoading.jsx";
 
 const StatsPage = () => {
   const theme = useTheme();
   const { setSelected } = useUtilProvider();
   const { user } = useAuth();
   const { allCentres } = useWebService();
-  const [loading, setLoading] = useState(false);
-  const [value, setValue] = useState("");
+  const [centreValue, setCentreValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   useEffect(() => {
     setSelected("Stats");
-    setValue(allCentres[0]);
+    setCentreValue(allCentres[0]);
   }, [user]);
+
+  const fetchAllCentreData = useCallback(async () => {
+    // await data
+  }, [centreValue]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -134,184 +136,169 @@ const StatsPage = () => {
         backgroundColor: theme.palette.secondary.main,
       }}
     >
-      {loading ? (
-        <ProcessLoading />
-      ) : (
-        <>
-          <Box width={"95%"} p={1.3}>
-            <Button
-              variant={"text"}
-              onClick={handleClick}
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              endIcon={
-                <KeyboardArrowDownIcon
-                  sx={{
-                    color: "#000",
-                  }}
-                />
-              }
-            >
-              <Typography variant={"h4"} color={"#000"} fontWeight={"650"}>
-                {value}
-              </Typography>
-            </Button>
+      <Box width={"95%"} p={1.3}>
+        <Button
+          variant={"text"}
+          onClick={handleClick}
+          aria-controls={open ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          endIcon={
+            <KeyboardArrowDownIcon
+              sx={{
+                color: "#000",
+              }}
+            />
+          }
+        >
+          <Typography variant={"h4"} color={"#000"} fontWeight={"650"}>
+            {centreValue}
+          </Typography>
+        </Button>
 
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          {allCentres.map((it) => (
+            <MenuItem
+              value={it}
+              onClick={() => {
+                handleClose();
+                setCentreValue(it);
               }}
             >
-              {allCentres.map((it) => (
-                <MenuItem
-                  value={it}
-                  onClick={() => {
-                    handleClose();
-                    setValue(it);
-                  }}
-                >
-                  {it}
-                </MenuItem>
-              ))}
-            </Menu>
+              {it}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+
+      <Box
+        height={"88%"}
+        width={"95%"}
+        display={"flex"}
+        justifyContent={"space-between"}
+      >
+        <Box
+          height={"100%"}
+          width={"25%"}
+          display={"flex"}
+          flexDirection={"column"}
+          alignItems={"center"}
+        >
+          <Box mb={1.5}>
+            <Typography
+              variant={"body1"}
+              fontWeight={"550"}
+              fontSize={"1rem"}
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"center"}
+            >
+              This Week
+            </Typography>
           </Box>
 
           <Box
-            height={"88%"}
-            width={"95%"}
+            height={"85%"}
+            width={"100%"}
             display={"flex"}
-            justifyContent={"space-between"}
+            flexDirection={"column"}
+            sx={{
+              backgroundColor: "#fff",
+              borderRadius: "13px",
+              boxShadow: 3,
+            }}
           >
             <Box
-              height={"100%"}
-              width={"25%"}
+              height={"45%"}
               display={"flex"}
               flexDirection={"column"}
-              alignItems={"center"}
+              justifyContent={"space-evenly"}
             >
-              <Box mb={1.5}>
-                <Typography
-                  variant={"body1"}
-                  fontWeight={"550"}
-                  fontSize={"1rem"}
-                  // textAlign={"center"}
-                  display={"flex"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                >
-                  This Week
-                </Typography>
-              </Box>
-
-              <Box
-                height={"85%"}
-                width={"100%"}
-                display={"flex"}
-                flexDirection={"column"}
-                sx={{
-                  backgroundColor: "#fff",
-                  borderRadius: "13px",
-                  boxShadow: 3,
-                }}
-              >
-                <Box
-                  height={"45%"}
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent={"space-evenly"}
-                >
-                  <Typography variant={"body1"} textAlign={"center"}>
-                    Weighed
-                  </Typography>
-                  <Typography
-                    variant={"h5"}
-                    fontWeight={600}
-                    textAlign={"center"}
-                  >
-                    152
-                  </Typography>
-                  <Typography variant={"body1"} textAlign={"center"}>
-                    Unweighed
-                  </Typography>
-                  <Typography
-                    variant={"h5"}
-                    fontWeight={600}
-                    textAlign={"center"}
-                  >
-                    45
-                  </Typography>
-                </Box>
-                <Box height={"55%"} width={"100%"}>
-                  {/*pie chart*/}
-                  <PieChart data={data} />
-                </Box>
-              </Box>
+              <Typography variant={"body1"} textAlign={"center"}>
+                Weighed
+              </Typography>
+              <Typography variant={"h5"} fontWeight={600} textAlign={"center"}>
+                152
+              </Typography>
+              <Typography variant={"body1"} textAlign={"center"}>
+                Unweighed
+              </Typography>
+              <Typography variant={"h5"} fontWeight={600} textAlign={"center"}>
+                45
+              </Typography>
             </Box>
-
-            <Box height={"100%"} width={"72%"}>
-              <Box display={"flex"} justifyContent={"space-between"}>
-                <Stack direction={"row"} spacing={1}>
-                  <IconButton>
-                    <KeyboardArrowLeftIcon />
-                  </IconButton>
-                  <Typography
-                    variant={"body2"}
-                    display={"flex"}
-                    alignItems={"center"}
-                  >
-                    4.17 - 4.25
-                  </Typography>
-                  <IconButton>
-                    <KeyboardArrowRightIcon />
-                  </IconButton>
-                </Stack>
-                <Stack spacing={2} direction={"row"}>
-                  <Button
-                    variant={"contained"}
-                    size={"small"}
-                    sx={{
-                      height: "80%",
-                      "&:hover": {
-                        color: "#fff",
-                      },
-                    }}
-                  >
-                    month
-                  </Button>
-                  <Button
-                    variant={"contained"}
-                    size={"small"}
-                    sx={{
-                      height: "80%",
-                      "&:hover": {
-                        color: "#fff",
-                      },
-                    }}
-                  >
-                    week
-                  </Button>
-                </Stack>
-              </Box>
-              <Box
-                height={"85%"}
-                width={"100%"}
-                sx={{
-                  backgroundColor: "#fff",
-                  borderRadius: "13px",
-                  boxShadow: 3,
-                }}
-              >
-                <LineChart data={dataForLine} />
-              </Box>
+            <Box height={"55%"} width={"100%"}>
+              {/*pie chart*/}
+              <PieChart data={data} />
             </Box>
           </Box>
-        </>
-      )}
+        </Box>
+
+        <Box height={"100%"} width={"72%"}>
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Stack direction={"row"} spacing={1}>
+              <IconButton>
+                <KeyboardArrowLeftIcon />
+              </IconButton>
+              <Typography
+                variant={"body2"}
+                display={"flex"}
+                alignItems={"center"}
+              >
+                4.17 - 4.25
+              </Typography>
+              <IconButton>
+                <KeyboardArrowRightIcon />
+              </IconButton>
+            </Stack>
+            <Stack spacing={2} direction={"row"}>
+              <Button
+                variant={"contained"}
+                size={"small"}
+                sx={{
+                  height: "80%",
+                  "&:hover": {
+                    color: "#fff",
+                  },
+                }}
+              >
+                month
+              </Button>
+              <Button
+                variant={"contained"}
+                size={"small"}
+                sx={{
+                  height: "80%",
+                  "&:hover": {
+                    color: "#fff",
+                  },
+                }}
+              >
+                week
+              </Button>
+            </Stack>
+          </Box>
+          <Box
+            height={"85%"}
+            width={"100%"}
+            sx={{
+              backgroundColor: "#fff",
+              borderRadius: "13px",
+              boxShadow: 3,
+            }}
+          >
+            <LineChart data={dataForLine} />
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 };

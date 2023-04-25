@@ -166,11 +166,11 @@ const HomePage = () => {
   const { user } = useAuth();
   const { setSelected } = useUtilProvider();
   const { allCentres } = useWebService();
-  const [value, setValue] = useState("");
+  const [centreValue, setCentreValue] = useState("");
   const theme = useTheme();
   useEffect(() => {
     setSelected("Home");
-    setValue(allCentres[0]);
+    setCentreValue(allCentres[0]);
   }, []);
 
   //control centres drop down
@@ -217,7 +217,7 @@ const HomePage = () => {
         >
           {/* TODO: replace hardcoded string with db */}
           <Typography variant={"h4"} fontWeight={"600"} color={"#000"}>
-            {value}
+            {centreValue}
           </Typography>
         </StyledButton>
         <Menu
@@ -235,7 +235,7 @@ const HomePage = () => {
               key={index}
               onClick={() => {
                 handleClose();
-                setValue(it);
+                setCentreValue(it);
               }}
             >
               {it}
