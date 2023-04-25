@@ -520,9 +520,9 @@ namespace SPCA_backend.Data
 
             List<StatsOutDTO> list = new List<StatsOutDTO>();
 
-            for (int i = minTimestamp; i < maxTimestamp; i += 259200) // a point every 3 days
+            for (int i = minTimestamp; i < maxTimestamp; i += 345600) // a point every 4 days
             {
-                list.Add(getStatsFromTimestampRangeAndCenterId(i, i + 259200, centerId));
+                list.Add(getStatsFromTimestampRangeAndCenterId(i, i + 345600, centerId));
             }
 
             return list.AsEnumerable();
