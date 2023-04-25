@@ -83,8 +83,7 @@ const LoginForm = () => {
                 setMessage("Loading...");
                 setMessageColor("black");
                 try {
-                  const res = await login(userName, password);
-                  setUser(res.data);
+                  await login(userName, password);
                   setMessageColor("green");
                   setMessage("Login Successfully");
                 } catch (e) {

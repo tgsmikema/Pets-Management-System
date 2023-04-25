@@ -7,6 +7,7 @@ import AddIcon from "@mui/icons-material/Add";
 import AddUser from "../components/AddUser.jsx";
 import EditUser from "../components/EditUser.jsx";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useWebService } from "../providers/WebServiceProvider.jsx";
 
 const styles = {
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -72,6 +73,7 @@ const rows = [
 
 const ProfilePage = () => {
   const theme = useTheme();
+  const { setAllCentres } = useWebService();
   const columns = [
     { field: "id", headerName: "id", flex: 1 },
     { field: "name", headerName: "name", flex: 1.5 },
@@ -162,6 +164,7 @@ const ProfilePage = () => {
             variant={"contained"}
             onClick={() => {
               logout();
+              setAllCentres([]);
               navigate("/");
             }}
           >

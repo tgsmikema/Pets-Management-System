@@ -18,6 +18,8 @@ import ErrorIcon from "@mui/icons-material/Error";
 import AddIcon from "@mui/icons-material/Add";
 import AddDog from "../components/AddDog.jsx";
 import { useNavigate } from "react-router-dom";
+import { useWebService } from "../providers/WebServiceProvider.jsx";
+import { useAuth } from "../providers/AuthProvider.jsx";
 
 const StyledButton = styled(Button)({
   padding: "2% 2%",
@@ -161,11 +163,15 @@ const columns = [
 ];
 
 const HomePage = () => {
+  const { user } = useAuth();
   const { setSelected } = useUtilProvider();
+  const { allCentres } = useWebService();
+  const [value, setValue] = useState("");
   const theme = useTheme();
   useEffect(() => {
     setSelected("Home");
-  });
+    setValue(allCentres[0]);
+  }, []);
 
   //control centres drop down
   const [anchorEl, setAnchorEl] = useState(null);
@@ -211,7 +217,7 @@ const HomePage = () => {
         >
           {/* TODO: replace hardcoded string with db */}
           <Typography variant={"h4"} fontWeight={"600"} color={"#000"}>
-            All Centres
+            {value}
           </Typography>
         </StyledButton>
         <Menu
@@ -223,10 +229,18 @@ const HomePage = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          {/* TODO: replace hardcoded string with db */}
-          <MenuItem onClick={handleClose}>Centre 1</MenuItem>
-          <MenuItem onClick={handleClose}>Centre 2</MenuItem>
-          <MenuItem onClick={handleClose}>Centre 3</MenuItem>
+          {/* already replace hardcoded string with db */}
+          {allCentres.map((it, index) => (
+            <MenuItem
+              key={index}
+              onClick={() => {
+                handleClose();
+                setValue(it);
+              }}
+            >
+              {it}
+            </MenuItem>
+          ))}
         </Menu>
 
         {/* Add dog button */}

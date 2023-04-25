@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import axios from "axios";
 import useLocalStorageProvider from "./useLocalStorageProvider.jsx";
 import { constants } from "../constants.js";
@@ -21,9 +27,8 @@ export function AuthProvider({ children }) {
           Authorization: "Basic " + btoa(`${userName}:${passWord}`),
         },
       });
-      console.log(res);
       setLoading(false);
-      return res;
+      setUser(res.data);
     },
     [user]
   );

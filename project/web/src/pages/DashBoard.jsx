@@ -15,7 +15,13 @@ const DashBoard = () => {
   const { user } = useAuth();
 
   return (
-    <Box height={"100vh"} width={"100vw"}>
+    <Box
+      height={"100vh"}
+      width={"100vw"}
+      sx={{
+        overflowX: "hidden",
+      }}
+    >
       <TopBar isLogin={false} />
       <Routes>
         <Route index element={<Navigate to={"/home"} />} />
