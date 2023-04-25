@@ -511,6 +511,23 @@ namespace SPCA_backend.Data
 
         }
 
+
+        public IEnumerable<StatsOutDTO> getMonthlyStats(StatsInDTO statsInDTO)
+        {
+            int minTimestamp = int.Parse(statsInDTO.minTimestamp);
+            int maxTimestamp = int.Parse(statsInDTO.maxTimestamp);
+            int centerId = statsInDTO.centerId;
+
+            List<StatsOutDTO> list = new List<StatsOutDTO>();
+
+            for (int i = minTimestamp; i < maxTimestamp; i += 259200) // a point every 3 days
+            {
+                list.Add(getStatsFromTimestampRangeAndCenterId(i, i + 259200, centerId));
+            }
+
+            return list.AsEnumerable();
+        }
+
         // ------------------------------------------------------------------Message------------------------------------------------------------------
 
 

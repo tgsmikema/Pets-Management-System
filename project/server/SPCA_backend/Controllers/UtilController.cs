@@ -121,5 +121,16 @@ namespace SPCA_backend.Controllers
             return Ok(statsOutDTOList);
         }
 
+
+
+        [HttpPost("monthlyStatus")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<IEnumerable<StatsOutDTO>> getMonthlyStatus(StatsInDTO statsInDTO)
+        {
+            IEnumerable<StatsOutDTO> statsOutDTOList = _repository.getMonthlyStats(statsInDTO);
+            return Ok(statsOutDTOList);
+        }
+
     }
 }
