@@ -482,7 +482,69 @@ namespace SPCA_backend.Data
             return listOfCentres;
         }
 
-        // ------------------------------------------------------------------Dog------------------------------------------------------------------
+        public StatsOutDTO getCurrentWeekStats(int centerId)
+        {
+            string startOfTheWeekMondayTimeStamp = convertDateTimeToTimestamp(DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday));
+            int startOfWeek = int.Parse(startOfTheWeekMondayTimeStamp);
+
+
+            List<Dog> selectedDogs = new List<Dog>();
+            List<Weight> weights = new List<Weight>();
+
+            if (centerId == -1)
+            {
+                selectedDogs = _dbContext.Dogs.ToList().ToList();
+                // return weights from all centers.
+                IEnumerable<Weight> allWeightsTemp = _dbContext.Weights.ToList(); //.Where(e => int.Parse(e.TimeStamp) >= startOfWeek);
+                foreach (Weight w in allWeightsTemp)
+                {
+                    if (int.Parse(w.TimeStamp) >= startOfWeek)
+                    {
+                        weights.Add(w);
+                    }
+                }
+            } else
+            {
+                IEnumerable<Dog> allDogsFromCurrentCenter = _dbContext.Dogs.Where(e => e.CentreId == centerId);
+                selectedDogs = allDogsFromCurrentCenter.ToList();
+                List<int> allDogIdFromCurrentCenter = new List<int>();
+                foreach (Dog dog in allDogsFromCurrentCenter)
+                {
+                    allDogIdFromCurrentCenter.Add(dog.Id);
+                }
+                IEnumerable<Weight> allWeightsTemp = _dbContext.Weights.ToList();
+                List<Weight> weightsTemp = new List<Weight>();
+                foreach (Weight w in allWeightsTemp)
+                {
+                    if (int.Parse(w.TimeStamp) >= startOfWeek)
+                    {
+                        weightsTemp.Add(w);
+                    }
+                }
+                weights = weightsTemp.Where(e => allDogIdFromCurrentCenter.Contains(e.DogId)).ToList();
+            }
+
+            HashSet<int> dogIdWeighted = new HashSet<int>();
+
+            foreach(Weight w in weights)
+            {
+                dogIdWeighted.Add(w.DogId);
+            }
+
+            int weighted = dogIdWeighted.Count();
+            int unweighted = selectedDogs.Count() - weighted;
+
+            StatsOutDTO statsOutDTO = new StatsOutDTO
+            {
+                TimeStamp = "0",
+                NoOfDogsWeighted = weighted,
+                NoOfDogsUnweighted = unweighted
+            };
+
+            return statsOutDTO;
+        }
+
+        // ------------------------------------------------------------------Message------------------------------------------------------------------
 
 
         public async Task AddNewMessage(MessageInDto messageInDto)
@@ -506,6 +568,10 @@ namespace SPCA_backend.Data
 
         //---------------------------------------------------------------------Helper Methods----------------------------------------------------------------
 
+        private string convertDateTimeToTimestamp(DateTime datetime)
+        {
+            return Convert.ToString((int)datetime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+        }
 
         private async Task SendEmail(int fromUserId, int toUserId, string messageContent)
         {

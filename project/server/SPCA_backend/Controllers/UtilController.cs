@@ -97,5 +97,17 @@ namespace SPCA_backend.Controllers
             return (checkExisting ? Ok("Centre deleted") : NotFound("Centre with id " + id + " does not exist"));
         }
 
+
+
+
+        [HttpGet("thisWeekStats")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<StatsOutDTO> getThisWeekStats(int centerId)
+        {
+            StatsOutDTO statsOutDTO = _repository.getCurrentWeekStats(centerId);
+            return Ok(statsOutDTO);
+        }
+
     }
 }

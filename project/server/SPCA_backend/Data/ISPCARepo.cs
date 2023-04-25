@@ -40,6 +40,7 @@ namespace SPCA_backend.Data
         public bool AddNewCentre(string name);
         public bool DeleteCentre(int centreId);
         public IEnumerable<Centre> ListAllCentres();
+        public StatsOutDTO getCurrentWeekStats(int centerId);
 
         //-------------------------Message Methods--------------------------
 
