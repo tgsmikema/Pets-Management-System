@@ -49,5 +49,6 @@ namespace SPCA_backend.Data
         public Task AddNewMessage(MessageInDto messageInDto);
         public IEnumerable<UserOutDto> getAlreadyMessagedPeopleList(int currentUserId);
         public IEnumerable<UserOutDto> getNeverMessagedPeopleList(int currentUserId);
+        public IEnumerable<MessageOutDto> getChatHistory(int currentUserId, int chatToUserId);
     }
 }

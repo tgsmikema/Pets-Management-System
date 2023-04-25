@@ -53,5 +53,14 @@ namespace SPCA_backend.Controllers
             return Ok(allPeople);
         }
 
+        [HttpGet("getChatHistory")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<IEnumerable<MessageOutDto>> getChatHistory(int currentUserId, int chatToUserId)
+        {
+            IEnumerable<MessageOutDto> allRelatedMessage = _repository.getChatHistory(currentUserId, chatToUserId);
+            return Ok(allRelatedMessage);
+        }
+
     }
 }

@@ -626,6 +626,29 @@ namespace SPCA_backend.Data
             return usersOut.AsEnumerable();
         }
 
+        public IEnumerable<MessageOutDto> getChatHistory(int currentUserId, int chatToUserId)
+        {
+            List<MessageOutDto> messageOutDtos = new List<MessageOutDto>();
+            
+            IEnumerable<Message> allRelatedMessages = _dbContext.Messages
+                .Where(e => ((e.ToUserId == currentUserId && e.FromUserId == chatToUserId) || (e.ToUserId == chatToUserId && e.FromUserId == currentUserId)))
+                .OrderBy(e => e.TimeStamp);
+
+            foreach(Message m in allRelatedMessages)
+            {
+                MessageOutDto mOut = new MessageOutDto
+                {
+                    FromUserId = m.FromUserId,
+                    ToUserId = m.ToUserId,
+                    Timestamp = m.TimeStamp,
+                    MessageContent = m.MessageContent
+                };
+                messageOutDtos.Add(mOut);
+            }
+
+            return messageOutDtos.AsEnumerable();
+        }
+
 
         //---------------------------------------------------------------------Helper Methods----------------------------------------------------------------
 
