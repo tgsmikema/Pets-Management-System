@@ -54,6 +54,7 @@ namespace SPCA_backend.Data
                 {
                     UserName = userInDto.UserName,
                     PasswordSha256Hash = SPCAAuthHandler.getSha256Hash(userInDto.Password),
+                    Email = userInDto.Email,
                     UserType = userInDto.UserType,
                     FirstName = userInDto.FirstName,
                     LastName = userInDto.LastName,
@@ -489,6 +490,7 @@ namespace SPCA_backend.Data
             {
                 Id = user.Id,
                 UserName = user.UserName,
+                Email = user.Email,
                 UserType = user.UserType,
                 FirstName = user.FirstName,
                 LastName = user.LastName,

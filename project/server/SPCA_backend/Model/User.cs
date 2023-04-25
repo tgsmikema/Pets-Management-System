@@ -11,6 +11,7 @@ namespace SPCA_backend.Model
         [Required]
         public string UserName { get; set; }
         [Required]
+        public string Email { get; set; }
         public string PasswordSha256Hash { get; set; }
         [Required]
         public string UserType { get; set; }
