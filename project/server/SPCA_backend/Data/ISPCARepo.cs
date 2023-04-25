@@ -40,5 +40,9 @@ namespace SPCA_backend.Data
         public bool AddNewCentre(string name);
         public bool DeleteCentre(int centreId);
         public IEnumerable<Centre> ListAllCentres();
+
+        //-------------------------Message Methods--------------------------
+
+        public Task AddNewMessage(MessageInDto messageInDto);
     }
 }

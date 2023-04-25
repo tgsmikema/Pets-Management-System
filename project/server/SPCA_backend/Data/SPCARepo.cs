@@ -5,6 +5,12 @@ using SPCA_backend.Model;
 using SPCA_backend.Handler;
 using Azure.Core;
 using Request = SPCA_backend.Model.Request;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.Extensions.Options;
+using MimeKit;
+using MimeKit.Text;
+
 
 namespace SPCA_backend.Data
 {
@@ -476,11 +482,56 @@ namespace SPCA_backend.Data
             return listOfCentres;
         }
 
+        // ------------------------------------------------------------------Dog------------------------------------------------------------------
 
+
+        public async Task AddNewMessage(MessageInDto messageInDto)
+        {
+            Message newMessage = new Message
+            {
+                FromUserId = messageInDto.FromUserId,
+                ToUserId = messageInDto.ToUserId,
+                IsRead = true,
+                MessageContent = messageInDto.MessageContent,
+                TimeStamp = Convert.ToString((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds),
+            };
+
+            EntityEntry<Message> e = _dbContext.Messages.Add(newMessage);
+            _dbContext.SaveChanges();
+
+            await SendEmail(messageInDto.FromUserId, messageInDto.ToUserId, messageInDto.MessageContent);
+
+        }
 
 
         //---------------------------------------------------------------------Helper Methods----------------------------------------------------------------
 
+
+        private async Task SendEmail(int fromUserId, int toUserId, string messageContent)
+        {
+            User userFrom = _dbContext.Users.FirstOrDefault(e => e.Id == fromUserId);
+            User userTo = _dbContext.Users.FirstOrDefault(e => e.Id == toUserId);
+
+            var email = new MimeMessage();
+            email.From.Add(MailboxAddress.Parse("capstone770team2admin@zohomail.com.au"));
+            email.To.Add(MailboxAddress.Parse(userTo.Email));
+            email.Subject = "[SPCA] " + userFrom.FirstName + " " + userFrom.LastName + 
+                " have sent you a message!";
+            string bodyContent = "Hi, " + userTo.FirstName + " \n\n"
+                + "You have just received a message from " + userFrom.FirstName + " " + userFrom.LastName + ",\n" +
+                "The message is quoted below, you can also view it from the chat history in the app: \n\n" + 
+                "----------------------------------------------------------------------------------------------------\n\n" +
+                messageContent;
+            email.Body = new TextPart(TextFormat.Plain) { Text = bodyContent };
+
+            // send email
+            using var smtp = new SmtpClient();
+            smtp.Connect("smtp.zoho.com.au", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate("tgsmikema@gmail.com", "2fast2furious!");
+            smtp.Send(email);
+            smtp.Disconnect(true);
+
+        }
 
 
 
