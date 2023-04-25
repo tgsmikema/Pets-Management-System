@@ -35,5 +35,32 @@ namespace SPCA_backend.Controllers
             return Ok("Message Sent.");
         }
 
+        [HttpGet("getAlreadyMessagedPeopleList")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<IEnumerable<UserOutDto>> getAlreadyMessagedPeopleList(int currentUserId)
+        {
+            IEnumerable<UserOutDto> allPeople = _repository.getAlreadyMessagedPeopleList(currentUserId);
+            return Ok(allPeople);
+        }
+
+        [HttpGet("getNeverMessagedPeopleList")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<IEnumerable<UserOutDto>> getNeverMessagedPeopleList(int currentUserId)
+        {
+            IEnumerable<UserOutDto> allPeople = _repository.getNeverMessagedPeopleList(currentUserId);
+            return Ok(allPeople);
+        }
+
+        [HttpGet("getChatHistory")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<IEnumerable<MessageOutDto>> getChatHistory(int currentUserId, int chatToUserId)
+        {
+            IEnumerable<MessageOutDto> allRelatedMessage = _repository.getChatHistory(currentUserId, chatToUserId);
+            return Ok(allRelatedMessage);
+        }
+
     }
 }
