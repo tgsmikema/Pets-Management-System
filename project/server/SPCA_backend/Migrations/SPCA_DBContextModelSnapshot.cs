@@ -138,6 +138,10 @@ namespace SPCA_backend.Migrations
                     b.Property<int>("CentreId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("TEXT");

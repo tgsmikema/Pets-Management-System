@@ -10,7 +10,7 @@ using SPCA_backend.Data;
 namespace SPCA_backend.Migrations
 {
     [DbContext(typeof(SPCA_DBContext))]
-    [Migration("20230414005000_InitialCreate")]
+    [Migration("20230425043644_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -140,6 +140,10 @@ namespace SPCA_backend.Migrations
 
                     b.Property<int>("CentreId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
