@@ -5,16 +5,196 @@ import {
   TextField,
   Typography,
   InputAdornment,
-  Stack,
-  IconButton,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import moment from "moment";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
 import SendIcon from "@mui/icons-material/Send";
 import { useAuth } from "../providers/AuthProvider.jsx";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChatUserItem from "../components/ChatUserItem.jsx";
+import UnChattedUserDialog from "../components/UnChattedUserDialog.jsx";
+
+const userList = [
+  {
+    name: "Mike Ma",
+    type: "admin",
+  },
+  {
+    name: "Anna Verdi",
+    type: "vet",
+  },
+  {
+    name: "John Doe",
+    type: "volunteer",
+  },
+  {
+    name: "Qingyang LI",
+    type: "admin",
+  },
+  {
+    name: "Hanako Yamada",
+    type: "admin",
+  },
+  {
+    name: "Oliver",
+    type: "admin",
+  },
+  {
+    name: "Mike Ma",
+    type: "admin",
+  },
+  {
+    name: "Mike Ma",
+    type: "admin",
+  },
+  {
+    name: "Mike Ma",
+    type: "admin",
+  },
+  {
+    name: "Mike Ma",
+    type: "admin",
+  },
+  {
+    name: "Mike Ma",
+    type: "admin",
+  },
+  {
+    name: "Mike Ma",
+    type: "admin",
+  },
+  {
+    name: "Mike Ma",
+    type: "admin",
+  },
+];
+
+const unChattedUserList = [
+  {
+    name: "Mike Ma",
+    type: "admin",
+  },
+  {
+    name: "Anna Verdi",
+    type: "vet",
+  },
+  {
+    name: "John Doe",
+    type: "volunteer",
+  },
+  {
+    name: "Qingyang LI",
+    type: "admin",
+  },
+  {
+    name: "Hanako Yamada",
+    type: "admin",
+  },
+  {
+    name: "Oliver",
+    type: "admin",
+  },
+];
+
+const chatHistory = [
+  {
+    id: 1,
+    date: "04/09/2022 19:34",
+    messageContent: "Hello mike, how are you?",
+    ToUser: { id: 1, name: "mike" },
+    FromUser: { id: 2, name: "admin" },
+  },
+
+  {
+    id: 2,
+    date: "04/09/2022 19:35",
+    messageContent: "I am fine.Thank you ,and you?",
+    ToUser: { id: 2, name: "admin" },
+    FromUser: { id: 1, name: "mike" },
+  },
+
+  {
+    id: 1,
+    date: "04/09/2022 19:34",
+    messageContent: "Hello mike, how are you?",
+    ToUser: { id: 1, name: "mike" },
+    FromUser: { id: 2, name: "admin" },
+  },
+
+  {
+    id: 2,
+    date: "04/09/2022 19:35",
+    messageContent: "I am fine.Thank you ,and you?",
+    ToUser: { id: 2, name: "admin" },
+    FromUser: { id: 1, name: "mike" },
+  },
+
+  {
+    id: 1,
+    date: "04/09/2022 19:34",
+    messageContent: "Hello mike, how are you?",
+    ToUser: { id: 1, name: "mike" },
+    FromUser: { id: 2, name: "admin" },
+  },
+
+  {
+    id: 2,
+    date: "04/09/2022 19:35",
+    messageContent: "I am fine.Thank you ,and you?",
+    ToUser: { id: 2, name: "admin" },
+    FromUser: { id: 1, name: "mike" },
+  },
+
+  {
+    id: 1,
+    date: "04/09/2022 19:34",
+    messageContent: "Hello mike, how are you?",
+    ToUser: { id: 1, name: "mike" },
+    FromUser: { id: 2, name: "admin" },
+  },
+  {
+    id: 1,
+    date: "04/09/2022 19:34",
+    messageContent: "Hello mike, how are you?",
+    ToUser: { id: 1, name: "mike" },
+    FromUser: { id: 2, name: "admin" },
+  },
+  {
+    id: 2,
+    date: "04/09/2022 19:35",
+    messageContent: "I am fine.Thank you ,and you?",
+    ToUser: { id: 2, name: "admin" },
+    FromUser: { id: 1, name: "mike" },
+  },
+
+  {
+    id: 2,
+    date: "04/09/2022 19:35",
+    messageContent:
+      "perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos ",
+    ToUser: { id: 2, name: "admin" },
+    FromUser: { id: 1, name: "mike" },
+  },
+  {
+    id: 1,
+    date: "04/09/2022 19:36",
+    messageContent:
+      "perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos ",
+    ToUser: { id: 1, name: "mike" },
+    FromUser: { id: 2, name: "admin" },
+  },
+
+  {
+    id: 1,
+    date: `${moment(parseInt(1672141137 * 1000)).format(
+      "YYYY-MM-DD HH:mm:ss"
+    )}`,
+    messageContent:
+      "Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omniss",
+    ToUser: { id: 1, name: "mike" },
+    FromUser: { id: 2, name: "admin" },
+  },
+];
 
 const ChatPage = () => {
   const { setSelected } = useUtilProvider();
@@ -24,169 +204,34 @@ const ChatPage = () => {
     console.log(
       moment(parseInt(1672141137 * 1000)).format("YYYY-MM-DD HH:mm:ss")
     );
-  });
+  }, [userList]);
 
   const { user } = useAuth();
-
   const [selectUser, setSelectUser] = useState(-1);
 
-  const useList = [
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Anna Verdi",
-      type: "vet",
-    },
-    {
-      name: "John Doe",
-      type: "volunteer",
-    },
-    {
-      name: "Qingyang LI",
-      type: "admin",
-    },
-    {
-      name: "Hanako Yamada",
-      type: "admin",
-    },
-    {
-      name: "Oliver",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-  ];
+  const [open, setOpen] = useState(false);
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, [open, setOpen]);
 
-  const chatHistory = [
-    {
-      id: 1,
-      date: "04/09/2022 19:34",
-      messageContent: "Hello mike, how are you?",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
+  const handleItemClick = useCallback(
+    (index) => {
+      userList.unshift(unChattedUserList[index]);
+      unChattedUserList.splice(index, 1);
+      handleClose();
+      setSelectUser(0);
     },
-
-    {
-      id: 2,
-      date: "04/09/2022 19:35",
-      messageContent: "I am fine.Thank you ,and you?",
-      ToUser: { id: 2, name: "admin" },
-      FromUser: { id: 1, name: "mike" },
-    },
-
-    {
-      id: 1,
-      date: "04/09/2022 19:34",
-      messageContent: "Hello mike, how are you?",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
-
-    {
-      id: 2,
-      date: "04/09/2022 19:35",
-      messageContent: "I am fine.Thank you ,and you?",
-      ToUser: { id: 2, name: "admin" },
-      FromUser: { id: 1, name: "mike" },
-    },
-
-    {
-      id: 1,
-      date: "04/09/2022 19:34",
-      messageContent: "Hello mike, how are you?",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
-
-    {
-      id: 2,
-      date: "04/09/2022 19:35",
-      messageContent: "I am fine.Thank you ,and you?",
-      ToUser: { id: 2, name: "admin" },
-      FromUser: { id: 1, name: "mike" },
-    },
-
-    {
-      id: 1,
-      date: "04/09/2022 19:34",
-      messageContent: "Hello mike, how are you?",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
-    {
-      id: 1,
-      date: "04/09/2022 19:34",
-      messageContent: "Hello mike, how are you?",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
-    {
-      id: 2,
-      date: "04/09/2022 19:35",
-      messageContent: "I am fine.Thank you ,and you?",
-      ToUser: { id: 2, name: "admin" },
-      FromUser: { id: 1, name: "mike" },
-    },
-
-    {
-      id: 2,
-      date: "04/09/2022 19:35",
-      messageContent:
-        "perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos ",
-      ToUser: { id: 2, name: "admin" },
-      FromUser: { id: 1, name: "mike" },
-    },
-    {
-      id: 1,
-      date: "04/09/2022 19:36",
-      messageContent:
-        "perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos ",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
-
-    {
-      id: 1,
-      date: `${moment(parseInt(1672141137 * 1000)).format(
-        "YYYY-MM-DD HH:mm:ss"
-      )}`,
-      messageContent:
-        "Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omniss",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
-  ];
+    [unChattedUserList]
+  );
 
   return (
     <Box height={"100%"} width={"100%"} display={"flex"}>
+      <UnChattedUserDialog
+        open={open}
+        handleClose={handleClose}
+        unChattedUserList={unChattedUserList}
+        handleItemClick={handleItemClick}
+      />
       {/* left sidebar */}
       <Box
         height={"100%"}
@@ -203,6 +248,9 @@ const ChatPage = () => {
           <Button
             variant={"contained"}
             fullWidth={true}
+            onClick={() => {
+              setOpen(true);
+            }}
             sx={{
               borderRadius: "20px",
               "&:hover": {
@@ -215,7 +263,7 @@ const ChatPage = () => {
         </Box>
         <Divider />
 
-        {useList.map((it, index) => (
+        {userList.map((it, index) => (
           <ChatUserItem
             name={it.name}
             type={it.type}
@@ -250,10 +298,10 @@ const ChatPage = () => {
               ml={1.5}
             >
               <Typography variant={"h5"} fontWeight={600}>
-                {useList[selectUser].name}
+                {userList[selectUser].name}
               </Typography>
               <Typography variant={"body1"}>
-                {useList[selectUser].type}
+                {userList[selectUser].type}
               </Typography>
             </Box>
           </Box>
