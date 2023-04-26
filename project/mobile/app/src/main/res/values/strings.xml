@@ -29,6 +29,8 @@
     <string name="delete">DELETE</string>
     <string name="save">SAVE</string>
     <string name="edit_user">Edit User</string>
+    <string name="edit_dog">Edit Dog</string>
+    <string name="add_weight">Add Weight</string>
 
     <string-array name="centers_list">
         <item>All Centers</item>

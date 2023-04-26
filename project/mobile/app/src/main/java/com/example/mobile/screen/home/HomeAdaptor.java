@@ -1,5 +1,6 @@
 package com.example.mobile.screen.home;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobile.R;
 import com.example.mobile.model.Dog;
+import com.example.mobile.screen.dog.DogFragment;
 
 import java.util.List;
 
 public class HomeAdaptor extends RecyclerView.Adapter<HomeAdaptor.ViewHolder> {
 
     private static List<Dog> dogList;
+    private ItemClickListener clickListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView id, name, breed, weight, date;
@@ -32,18 +35,21 @@ public class HomeAdaptor extends RecyclerView.Adapter<HomeAdaptor.ViewHolder> {
             date = v.findViewById(R.id.text_date);
             flag = v.findViewById(R.id.image_flag);
             alert = v.findViewById(R.id.image_alert);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             Dog thisDog = dogList.get(getAdapterPosition());
-            //TODO: go to dog page
-
+            Intent intent = new Intent(view.getContext(), DogFragment.class);
+            intent.putExtra("id", thisDog.getId());
+            view.getContext().startActivity(intent);
         }
     }
 
-    public HomeAdaptor(List<Dog> dogList) {
+    public HomeAdaptor(List<Dog> dogList, ItemClickListener clickListener) {
         this.dogList = dogList;
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -73,10 +79,20 @@ public class HomeAdaptor extends RecyclerView.Adapter<HomeAdaptor.ViewHolder> {
         } else {
             vh.alert.setImageResource(R.drawable.blank);
         }
+        vh.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickListener.onItemClick(dog);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return dogList.size();
+    }
+
+    public interface ItemClickListener {
+        public void onItemClick(Dog dog);
     }
 }
