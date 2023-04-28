@@ -13,14 +13,17 @@ const WebContext = createContext({});
 
 export function WebServiceProvider({ children }) {
   const { user } = useAuth();
+  //this will use for list centres for different userType
   const [allCentres, setAllCentres] = useState([]);
 
+  //we want to fetch all centres when the app start according to the user type
   useEffect(() => {
     (async () => {
       await handleCentres();
     })();
   }, [user]);
 
+  //handle the centre list, will add the All Centres item for the admin user
   const handleCentres = useCallback(async () => {
     const res = await fetchAllCenters();
     const centers = res.data.map((it) => it.name);
@@ -30,9 +33,9 @@ export function WebServiceProvider({ children }) {
       const center = res.data.find((it) => it.id === user.centreId);
       setAllCentres([center.name]);
     }
-    return allCentres;
   }, [user]);
 
+  //fetch all centres
   const fetchAllCenters = useCallback(async () => {
     if (user !== null) {
       const centers = await axios.get(

@@ -168,10 +168,11 @@ const HomePage = () => {
   const { allCentres } = useWebService();
   const [centreValue, setCentreValue] = useState("");
   const theme = useTheme();
+  const [centreIdx, setCentreIdx] = useState(0);
   useEffect(() => {
     setSelected("Home");
-    setCentreValue(allCentres[0]);
-  }, []);
+    setCentreValue(allCentres[centreIdx]);
+  }, [user, centreIdx]);
 
   //control centres drop down
   const [anchorEl, setAnchorEl] = useState(null);
@@ -236,6 +237,7 @@ const HomePage = () => {
               onClick={() => {
                 handleClose();
                 setCentreValue(it);
+                setCentreIdx(index);
               }}
             >
               {it}
