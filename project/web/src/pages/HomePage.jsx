@@ -20,6 +20,7 @@ import AddDog from "../components/AddDog.jsx";
 import { useNavigate } from "react-router-dom";
 import { useWebService } from "../providers/WebServiceProvider.jsx";
 import { useAuth } from "../providers/AuthProvider.jsx";
+import ProcessLoading from "../components/ProcessLoading.jsx";
 
 const StyledButton = styled(Button)({
   padding: "2% 2%",
@@ -165,14 +166,20 @@ const columns = [
 const HomePage = () => {
   const { user } = useAuth();
   const { setSelected } = useUtilProvider();
-  const { allCentres } = useWebService();
+  const { allCentres, centreLoading } = useWebService();
+  //display the centre name
   const [centreValue, setCentreValue] = useState("");
-  const theme = useTheme();
+
+  //this centreIdx is used for the admin user, as it will list all the centres,
+  //the centreIdx will match the centre id, such as when centreIdx = 0 , it represents the all centre
+  //you can use this centreIdx to send a get request to fetch the all centres data
   const [centreIdx, setCentreIdx] = useState(0);
+
+  const theme = useTheme();
   useEffect(() => {
     setSelected("Home");
     setCentreValue(allCentres[centreIdx]);
-  }, [user, centreIdx]);
+  }, [user, centreIdx, centreLoading]);
 
   //control centres drop down
   const [anchorEl, setAnchorEl] = useState(null);
@@ -218,7 +225,7 @@ const HomePage = () => {
         >
           {/* TODO: replace hardcoded string with db */}
           <Typography variant={"h4"} fontWeight={"600"} color={"#000"}>
-            {centreValue}
+            {centreLoading ? <ProcessLoading /> : centreValue}
           </Typography>
         </StyledButton>
         <Menu

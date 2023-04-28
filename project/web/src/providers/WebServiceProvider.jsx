@@ -15,11 +15,14 @@ export function WebServiceProvider({ children }) {
   const { user } = useAuth();
   //this will use for list centres for different userType
   const [allCentres, setAllCentres] = useState([]);
+  const [centreLoading, setCentreLoading] = useState(false);
 
   //we want to fetch all centres when the app start according to the user type
   useEffect(() => {
     (async () => {
+      setCentreLoading(true);
       await handleCentres();
+      setCentreLoading(false);
     })();
   }, [user]);
 
@@ -54,6 +57,7 @@ export function WebServiceProvider({ children }) {
     allCentres,
     handleCentres,
     setAllCentres,
+    centreLoading,
   };
 
   return <WebContext.Provider value={value}>{children}</WebContext.Provider>;

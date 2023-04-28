@@ -19,6 +19,7 @@ import { useWebService } from "../providers/WebServiceProvider.jsx";
 import { useAuth } from "../providers/AuthProvider.jsx";
 import axios from "axios";
 import { constants } from "../constants.js";
+import ProcessLoading from "../components/ProcessLoading.jsx";
 
 const StatsPage = () => {
   const theme = useTheme();
@@ -41,6 +42,9 @@ const StatsPage = () => {
     setAnchorEl(null);
   };
 
+  //setLoading for line chart
+  const [loading, setLoading] = useState(false);
+
   //whether show week data, if it is false, we will show month data
   const [isWeek, setWeek] = useState(true);
 
@@ -54,11 +58,11 @@ const StatsPage = () => {
   const [weekTimeStamp, setWeekTimeStamp] = useState(timestampInSeconds);
 
   const getPreviousWeekTimeStamp = (currentTimeStamp) => {
-    return currentTimeStamp - 7 * 24 * 60 * 60 * 1000;
+    return new Date(currentTimeStamp - 7 * 24 * 60 * 60 * 1000).getTime();
   };
 
   const getNextWeekTimeStamp = (currentTimeStamp) => {
-    return currentTimeStamp + 7 * 24 * 60 * 60 * 1000;
+    return new Date(currentTimeStamp + 7 * 24 * 60 * 60 * 1000).getTime();
   };
 
   //given a timestamp, we will return the day in this form 4.17
@@ -73,28 +77,44 @@ const StatsPage = () => {
   };
 
   //process the month date for monthly data used for the line chart
-  const [monthTimeStamp, setMonthTimeStamp] = useState(timestampInSeconds);
 
-  const getLastDayOfLastMonth = (currentTimeStamp) => {
-    const oneMonthAgo = currentTimeStamp - 2764800000; // subtract number of milliseconds for 32 days
-    const lastMonth = new Date(oneMonthAgo); // create new Date object
-    lastMonth.setDate(1); // set date to first day of the month
-    lastMonth.setHours(0, 0, 0, 0); // set time to midnight
-    const firstDayOfMonthTimestamp = lastMonth.getTime(); // get timestamp of first day of the month
-    lastMonth.setMonth(lastMonth.getMonth() + 1); // set to first day of next month
-    lastMonth.setDate(0); // set to last day of previous month
-    lastMonth.setHours(23, 59, 59, 999); // set time to end of the day
-    const lastDayOfMonthTimestamp = lastMonth.getTime(); // get timestamp of last day of the month
-    return [firstDayOfMonthTimestamp, lastDayOfMonthTimestamp];
+  const getFirstDayOfMonth = (currentTimeStamp) => {
+    const curMonth = new Date(currentTimeStamp);
+    curMonth.setDate(1);
+    curMonth.setHours(0, 0, 0, 0);
+    return curMonth.getTime();
+  };
+
+  const getLastDayOfMonth = (currentTimeStamp) => {
+    const curMonth = new Date(currentTimeStamp);
+    curMonth.setMonth(curMonth.getMonth() + 1);
+    curMonth.setDate(0);
+    curMonth.setHours(23, 59, 59, 999);
+    return curMonth.getTime();
+  };
+
+  const getMidDayOfMonth = (timeStamp) => {
+    const curMonth = new Date(timeStamp);
+    curMonth.setDate(15);
+    curMonth.setHours(0, 0, 0, 0);
+    return curMonth.getTime();
   };
 
   const getPreviousMonthTimeStamp = (currentTimeStamp) => {
-    return currentTimeStamp - 30 * 24 * 60 * 60 * 1000;
+    return getMidDayOfMonth(
+      new Date(currentTimeStamp - 30 * 24 * 60 * 60 * 1000).getTime()
+    );
   };
 
   const getNextMonthTimeStamp = (currentTimeStamp) => {
-    return currentTimeStamp + 30 * 24 * 60 * 60 * 1000;
+    return getMidDayOfMonth(
+      new Date(currentTimeStamp + 30 * 24 * 60 * 60 * 1000).getTime()
+    );
   };
+
+  const [monthTimeStamp, setMonthTimeStamp] = useState(
+    getPreviousMonthTimeStamp(getMidDayOfMonth(timestampInSeconds))
+  );
 
   const getMonthFromTimeStamp = (timeStamp) => {
     let date = new Date(timeStamp);
@@ -106,13 +126,15 @@ const StatsPage = () => {
   };
 
   // week button click
-  const onClickForWeekButton = () => {
+  const onClickForWeekButton = async () => {
     setWeek(true);
+    await fetchWeekData();
   };
 
   //month button click
-  const onClickForMonthButton = () => {
+  const onClickForMonthButton = async () => {
     setWeek(false);
+    await fetchMonthData();
   };
 
   //fetch the data from the backend;
@@ -154,8 +176,21 @@ const StatsPage = () => {
   }, [centreValue]);
 
   //2. fetch one week's data according to the timestamp for line chart
-  const [weekData, setWeekData] = useState([]);
+  const [weekWeightData, setWeekWeightData] = useState([]);
+  const [weekUnWeightData, setWeekUnWeightData] = useState([]);
+
+  const weekArray = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
   const fetchWeekData = useCallback(async () => {
+    // setLoading(true);
     const res = await axios.post(
       `${constants.backend}/util/weeklyStats`,
       {
@@ -171,64 +206,20 @@ const StatsPage = () => {
         },
       }
     );
-    setWeekData(res.data);
+    setWeekWeightData(
+      res.data.map((it, index) => ({
+        x: weekArray[(index + getDay(weekTimeStamp)) % 7],
+        y: it.noOfDogsWeighted,
+      }))
+    );
+    setWeekUnWeightData(
+      res.data.map((it, index) => ({
+        x: weekArray[(index + getDay(weekTimeStamp)) % 7],
+        y: it.noOfDogsUnweighted,
+      }))
+    );
+    setLoading(false);
   }, [weekTimeStamp, centreIdx]);
-
-  const weekArray = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-
-  const weekWeightData = weekData.map((it, index) => ({
-    x: weekArray[(index + getDay(weekTimeStamp)) % 7],
-    y: it.noOfDogsWeighted,
-  }));
-
-  const weekUnWeightData = weekData.map((it, index) => ({
-    x: weekArray[(index + getDay(weekTimeStamp)) % 7],
-    y: it.noOfDogsUnweighted,
-  }));
-
-  //back button click
-  const onClickForBack = () => {
-    if (isWeek) {
-      setWeekTimeStamp(getPreviousWeekTimeStamp(weekTimeStamp));
-      fetchWeekData();
-    } else {
-      setMonthTimeStamp(getPreviousMonthTimeStamp(monthTimeStamp));
-    }
-  };
-
-  //forward button click
-  const onClickForForward = () => {
-    if (isWeek) {
-      if (getNextWeekTimeStamp(weekTimeStamp) >= timestampInSeconds) {
-        setWeekTimeStamp(timestampInSeconds);
-        fetchWeekData();
-      } else {
-        setWeekTimeStamp(getNextWeekTimeStamp(weekTimeStamp));
-        fetchWeekData();
-      }
-    } else {
-      if (getNextMonthTimeStamp(monthTimeStamp) >= timestampInSeconds) {
-        setMonthTimeStamp(timestampInSeconds);
-      } else {
-        setMonthTimeStamp(getNextMonthTimeStamp(monthTimeStamp));
-      }
-    }
-  };
-
-  useEffect(() => {
-    setSelected("Stats");
-    setCentreValue(allCentres[centreIdx]);
-    fetchAllCentreData();
-    fetchWeekData();
-  }, [user, centreIdx]);
 
   const weekDataForLine = [
     {
@@ -240,6 +231,106 @@ const StatsPage = () => {
       data: weekUnWeightData,
     },
   ];
+
+  //3. fetch one month's data for line chart
+  const [monthWeightData, setMonthWeightData] = useState([]);
+  const [monthUnWeightData, setMonthUnWeightData] = useState([]);
+
+  const fetchMonthData = useCallback(async () => {
+    // setLoading(true);
+    const res = await axios.post(
+      `${constants.backend}/util/monthlyStatus`,
+      {
+        centerId: user.userType !== "admin" ? user.centerId : centreIdx,
+        minTimestamp: Math.floor(
+          getFirstDayOfMonth(monthTimeStamp) / 1000
+        ).toString(),
+        maxTimestamp: Math.floor(
+          getLastDayOfMonth(monthTimeStamp) / 1000
+        ).toString(),
+      },
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+
+    setMonthWeightData(
+      res.data.map((it) => ({
+        x: getStringOfDayFromTimeStamp(it.timeStamp * 1000),
+        y: it.noOfDogsWeighted,
+      }))
+    );
+
+    setMonthUnWeightData(
+      res.data.map((it) => ({
+        x: getStringOfDayFromTimeStamp(it.timeStamp * 1000),
+        y: it.noOfDogsUnweighted,
+      }))
+    );
+    setLoading(false);
+  }, [monthTimeStamp, centreIdx]);
+
+  const monthDataForLine = [
+    {
+      id: "weighed",
+      data: monthWeightData,
+    },
+    {
+      id: "unWeighed",
+      data: monthUnWeightData,
+    },
+  ];
+
+  //back button click
+  const onClickForBack = () => {
+    if (isWeek) {
+      setWeekTimeStamp(getPreviousWeekTimeStamp(weekTimeStamp));
+      fetchWeekData();
+    } else {
+      setMonthTimeStamp(
+        getMidDayOfMonth(getPreviousMonthTimeStamp(monthTimeStamp))
+      );
+      fetchMonthData();
+    }
+  };
+
+  //forward button click
+  const onClickForForward = async () => {
+    if (isWeek) {
+      if (getNextWeekTimeStamp(weekTimeStamp) >= timestampInSeconds) {
+        setWeekTimeStamp(timestampInSeconds);
+        await fetchWeekData();
+      } else {
+        setWeekTimeStamp(getNextWeekTimeStamp(weekTimeStamp));
+        await fetchWeekData();
+      }
+    } else {
+      if (
+        getNextMonthTimeStamp(monthTimeStamp) >=
+        getPreviousMonthTimeStamp(getMidDayOfMonth(timestampInSeconds))
+      ) {
+        setMonthTimeStamp(
+          getMidDayOfMonth(
+            getPreviousMonthTimeStamp(getMidDayOfMonth(timestampInSeconds))
+          )
+        );
+        await fetchMonthData();
+      } else {
+        setMonthTimeStamp(getNextMonthTimeStamp(monthTimeStamp));
+        await fetchMonthData();
+      }
+    }
+  };
+
+  useEffect(() => {
+    setSelected("Stats");
+    setCentreValue(allCentres[centreIdx]);
+    fetchAllCentreData();
+    fetchWeekData();
+    fetchMonthData();
+  }, [user, centreIdx, monthTimeStamp, weekTimeStamp]);
 
   return (
     <Box
@@ -375,9 +466,7 @@ const StatsPage = () => {
                   ? `${getStringOfDayFromTimeStamp(
                       getPreviousWeekTimeStamp(weekTimeStamp)
                     )} - ${getStringOfDayFromTimeStamp(weekTimeStamp)}`
-                  : `${getMonthFromTimeStamp(
-                      getPreviousMonthTimeStamp(monthTimeStamp)
-                    )}`}
+                  : `${getMonthFromTimeStamp(monthTimeStamp)}`}
               </Typography>
               <IconButton onClick={onClickForForward}>
                 <KeyboardArrowRightIcon />
@@ -429,7 +518,13 @@ const StatsPage = () => {
               boxShadow: 3,
             }}
           >
-            {weekData.length && <LineChart data={weekDataForLine} />}
+            {loading ? (
+              <ProcessLoading />
+            ) : isWeek ? (
+              weekWeightData.length && <LineChart data={weekDataForLine} />
+            ) : (
+              monthWeightData.length && <LineChart data={monthDataForLine} />
+            )}
           </Box>
         </Box>
       </Box>
