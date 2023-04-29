@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/weight_text_title"
+        android:id="@+id/weight_input_text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -20,24 +20,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/weight_subtitle"
+        android:id="@+id/weight_input_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/select_scales"
+        android:text="Place Oliver on the scales"
         android:textColor="@color/black"
         android:textSize="26sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weight_text_title" />
-
-    <Spinner
-        android:id="@+id/weight_location_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weight_subtitle" />
+        app:layout_constraintTop_toBottomOf="@id/weight_input_text_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/weight_cancel"
+            android:id="@+id/weight_input_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -59,14 +50,38 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/weight_start"
+            android:id="@+id/weight_input_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:background="@drawable/button_rounded_dark"
-            android:text="@string/start_weighing"
+            android:text="@string/save"
             android:textSize="20sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/weight_input_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="14.8kg"
+        android:textColor="@color/black"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weight_input_subtitle" />
+
+    <TextView
+        android:id="@+id/weight_input_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="18/03/23"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weight_input_weight" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
