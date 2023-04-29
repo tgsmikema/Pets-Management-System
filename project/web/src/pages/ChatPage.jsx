@@ -14,7 +14,6 @@ import moment from "moment";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
 import SendIcon from "@mui/icons-material/Send";
 import { useAuth } from "../providers/AuthProvider.jsx";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChatUserItem from "../components/ChatUserItem.jsx";
 
 const ChatPage = () => {

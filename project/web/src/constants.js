@@ -1,3 +1,3 @@
 export const constants = {
-  backend: "https://tgsmikema-001-site1.dtempurl.com", // will be changed later
+  backend: "https://capstone2team-001-site1.itempurl.com", // will be changed later
 };

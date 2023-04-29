@@ -27,7 +27,7 @@ const StatsPage = () => {
   const { setSelected } = useUtilProvider();
   const { user } = useAuth();
   //fetch all centres for the user, this action done when the app start
-  const { allCentres } = useWebService();
+  const { allCentres, centreLoading } = useWebService();
   //this value is used to display the centre name
   const [centreValue, setCentreValue] = useState("");
 
@@ -330,7 +330,7 @@ const StatsPage = () => {
     fetchAllCentreData();
     fetchWeekData();
     fetchMonthData();
-  }, [user, centreIdx, monthTimeStamp, weekTimeStamp]);
+  }, [user, centreIdx, monthTimeStamp, weekTimeStamp, centreLoading]);
 
   return (
     <Box
@@ -359,7 +359,7 @@ const StatsPage = () => {
           }
         >
           <Typography variant={"h4"} color={"#000"} fontWeight={"650"}>
-            {centreValue}
+            {centreLoading ? <ProcessLoading /> : centreValue}
           </Typography>
         </Button>
 
