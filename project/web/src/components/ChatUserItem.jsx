@@ -1,13 +1,20 @@
 import { Box, Divider, IconButton, Typography } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications.js";
 
-const ChatUserItem = ({ name, selectUser, setSelectUser, type, index }) => {
+const ChatUserItem = ({
+  name,
+  selectUser,
+  setSelectUser,
+  type,
+  index,
+  onClick,
+}) => {
   return (
     <Box sx={{ textTransform: "capitalize" }}>
       <Box
         p={1.3}
         onClick={() => {
-          console.log(name);
+          onClick();
           setSelectUser(index);
         }}
         sx={{
