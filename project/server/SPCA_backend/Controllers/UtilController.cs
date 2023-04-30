@@ -97,5 +97,40 @@ namespace SPCA_backend.Controllers
             return (checkExisting ? Ok("Centre deleted") : NotFound("Centre with id " + id + " does not exist"));
         }
 
+
+
+
+        [HttpGet("thisWeekStats")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<StatsOutDTO> getThisWeekStats(int centerId)
+        {
+            StatsOutDTO statsOutDTO = _repository.getCurrentWeekStats(centerId);
+            return Ok(statsOutDTO);
+        }
+
+
+
+
+        [HttpPost("weeklyStats")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<IEnumerable<StatsOutDTO>> getWeeklyStats(StatsInDTO statsInDTO)
+        {
+            IEnumerable<StatsOutDTO> statsOutDTOList = _repository.getWeeklyStats(statsInDTO);
+            return Ok(statsOutDTOList);
+        }
+
+
+
+        [HttpPost("monthlyStatus")]
+        [Authorize(AuthenticationSchemes = "Authentication")]
+        [Authorize(Policy = "AllUser")]
+        public ActionResult<IEnumerable<StatsOutDTO>> getMonthlyStatus(StatsInDTO statsInDTO)
+        {
+            IEnumerable<StatsOutDTO> statsOutDTOList = _repository.getMonthlyStats(statsInDTO);
+            return Ok(statsOutDTOList);
+        }
+
     }
 }

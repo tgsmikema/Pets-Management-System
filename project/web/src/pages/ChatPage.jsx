@@ -5,6 +5,7 @@ import {
   TextField,
   Typography,
   InputAdornment,
+  useTheme,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import moment from "moment";
@@ -198,6 +199,7 @@ const chatHistory = [
 
 const ChatPage = () => {
   const { setSelected } = useUtilProvider();
+  const theme = useTheme();
   useEffect(() => {
     setSelected("Chat");
     console.log(user.userName);
@@ -225,7 +227,14 @@ const ChatPage = () => {
   );
 
   return (
-    <Box height={"100%"} width={"100%"} display={"flex"}>
+    <Box
+      height={"84vh"}
+      width={"100%"}
+      display={"flex"}
+      sx={{
+        backgroundColor: theme.palette.secondary.main,
+      }}
+    >
       <UnChattedUserDialog
         open={open}
         handleClose={handleClose}

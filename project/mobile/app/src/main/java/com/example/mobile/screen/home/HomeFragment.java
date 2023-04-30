@@ -10,12 +10,16 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobile.R;
 import com.example.mobile.databinding.FragmentHomeBinding;
 import com.example.mobile.model.Dog;
+import com.example.mobile.model.User;
+import com.example.mobile.screen.dog.DogFragment;
+import com.example.mobile.screen.profile.EditUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +68,12 @@ public class HomeFragment extends Fragment {
 
         //TODO: replace mock data with db
         List<Dog> dogs = new ArrayList<>();
-        dogs.add(new Dog("8093", "Kyra", "Border Collie", "14.8", "08/03/23", false, true));
-        dogs.add(new Dog("8094", "Luna", "Husky", "7.6", "24/03/23", true, false));
-        dogs.add(new Dog("8095", "Ted", "Corgi", "8.7", "24/03/23", false, false));
-        dogs.add(new Dog("8096", "Bella", "Poodle", "9.2", "24/03/23", true, true));
+        dogs.add(new Dog("8093", "Kyra", "Border Collie", "Manukau", "14.8", "08/03/23", false, true));
+        dogs.add(new Dog("8094", "Luna", "Husky", "Manukau","7.6", "24/03/23", true, false));
+        dogs.add(new Dog("8095", "Ted", "Corgi", "Manukau","8.7", "24/03/23", false, false));
+        dogs.add(new Dog("8096", "Bella", "Poodle", "Manukau","9.2", "24/03/23", true, true));
 
-        HomeAdaptor listAdaptor = new HomeAdaptor(dogs);
+        HomeAdaptor listAdaptor = new HomeAdaptor(dogs, this::onItemClick);
         recyclerView.setAdapter(listAdaptor);
 
         //add button
@@ -85,6 +89,24 @@ public class HomeFragment extends Fragment {
         });
 
         return root;
+    }
+
+    public void onItemClick(Dog dog) {
+        Bundle bundle = new Bundle();
+        bundle.putString("name", dog.getName());
+        bundle.putString("breed", dog.getBreed());
+        bundle.putString("id", dog.getId());
+        bundle.putString("location", dog.getLocation());
+        bundle.putString("weight", dog.getWeight());
+        bundle.putString("date", dog.getDate());
+        bundle.putBoolean("flag", dog.isFlag());
+        bundle.putBoolean("alert", dog.isAlert());
+        DogFragment fragment = new DogFragment();
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override

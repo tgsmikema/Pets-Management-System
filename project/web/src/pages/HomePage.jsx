@@ -1,4 +1,12 @@
-import { Box, Menu, MenuItem, Button, Typography, Dialog } from "@mui/material";
+import {
+  Box,
+  Menu,
+  MenuItem,
+  Button,
+  Typography,
+  Dialog,
+  useTheme,
+} from "@mui/material";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -10,6 +18,9 @@ import ErrorIcon from "@mui/icons-material/Error";
 import AddIcon from "@mui/icons-material/Add";
 import AddDog from "../components/AddDog.jsx";
 import { useNavigate } from "react-router-dom";
+import { useWebService } from "../providers/WebServiceProvider.jsx";
+import { useAuth } from "../providers/AuthProvider.jsx";
+import ProcessLoading from "../components/ProcessLoading.jsx";
 
 const StyledButton = styled(Button)({
   padding: "2% 2%",
@@ -21,7 +32,6 @@ const StyledButton = styled(Button)({
 
 //control row click
 //TODO: route to dog page
-
 
 function ViewButton(params) {
   const id = params.params;
@@ -149,17 +159,27 @@ const columns = [
     field: "view",
     headerName: " ",
     flex: 1,
-    renderCell: (params) => (
-      <ViewButton params={params.row.id} />
-    ),
+    renderCell: (params) => <ViewButton params={params.row.id} />,
   },
 ];
 
 const HomePage = () => {
+  const { user } = useAuth();
   const { setSelected } = useUtilProvider();
+  const { allCentres, centreLoading } = useWebService();
+  //display the centre name
+  const [centreValue, setCentreValue] = useState("");
+
+  //this centreIdx is used for the admin user, as it will list all the centres,
+  //the centreIdx will match the centre id, such as when centreIdx = 0 , it represents the all centre
+  //you can use this centreIdx to send a get request to fetch the all centres data
+  const [centreIdx, setCentreIdx] = useState(0);
+
+  const theme = useTheme();
   useEffect(() => {
     setSelected("Home");
-  });
+    setCentreValue(allCentres[centreIdx]);
+  }, [user, centreIdx, centreLoading]);
 
   //control centres drop down
   const [anchorEl, setAnchorEl] = useState(null);
@@ -187,6 +207,9 @@ const HomePage = () => {
       display={"flex"}
       flexDirection={"column"}
       alignItems={"center"}
+      sx={{
+        backgroundColor: theme.palette.secondary.main,
+      }}
     >
       <Box
         sx={{ display: "flex", justifyContent: "space-between", width: "95%" }}
@@ -202,7 +225,7 @@ const HomePage = () => {
         >
           {/* TODO: replace hardcoded string with db */}
           <Typography variant={"h4"} fontWeight={"600"} color={"#000"}>
-            All Centres
+            {centreLoading ? <ProcessLoading /> : centreValue}
           </Typography>
         </StyledButton>
         <Menu
@@ -214,10 +237,19 @@ const HomePage = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          {/* TODO: replace hardcoded string with db */}
-          <MenuItem onClick={handleClose}>Centre 1</MenuItem>
-          <MenuItem onClick={handleClose}>Centre 2</MenuItem>
-          <MenuItem onClick={handleClose}>Centre 3</MenuItem>
+          {/* already replace hardcoded string with db */}
+          {allCentres.map((it, index) => (
+            <MenuItem
+              key={index}
+              onClick={() => {
+                handleClose();
+                setCentreValue(it);
+                setCentreIdx(index);
+              }}
+            >
+              {it}
+            </MenuItem>
+          ))}
         </Menu>
 
         {/* Add dog button */}

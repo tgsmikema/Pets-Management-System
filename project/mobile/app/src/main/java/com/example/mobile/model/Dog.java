@@ -66,6 +66,17 @@ public class Dog {
         this.alert = alert;
     }
 
+    public Dog(String id, String name, String breed, String location, String weight, String date, boolean flag, boolean alert) {
+        this.id = id;
+        this.name = name;
+        this.breed = breed;
+        this.location = location;
+        this.weight = weight;
+        this.date = date;
+        this.flag = flag;
+        this.alert = alert;
+    }
+
 
 
 }

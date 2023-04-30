@@ -5,6 +5,12 @@ using SPCA_backend.Model;
 using SPCA_backend.Handler;
 using Azure.Core;
 using Request = SPCA_backend.Model.Request;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.Extensions.Options;
+using MimeKit;
+using MimeKit.Text;
+
 
 namespace SPCA_backend.Data
 {
@@ -54,6 +60,7 @@ namespace SPCA_backend.Data
                 {
                     UserName = userInDto.UserName,
                     PasswordSha256Hash = SPCAAuthHandler.getSha256Hash(userInDto.Password),
+                    Email = userInDto.Email,
                     UserType = userInDto.UserType,
                     FirstName = userInDto.FirstName,
                     LastName = userInDto.LastName,
@@ -475,11 +482,265 @@ namespace SPCA_backend.Data
             return listOfCentres;
         }
 
+        public StatsOutDTO getCurrentWeekStats(int centerId)
+        {
+            string startOfTheWeekMondayTimeStamp = convertDateTimeToTimestamp(DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday));
+            int startOfWeek = int.Parse(startOfTheWeekMondayTimeStamp);
+            int rightNow = (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
+            StatsOutDTO statsOutDTO = getStatsFromTimestampRangeAndCenterId(startOfWeek, rightNow, centerId);
+            return statsOutDTO;
+
+        }
+
+
+        public IEnumerable<StatsOutDTO> getWeeklyStats(StatsInDTO statsInDTO)
+        {
+            int minTimestamp = int.Parse(statsInDTO.minTimestamp);
+            int maxTimestamp = int.Parse(statsInDTO.maxTimestamp);
+            int centerId = statsInDTO.centerId;
+
+            List<StatsOutDTO> list = new List<StatsOutDTO>();
+
+            for (int i = minTimestamp; i < maxTimestamp; i+= 86400)
+            {
+                list.Add(getStatsFromTimestampRangeAndCenterId(i, i + 86400, centerId));
+            }
+
+            return list.AsEnumerable();
+
+        }
+
+
+        public IEnumerable<StatsOutDTO> getMonthlyStats(StatsInDTO statsInDTO)
+        {
+            int minTimestamp = int.Parse(statsInDTO.minTimestamp);
+            int maxTimestamp = int.Parse(statsInDTO.maxTimestamp);
+            int centerId = statsInDTO.centerId;
+
+            List<StatsOutDTO> list = new List<StatsOutDTO>();
+
+            for (int i = minTimestamp; i < maxTimestamp; i += 345600) // a point every 4 days
+            {
+                list.Add(getStatsFromTimestampRangeAndCenterId(i, i + 345600, centerId));
+            }
+
+            return list.AsEnumerable();
+        }
+
+        // ------------------------------------------------------------------Message------------------------------------------------------------------
+
+
+        public async Task AddNewMessage(MessageInDto messageInDto)
+        {
+            Message newMessage = new Message
+            {
+                FromUserId = messageInDto.FromUserId,
+                ToUserId = messageInDto.ToUserId,
+                IsRead = true,
+                MessageContent = messageInDto.MessageContent,
+                TimeStamp = Convert.ToString((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds),
+            };
+
+            EntityEntry<Message> e = _dbContext.Messages.Add(newMessage);
+            _dbContext.SaveChanges();
+
+            await SendEmail(messageInDto.FromUserId, messageInDto.ToUserId, messageInDto.MessageContent);
+
+        }
+
+
+        public IEnumerable<UserOutDto> getAlreadyMessagedPeopleList(int currentUserId)
+        {
+            HashSet<int> peopleId = new HashSet<int>();
+            IEnumerable<Message> allRelatedMessages = _dbContext.Messages.Where(e => (e.ToUserId == currentUserId || e.FromUserId == currentUserId));
+
+            foreach (Message m in allRelatedMessages)
+            {
+                peopleId.Add(m.FromUserId);
+                peopleId.Add(m.ToUserId);
+            }
+
+            peopleId.Remove(currentUserId);
+
+            IEnumerable<User> allUsers = _dbContext.Users.ToList();
+            List<UserOutDto> usersOut = new List<UserOutDto>();
+
+            foreach(User u in allUsers)
+            {
+                if (peopleId.Contains(u.Id))
+                {
+                    UserOutDto uOut = new UserOutDto
+                    {
+                        Id = u.Id,
+                        UserName = u.UserName,
+                        UserType = u.UserType,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName,
+                        Email = u.Email,
+                        CentreId = u.CentreId,
+                        Token = "hidden"
+                    };
+                    usersOut.Add(uOut);
+                }
+            }
+
+            return usersOut.AsEnumerable();
+        }
+
+        public IEnumerable<UserOutDto> getNeverMessagedPeopleList(int currentUserId)
+        {
+            HashSet<int> peopleId = new HashSet<int>();
+            IEnumerable<Message> allRelatedMessages = _dbContext.Messages.Where(e => (e.ToUserId == currentUserId || e.FromUserId == currentUserId));
+
+            foreach (Message m in allRelatedMessages)
+            {
+                peopleId.Add(m.FromUserId);
+                peopleId.Add(m.ToUserId);
+            }
+
+            peopleId.Remove(currentUserId);
+
+            IEnumerable<User> allUsers = _dbContext.Users.Where(u => u.Id != currentUserId);
+            List<UserOutDto> usersOut = new List<UserOutDto>();
+
+            foreach (User u in allUsers)
+            {
+                if (!peopleId.Contains(u.Id))
+                {
+                    UserOutDto uOut = new UserOutDto
+                    {
+                        Id = u.Id,
+                        UserName = u.UserName,
+                        UserType = u.UserType,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName,
+                        Email = u.Email,
+                        CentreId = u.CentreId,
+                        Token = "hidden"
+                    };
+                    usersOut.Add(uOut);
+                }
+            }
+
+            return usersOut.AsEnumerable();
+        }
+
+        public IEnumerable<MessageOutDto> getChatHistory(int currentUserId, int chatToUserId)
+        {
+            List<MessageOutDto> messageOutDtos = new List<MessageOutDto>();
+            
+            IEnumerable<Message> allRelatedMessages = _dbContext.Messages
+                .Where(e => ((e.ToUserId == currentUserId && e.FromUserId == chatToUserId) || (e.ToUserId == chatToUserId && e.FromUserId == currentUserId)))
+                .OrderBy(e => e.TimeStamp);
+
+            foreach(Message m in allRelatedMessages)
+            {
+                MessageOutDto mOut = new MessageOutDto
+                {
+                    FromUserId = m.FromUserId,
+                    ToUserId = m.ToUserId,
+                    Timestamp = m.TimeStamp,
+                    MessageContent = m.MessageContent
+                };
+                messageOutDtos.Add(mOut);
+            }
+
+            return messageOutDtos.AsEnumerable();
+        }
 
 
         //---------------------------------------------------------------------Helper Methods----------------------------------------------------------------
 
+        private StatsOutDTO getStatsFromTimestampRangeAndCenterId (int minTimestamp, int maxTimestamp, int centerId)
+        {
+            List<Dog> selectedDogs = new List<Dog>();
+            List<Weight> weights = new List<Weight>();
+
+            if (centerId == 0)
+            {
+                selectedDogs = _dbContext.Dogs.ToList().ToList();
+                // return weights from all centers.
+                IEnumerable<Weight> allWeightsTemp = _dbContext.Weights.ToList(); //.Where(e => int.Parse(e.TimeStamp) >= startOfWeek);
+                foreach (Weight w in allWeightsTemp)
+                {
+                    if (int.Parse(w.TimeStamp) >= minTimestamp && int.Parse(w.TimeStamp) <= maxTimestamp)
+                    {
+                        weights.Add(w);
+                    }
+                }
+            }
+            else
+            {
+                IEnumerable<Dog> allDogsFromCurrentCenter = _dbContext.Dogs.Where(e => e.CentreId == centerId);
+                selectedDogs = allDogsFromCurrentCenter.ToList();
+                List<int> allDogIdFromCurrentCenter = new List<int>();
+                foreach (Dog dog in allDogsFromCurrentCenter)
+                {
+                    allDogIdFromCurrentCenter.Add(dog.Id);
+                }
+                IEnumerable<Weight> allWeightsTemp = _dbContext.Weights.ToList();
+                List<Weight> weightsTemp = new List<Weight>();
+                foreach (Weight w in allWeightsTemp)
+                {
+                    if (int.Parse(w.TimeStamp) >= minTimestamp && int.Parse(w.TimeStamp) <= maxTimestamp)
+                    {
+                        weightsTemp.Add(w);
+                    }
+                }
+                weights = weightsTemp.Where(e => allDogIdFromCurrentCenter.Contains(e.DogId)).ToList();
+            }
+
+            HashSet<int> dogIdWeighted = new HashSet<int>();
+
+            foreach (Weight w in weights)
+            {
+                dogIdWeighted.Add(w.DogId);
+            }
+
+            int weighted = dogIdWeighted.Count();
+            int unweighted = selectedDogs.Count() - weighted;
+
+            StatsOutDTO statsOutDTO = new StatsOutDTO
+            {
+                TimeStamp = Convert.ToString(minTimestamp),
+                NoOfDogsWeighted = weighted,
+                NoOfDogsUnweighted = unweighted
+            };
+
+            return statsOutDTO;
+        }
+
+        private string convertDateTimeToTimestamp(DateTime datetime)
+        {
+            return Convert.ToString((int)datetime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+        }
+
+        private async Task SendEmail(int fromUserId, int toUserId, string messageContent)
+        {
+            User userFrom = _dbContext.Users.FirstOrDefault(e => e.Id == fromUserId);
+            User userTo = _dbContext.Users.FirstOrDefault(e => e.Id == toUserId);
+
+            var email = new MimeMessage();
+            email.From.Add(MailboxAddress.Parse("capstone770team2admin@zohomail.com.au"));
+            email.To.Add(MailboxAddress.Parse(userTo.Email));
+            email.Subject = "[SPCA] " + userFrom.FirstName + " " + userFrom.LastName + 
+                " have sent you a message!";
+            string bodyContent = "Hi, " + userTo.FirstName + " \n\n"
+                + "You have just received a message from " + userFrom.FirstName + " " + userFrom.LastName + ",\n" +
+                "The message is quoted below, you can also view it from the chat history in the app: \n\n" + 
+                "----------------------------------------------------------------------------------------------------\n\n" +
+                messageContent;
+            email.Body = new TextPart(TextFormat.Plain) { Text = bodyContent };
+
+            // send email
+            using var smtp = new SmtpClient();
+            smtp.Connect("smtp.zoho.com.au", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate("tgsmikema@gmail.com", "2fast2furious!");
+            smtp.Send(email);
+            smtp.Disconnect(true);
+
+        }
 
 
 
@@ -489,6 +750,7 @@ namespace SPCA_backend.Data
             {
                 Id = user.Id,
                 UserName = user.UserName,
+                Email = user.Email,
                 UserType = user.UserType,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
