@@ -1,14 +1,20 @@
 import { Box, Divider, IconButton, Typography } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications.js";
 
-const ChatUserItem = ({ name, selectUser, setSelectUser, type, index }) => {
+const ChatUserItem = ({
+  name,
+  selectUser,
+  setSelectUser,
+  type,
+  index,
+  onClick,
+}) => {
   return (
     <Box sx={{ textTransform: "capitalize" }}>
       <Box
-        p={1.2}
-        position={"relative"}
+        p={1.3}
         onClick={() => {
-          console.log(name);
+          onClick();
           setSelectUser(index);
         }}
         sx={{
@@ -23,17 +29,6 @@ const ChatUserItem = ({ name, selectUser, setSelectUser, type, index }) => {
           {name}
         </Typography>
         <Typography variant={"body1"}>{type}</Typography>
-        <IconButton
-          sx={{
-            color: "#fa3e3e",
-            position: "absolute",
-            right: 4,
-            top: 4,
-            zIndex: 999,
-          }}
-        >
-          <NotificationsIcon />
-        </IconButton>
       </Box>
       <Divider />
     </Box>

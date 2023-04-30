@@ -5,197 +5,131 @@ import {
   TextField,
   Typography,
   InputAdornment,
-  Stack,
-  IconButton,
   useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import moment from "moment";
+import { constants } from "../constants.js";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
 import SendIcon from "@mui/icons-material/Send";
 import { useAuth } from "../providers/AuthProvider.jsx";
 import ChatUserItem from "../components/ChatUserItem.jsx";
+import UnChattedUserDialog from "../components/UnChattedUserDialog.jsx";
+import axios from "axios";
 
 const ChatPage = () => {
   const { setSelected } = useUtilProvider();
-  useEffect(() => {
-    setSelected("Chat");
-    console.log(user.userName);
-    console.log(
-      moment(parseInt(1672141137 * 1000)).format("YYYY-MM-DD HH:mm:ss")
-    );
-  });
-
-  const { user } = useAuth();
-
-  const [selectUser, setSelectUser] = useState(-1);
-
   const theme = useTheme();
 
-  const useList = [
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Anna Verdi",
-      type: "vet",
-    },
-    {
-      name: "John Doe",
-      type: "volunteer",
-    },
-    {
-      name: "Qingyang LI",
-      type: "admin",
-    },
-    {
-      name: "Hanako Yamada",
-      type: "admin",
-    },
-    {
-      name: "Oliver",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-    {
-      name: "Mike Ma",
-      type: "admin",
-    },
-  ];
+  const { user } = useAuth();
+  const [selectUser, setSelectUser] = useState(-1);
 
-  const chatHistory = [
-    {
-      id: 1,
-      date: "04/09/2022 19:34",
-      messageContent: "Hello mike, how are you?",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
+  const [open, setOpen] = useState(false);
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, [open, setOpen]);
 
-    {
-      id: 2,
-      date: "04/09/2022 19:35",
-      messageContent: "I am fine.Thank you ,and you?",
-      ToUser: { id: 2, name: "admin" },
-      FromUser: { id: 1, name: "mike" },
-    },
+  const timeStampToDate = (timeStamp) => {
+    return moment(parseInt(timeStamp * 1000)).format("YYYY-MM-DD HH:mm:ss");
+  };
 
-    {
-      id: 1,
-      date: "04/09/2022 19:34",
-      messageContent: "Hello mike, how are you?",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
+  //fetch the backend data
 
-    {
-      id: 2,
-      date: "04/09/2022 19:35",
-      messageContent: "I am fine.Thank you ,and you?",
-      ToUser: { id: 2, name: "admin" },
-      FromUser: { id: 1, name: "mike" },
-    },
+  //1. fetch chatted user list
+  const [chattedUserList, setChattedUserList] = useState([]);
+  const fetchChattedUser = useCallback(async () => {
+    const res = await axios.get(
+      `${constants.backend}/chat/getAlreadyMessagedPeopleList?currentUserId=${user.id}`,
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+    setChattedUserList(res.data);
+  }, []);
 
-    {
-      id: 1,
-      date: "04/09/2022 19:34",
-      messageContent: "Hello mike, how are you?",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
+  //2. fetch unchatted user List
+  const [unChattedUserList, setUnChattedUserList] = useState([]);
+  const fetchUnChattedUser = useCallback(async () => {
+    const res = await axios.get(
+      `${constants.backend}/chat/getNeverMessagedPeopleList?currentUserId=${user.id}`,
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+    setUnChattedUserList(res.data);
+  }, []);
 
-    {
-      id: 2,
-      date: "04/09/2022 19:35",
-      messageContent: "I am fine.Thank you ,and you?",
-      ToUser: { id: 2, name: "admin" },
-      FromUser: { id: 1, name: "mike" },
-    },
+  //3.fetch chat history
+  const [chatHistory, setChatHistory] = useState([]);
+  const fetchChatHistory = useCallback(async (friendId) => {
+    const res = await axios.get(
+      `${constants.backend}/chat/getChatHistory?currentUserId=${user.id}&chatToUserId=${friendId}`,
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+    setChatHistory(res.data);
+  }, []);
 
-    {
-      id: 1,
-      date: "04/09/2022 19:34",
-      messageContent: "Hello mike, how are you?",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
+  //4. send the message
+  const [message, setMessage] = useState("");
+  const sendMessage = useCallback(
+    async (fromUserId, toUserId, messageContent) => {
+      const res = await axios.post(
+        `${constants.backend}/chat/send`,
+        {
+          fromUserId: fromUserId,
+          toUserId: toUserId,
+          messageContent: messageContent,
+        },
+        {
+          headers: {
+            Authorization: "Basic " + user.token,
+          },
+        }
+      );
     },
-    {
-      id: 1,
-      date: "04/09/2022 19:34",
-      messageContent: "Hello mike, how are you?",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
-    {
-      id: 2,
-      date: "04/09/2022 19:35",
-      messageContent: "I am fine.Thank you ,and you?",
-      ToUser: { id: 2, name: "admin" },
-      FromUser: { id: 1, name: "mike" },
-    },
+    []
+  );
 
-    {
-      id: 2,
-      date: "04/09/2022 19:35",
-      messageContent:
-        "perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos ",
-      ToUser: { id: 2, name: "admin" },
-      FromUser: { id: 1, name: "mike" },
+  const handleItemClick = useCallback(
+    async (index) => {
+      const friend = unChattedUserList[index];
+      chattedUserList.unshift(friend);
+      await fetchChatHistory(friend.id);
+      unChattedUserList.splice(index, 1);
+      handleClose();
+      setSelectUser(0);
     },
-    {
-      id: 1,
-      date: "04/09/2022 19:36",
-      messageContent:
-        "perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos ",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
+    [unChattedUserList]
+  );
 
-    {
-      id: 1,
-      date: `${moment(parseInt(1672141137 * 1000)).format(
-        "YYYY-MM-DD HH:mm:ss"
-      )}`,
-      messageContent:
-        "Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omniss",
-      ToUser: { id: 1, name: "mike" },
-      FromUser: { id: 2, name: "admin" },
-    },
-  ];
-
+  useEffect(() => {
+    setSelected("Chat");
+    fetchChattedUser();
+    fetchUnChattedUser();
+  }, []);
   return (
     <Box
-      height={"84%"}
+      height={"84vh"}
       width={"100%"}
       display={"flex"}
       sx={{
         backgroundColor: theme.palette.secondary.main,
       }}
     >
+      <UnChattedUserDialog
+        open={open}
+        handleClose={handleClose}
+        unChattedUserList={unChattedUserList}
+        handleItemClick={handleItemClick}
+      />
       {/* left sidebar */}
       <Box
         height={"100%"}
@@ -212,6 +146,9 @@ const ChatPage = () => {
           <Button
             variant={"contained"}
             fullWidth={true}
+            onClick={() => {
+              setOpen(true);
+            }}
             sx={{
               borderRadius: "20px",
               "&:hover": {
@@ -224,13 +161,16 @@ const ChatPage = () => {
         </Box>
         <Divider />
 
-        {useList.map((it, index) => (
+        {chattedUserList?.map((it, index) => (
           <ChatUserItem
-            name={it.name}
-            type={it.type}
+            name={`${it.firstName} ${it.lastName}`}
+            type={it.userType}
             index={index}
             selectUser={selectUser}
             setSelectUser={setSelectUser}
+            onClick={async () => {
+              await fetchChatHistory(it.id);
+            }}
           />
         ))}
       </Box>
@@ -259,10 +199,10 @@ const ChatPage = () => {
               ml={1.5}
             >
               <Typography variant={"h5"} fontWeight={600}>
-                {useList[selectUser].name}
+                {`${chattedUserList[selectUser].firstName} ${chattedUserList[selectUser].lastName}`}
               </Typography>
               <Typography variant={"body1"}>
-                {useList[selectUser].type}
+                {chattedUserList[selectUser].userType}
               </Typography>
             </Box>
           </Box>
@@ -277,37 +217,46 @@ const ChatPage = () => {
               overflowY: "auto",
             }}
           >
-            {chatHistory.map((it, index) => (
-              <Box
-                display={"flex"}
-                flexDirection={"column"}
-                maxWidth={"60%"}
-                alignSelf={
-                  it.FromUser.name === user.userName ? "flex-end" : "flex-start"
-                }
-                px={7}
-                py={1.5}
+            {chatHistory.length === 0 ? (
+              <Typography
+                variant={"h4"}
+                alignSelf={"center"}
+                color={"#000"}
+                mt={10}
               >
+                No Chat History
+              </Typography>
+            ) : (
+              chatHistory.map((it, index) => (
                 <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  maxWidth={"60%"}
                   alignSelf={
-                    it.FromUser.name === user.userName
-                      ? "flex-end"
-                      : "flex-start"
+                    it.fromUserId === user.id ? "flex-end" : "flex-start"
                   }
+                  px={7}
+                  py={1.5}
                 >
-                  {it.date}
+                  <Box
+                    alignSelf={
+                      it.fromUserId === user.id ? "flex-end" : "flex-start"
+                    }
+                  >
+                    {timeStampToDate(it.timestamp)}
+                  </Box>
+                  <Box
+                    p={2}
+                    sx={{
+                      borderRadius: "13px",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    {it.messageContent}
+                  </Box>
                 </Box>
-                <Box
-                  p={2}
-                  sx={{
-                    borderRadius: "13px",
-                    backgroundColor: "#fff",
-                  }}
-                >
-                  {it.messageContent}
-                </Box>
-              </Box>
-            ))}
+              ))
+            )}
           </Box>
           <Box
             height={"8%"}
@@ -322,6 +271,10 @@ const ChatPage = () => {
               <TextField
                 size={"small"}
                 fullWidth={true}
+                value={message}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment
@@ -334,7 +287,23 @@ const ChatPage = () => {
                         },
                       }}
                     >
-                      <SendIcon />
+                      <SendIcon
+                        onClick={async () => {
+                          const friend = chattedUserList[selectUser];
+                          const mess = message;
+                          setMessage("");
+                          setChatHistory([
+                            ...chatHistory,
+                            {
+                              fromUserId: user.id,
+                              toUserId: friend.id,
+                              messageContent: mess,
+                              timestamp: Date.now() / 1000,
+                            },
+                          ]);
+                          await sendMessage(user.id, friend.id, mess);
+                        }}
+                      />
                     </InputAdornment>
                   ),
                 }}
