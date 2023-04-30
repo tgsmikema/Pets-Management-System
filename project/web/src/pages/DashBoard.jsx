@@ -15,24 +15,22 @@ const DashBoard = () => {
   const { user } = useAuth();
 
   return (
-    <Box height={"100vh"} width={"100vw"}>
+    <Box
+      height={"100vh"}
+      width={"100vw"}
+      sx={{
+        overflowX: "hidden",
+      }}
+    >
       <TopBar isLogin={false} />
-      <Box
-        height={"84%"}
-        width={"100%"}
-        sx={{
-          backgroundColor: theme.palette.secondary.main,
-        }}
-      >
-        <Routes>
-          <Route index element={<Navigate to={"/home"} />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/stats" element={<StatsPage />} />
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/dogs/:id" element={<DogPage />} />
-        </Routes>
-      </Box>
+      <Routes>
+        <Route index element={<Navigate to={"/home"} />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/stats" element={<StatsPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/dogs/:id" element={<DogPage />} />
+      </Routes>
       <Footer />
     </Box>
   );

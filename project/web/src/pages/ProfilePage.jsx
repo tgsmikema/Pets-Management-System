@@ -1,4 +1,4 @@
-import { Box, Button, Typography, Dialog } from "@mui/material";
+import { Box, Button, Typography, Dialog, useTheme } from "@mui/material";
 import { useAuth } from "../providers/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
@@ -7,24 +7,23 @@ import AddIcon from "@mui/icons-material/Add";
 import AddUser from "../components/AddUser.jsx";
 import EditUser from "../components/EditUser.jsx";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-
+import { useWebService } from "../providers/WebServiceProvider.jsx";
 
 const styles = {
-  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-  padding: '2% 2% 1% 2%',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  height: '100%',
+  boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+  padding: "1.5%",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  height: "100%",
 };
 
 const button_styles = {
-  backgroundColor: '#FFFFFF',
-  borderRadius: '5px',
-  minWidth: '200px',
-  margin: '10px',
+  backgroundColor: "#FFFFFF",
+  borderRadius: "5px",
+  minWidth: "200px",
+  margin: "10px",
 };
-
 
 //TODO: replace hardcoded values with db
 const rows = [
@@ -72,9 +71,9 @@ const rows = [
   },
 ];
 
-
-
 const ProfilePage = () => {
+  const theme = useTheme();
+  const { setAllCentres } = useWebService();
   const columns = [
     { field: "id", headerName: "id", flex: 1 },
     { field: "name", headerName: "name", flex: 1.5 },
@@ -113,7 +112,6 @@ const ProfilePage = () => {
     setOpenAddUser(false);
   };
 
-  
   //control edit button
   const [openEditUser, setOpenEditUser] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -127,21 +125,33 @@ const ProfilePage = () => {
   };
 
   return (
-    <Box>
-      <Box sx={styles} >
-        <div style={{ flex: '1 1 0%' }}>
-          <Typography variant={"h3"} fontWeight={"600"} color={"#000"}>
+    <Box
+      sx={{
+        backgroundColor: theme.palette.secondary.main,
+      }}
+    >
+      <Box sx={styles}>
+        <div style={{ flex: "1 1 0%" }}>
+          <Typography variant={"h4"} fontWeight={"650"} color={"#000"}>
             Maria Ivanova
           </Typography>
-          <Typography variant={"h5"} fontWeight={"500"} color={"#000"}>
-            Software Engineer at UOA 
+          <Typography variant={"h6"} fontWeight={"500"} color={"#000"}>
+            Software Engineer at UOA
           </Typography>
-          <Typography variant={"h5"} fontWeight={"500"} color={"#000"}>
+          <Typography variant={"h6"} fontWeight={"500"} color={"#000"}>
             Admin
           </Typography>
         </div>
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end'}}>
-          <Button sx={{...button_styles, marginLeft: 'auto'}}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button
+            sx={{ ...button_styles, marginLeft: "auto" }}
             variant={"contained"}
             onClick={() => {
               // TODO: Add code to change password
@@ -149,24 +159,36 @@ const ProfilePage = () => {
           >
             Change Password
           </Button>
-          <Button sx={button_styles}
+          <Button
+            sx={button_styles}
             variant={"contained"}
             onClick={() => {
               logout();
+              setAllCentres([]);
               navigate("/");
             }}
           >
             Log out
           </Button>
         </div>
-        
       </Box>
-      
+
       <Box
-        height={"100%"}
-        width={"100%"}> {/* TODO: ADD CODE HERE TO MAKE THIS ONLY SHOW TO ADMINS */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1%'}}>
-          <Typography variant={"h3"} fontWeight={"600"} color={"#000"}>
+        width={"100%"}
+        padding={3}
+        boxSizing={"border-box"}
+        sx={{
+          overflowY: "auto",
+        }}
+      >
+        {/* TODO: ADD CODE HERE TO MAKE THIS ONLY SHOW TO ADMINS */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography variant={"h4"} fontWeight={"650"} color={"#000"}>
             Manage User Access
           </Typography>
           {/* Add user button */}
@@ -186,16 +208,17 @@ const ProfilePage = () => {
             </Button>
           </Box>
         </div>
-
         {/* Table */}
         <Box
           height={"500px"}
-          width={"95%"}
+          width={"100%"}
+          display={"flex"}
+          justifyContent={"center"}
+          mt={2}
           sx={{
             backgroundColor: "#fff",
             borderRadius: "13px",
             boxShadow: 3,
-            marginLeft: '2%',
           }}
         >
           <DataGrid
@@ -211,7 +234,6 @@ const ProfilePage = () => {
             }}
           />
         </Box>
-
         {/* Add user modal */}
         <Dialog
           open={openAddUser}

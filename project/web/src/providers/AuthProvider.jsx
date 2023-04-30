@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import axios from "axios";
 import useLocalStorageProvider from "./useLocalStorageProvider.jsx";
 import { constants } from "../constants.js";
@@ -9,19 +15,20 @@ const AuthContext = React.createContext({});
 export function AuthProvider({ children }) {
   // we will use local storage to store the user and token, when the user log out these will clear
   const [user, setUser] = useLocalStorageProvider("user", null);
-  // const [token, setToken] = useLocalStorageProvider("token", "");
+  const [loading, setLoading] = useState(false);
 
   //this is login function, have two parameters username,password, this function will return Promise
   //object, if success, the attribute data will contain the data we want to use
   const login = useCallback(
     async (userName, passWord) => {
+      setLoading(true);
       const res = await axios.get(`${constants.backend}/user/login`, {
         headers: {
           Authorization: "Basic " + btoa(`${userName}:${passWord}`),
         },
       });
-      console.log(res);
-      return res;
+      setLoading(false);
+      setUser(res.data);
     },
     [user]
   );
@@ -36,6 +43,7 @@ export function AuthProvider({ children }) {
     setUser,
     login,
     logout,
+    loading,
   };
 
   return (
