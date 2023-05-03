@@ -1,7 +1,12 @@
 package com.example.mobile.service;
 
 import com.example.mobile.SPCApplication;
+import com.example.mobile.model.Centre;
+import com.example.mobile.model.TimeWeightRequest;
 import com.example.mobile.model.User;
+import com.example.mobile.model.WeightData;
+
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -28,5 +33,54 @@ public class SPCAService {
         Call<User> call = userService.login();
         return call;
     }
+
+    public Call<List<Centre>> fetchAllCentres(String token){
+        client = new OkHttpClient.Builder()
+                .addInterceptor(new AuthInterceptor(token))
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(SPCApplication.baseUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UtilService utilService = retrofit.create(UtilService.class);
+        Call<List<Centre>> call = utilService.fetchAllCentres();
+        return call;
+    }
+
+    public Call<WeightData> fetchThisWeekStatist(String token, int centreId){
+        client = new OkHttpClient.Builder()
+                .addInterceptor(new AuthInterceptor(token))
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(SPCApplication.baseUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UtilService utilService = retrofit.create(UtilService.class);
+        Call<WeightData> weekWeightDataCall = utilService.fetchThisWeekStatic(centreId);
+        return weekWeightDataCall;
+    }
+
+    public Call<List<WeightData>> fetchWeekData(String token, TimeWeightRequest body){
+        client = new OkHttpClient.Builder()
+                .addInterceptor(new AuthInterceptor(token))
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(SPCApplication.baseUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UtilService utilService = retrofit.create(UtilService.class);
+        Call<List<WeightData>> listCall = utilService.fetchWeekDate(body);
+        return listCall;
+    }
+
 
 }

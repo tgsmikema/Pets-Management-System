@@ -16,7 +16,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.mobile.SPCApplication;
 import com.example.mobile.databinding.FragmentStatistBinding;
+import com.example.mobile.model.TimeWeightRequest;
+import com.example.mobile.model.WeightData;
+import com.example.mobile.service.SPCAService;
+import com.example.mobile.util.TimeUtil;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -30,7 +35,13 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class StatistFragment extends Fragment{
 
@@ -81,21 +92,56 @@ public class StatistFragment extends Fragment{
 
     private List<String> allCentres;
 
+    private SPCAService spcaService;
+
+    private int centreId;
+
+    private volatile boolean isActivityRunning;
+
+    private long curTimeStamp;
+
+    public ImageButton getImageButtonForWeekBack() {
+        return imageButtonForWeekBack;
+    }
+
+    private List<Integer> weekWeightList;
+    private List<Integer> weekUnWeightList;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentStatistBinding.inflate(inflater, container, false);
+        centreId = SPCApplication.currentUser.getUserType().equals("admin") ? 0 : SPCApplication.currentUser.getCentreId();
+        isActivityRunning = true;
+        curTimeStamp = TimeUtil.curTimeStamp();
+        weekWeightList = new ArrayList<>();
+        weekUnWeightList = new ArrayList<>();
+
+//        long time = TimeUtil.curTimeStamp();
+//        Date date = new Date(time);
+//        System.out.println(date);
+//        date = new Date(TimeUtil.getPreviousWeekTimeStamp(time));
+//        System.out.println(date);
+//        System.out.println(TimeUtil.curTimeStamp());
+//        System.out.println(TimeUtil.getDateFromTimeStamp(TimeUtil.curTimeStamp()));
+//
+//        Date date = TimeUtil.getDateFromTimeStamp(TimeUtil.curTimeStamp());
+//        System.out.println(date.getMonth() + 1);
+//        System.out.println(date.getDate());
+//        System.out.println(date.getDay());
         initialView();
         initSpinner();
         initWeekLineData();
         initMonthLineChart();
+        fetchNeededData();
         return binding.getRoot();
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        isActivityRunning = true;
         initialView();
         initSpinner();
         initWeekLineData();
@@ -103,9 +149,83 @@ public class StatistFragment extends Fragment{
     }
 
     @Override
+    public void onPause(){
+        super.onPause();
+        isActivityRunning = false;
+        binding = null;
+    }
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
+        isActivityRunning = false;
         binding = null;
+    }
+
+    public void fetchNeededData(){
+        spcaService = new SPCAService();
+        Call<WeightData> call = spcaService.fetchThisWeekStatist(SPCApplication.currentUser.getToken(),centreId);
+        call.enqueue(new Callback<WeightData>() {
+            @Override
+            public void onResponse(Call<WeightData> call, Response<WeightData> response) {
+                  WeightData weekWeightData = response.body();
+                  setThisWeekStatist(weekWeightData.getNoOfDogsWeighted(),weekWeightData.getNoOfDogsUnweighted());
+            }
+
+            @Override
+            public void onFailure(Call<WeightData> call, Throwable t) {
+            }
+        });
+
+        fetchWeekDate();
+    }
+
+    public void fetchWeekDate(){
+        long minTimestamp = TimeUtil.getPreviousWeekTimeStamp(curTimeStamp) / 1000;
+        long maxTimestamp = curTimeStamp / 1000;
+
+        Call<List<WeightData>> listCall = spcaService.fetchWeekData(SPCApplication.currentUser.getToken(), new TimeWeightRequest(centreId, String.valueOf(minTimestamp), String.valueOf(maxTimestamp)));
+
+        listCall.enqueue(new Callback<List<WeightData>>() {
+            @Override
+            public void onResponse(Call<List<WeightData>> call, Response<List<WeightData>> response) {
+                List<WeightData> body = response.body();
+                setWeekData(body);
+            }
+
+            @Override
+            public void onFailure(Call<List<WeightData>> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    public void setThisWeekStatist(int weight,int unweight){
+
+        if(!isActivityRunning){
+            return;
+        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Update UI here
+                // You can access UI components like TextView, ImageView, etc. here
+                textViewForWeighted.setText(String.valueOf(weight));
+                textViewForUnweighted.setText(String.valueOf(unweight));
+            }
+        });
+    }
+
+    public void setWeekData(List<WeightData> data){
+        if(!isActivityRunning) return;
+         weekWeightList = data.stream().map(it -> it.getNoOfDogsWeighted()).collect(Collectors.toList());
+         weekUnWeightList = data.stream().map(it -> it.getNoOfDogsUnweighted()).collect(Collectors.toList());
+         initWeekLineData();
+    }
+
+    public String getWeekDateString (){
+        long preWeekTimeStamp = TimeUtil.getPreviousWeekTimeStamp(curTimeStamp);
+        return TimeUtil.getDateSimplyString(preWeekTimeStamp) + "-" + TimeUtil.getDateSimplyString(curTimeStamp);
     }
 
     public void initialView() {
@@ -120,10 +240,17 @@ public class StatistFragment extends Fragment{
         imageButtonForMonthForward = binding.buttonMonthForward;
         weekLineChart = binding.weekChart;
         monthLineChart = binding.monthChart;
+        textViewForWeekDate.setText(getWeekDateString());
     }
 
     public void initSpinner(){
-        allCentres = new ArrayList<>(Arrays.asList("All Centres","Centre1","Centre2","Centre3","Centre4"));
+        if(SPCApplication.currentUser.getUserType().equals("admin")){
+            allCentres = SPCApplication.allCentres.stream().map(it -> it.getName()).collect(Collectors.toList());
+        }else{
+            allCentres = new ArrayList<String>();
+            allCentres.add(SPCApplication.allCentres.get(SPCApplication.currentUser.getCentreId()).getName());
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, allCentres);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -133,6 +260,10 @@ public class StatistFragment extends Fragment{
                 TextView curItem = (TextView) parent.getChildAt(0);
                 curItem.setTextSize(30);
                 curItem.setTypeface(null, Typeface.BOLD);
+                if(SPCApplication.currentUser.getUserType().equals("admin")){
+                    centreId = position;
+                    fetchNeededData();
+                }
             }
 
             @Override
@@ -151,33 +282,33 @@ public class StatistFragment extends Fragment{
         Legend legend = weekLineChart.getLegend();
         legend.setTextSize(12);
 
-        weekLineChart.setNoDataText("No data available");
+        if(weekWeightList.size() == 0){
+            weekLineChart.setNoDataText("No data available");
+        }
+        String[] week = new String[] {"Mon","Tue","Wed","Thur","Fri","Sat","Sun"};
+        int idx = new Date(curTimeStamp).getDay();
+        String[] weekOnXAix = new String[7];
+        for(int i = 0;i<7;i++){
+            weekOnXAix[i] = week[(idx + i) % 7];
+        }
 
         XAxis xAxis = weekLineChart.getXAxis();
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(new String[] {"Mon","Tue","Wed","Thur","Fri","Sat","Sun"}));
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(weekOnXAix));
         xAxis.setGranularity(1);
         xAxis.setTextSize(13);
         YAxis yAxis = weekLineChart.getAxisLeft();
         yAxis.setTextSize(13);
         YAxis yAxisRight = weekLineChart.getAxisRight();
         yAxisRight.setTextSize(13);
-        List<LineChartData> dataObjects = new ArrayList<>(Arrays.asList(new LineChartData(0,123),
-                new LineChartData(1,56),
-                new LineChartData(2,89),
-                new LineChartData(3,29),
-                new LineChartData(4,189),
-                new LineChartData(5,79),
-                new LineChartData(6,101)
-                ));
+        List<LineChartData> dataObjects = new ArrayList<>();
+        for(int i = 0;i<weekWeightList.size();i++){
+             dataObjects.add(new LineChartData(i, weekWeightList.get(i)));
+        }
 
-        List<LineChartData> dataObjects1 = new ArrayList<>(Arrays.asList(new LineChartData(0,223)
-                ,new LineChartData(1,156),
-                new LineChartData(2,89),
-                new LineChartData(3,129),
-                new LineChartData(4,19),
-                new LineChartData(5,109),
-                new LineChartData(6,11)
-                ));
+        List<LineChartData> dataObjects1 = new ArrayList<>();
+        for(int i = 0;i<weekUnWeightList.size();i++){
+            dataObjects1.add(new LineChartData(i, weekUnWeightList.get(i)));
+        }
 
         List<Entry> entries = new ArrayList<Entry>();
         for (LineChartData data : dataObjects) {

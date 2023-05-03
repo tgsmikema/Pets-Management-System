@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobile.R;
+import com.example.mobile.SPCApplication;
 import com.example.mobile.databinding.FragmentHomeBinding;
 import com.example.mobile.model.Dog;
 import com.example.mobile.model.User;

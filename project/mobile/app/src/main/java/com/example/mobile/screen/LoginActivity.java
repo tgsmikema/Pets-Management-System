@@ -13,9 +13,12 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.mobile.SPCApplication;
 import com.example.mobile.databinding.ActivityLoginBinding;
+import com.example.mobile.model.Centre;
 import com.example.mobile.model.User;
 import com.example.mobile.service.SPCAService;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         initialView();
         spcaService = new SPCAService();
         dialogs = new MaterialDialog.Builder(this).content("Please wait").progress(true, 0).cancelable(false).build();
-        checkUserInfo();
+//        checkUserInfo();
     }
 
     @Override
@@ -94,7 +97,6 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                dialogs.dismiss();
                 if (response.isSuccessful()) {
                     User user = response.body();
                     //set the global current user
@@ -102,10 +104,10 @@ public class LoginActivity extends AppCompatActivity {
                     textViewErrorMessage.setText("");
                     editTextUserName.setText("");
                     editTextPassword.setText("");
-                    if(!hasInfo){
-                        saveUserInfo(username,password);
-                    }
-                    goToMainActivity();
+//                    if(!hasInfo){
+//                        saveUserInfo(username,password);
+//                    }
+                    fetchAllCentres();
                 } else {
                     // Handle error
                     showErrorMessage("Your username or password is invalid");
@@ -138,4 +140,25 @@ public class LoginActivity extends AppCompatActivity {
             userLogin(username,password,true);
         }
     }
+
+    public void fetchAllCentres(){
+        Call<List<Centre>> listCall = spcaService.fetchAllCentres(SPCApplication.currentUser.getToken());
+        listCall.enqueue(new Callback<List<Centre>>() {
+            @Override
+            public void onResponse(Call<List<Centre>> call, Response<List<Centre>> response) {
+                dialogs.dismiss();
+                List<Centre> res = response.body();
+                if(res != null){
+                    res.add(0,new Centre(0,"All Centres"));
+                    SPCApplication.allCentres = res;
+                }
+                goToMainActivity();
+            }
+            @Override
+            public void onFailure(Call<List<Centre>> call, Throwable t) {
+                dialogs.dismiss();
+            }
+        });
+    }
+
 }
