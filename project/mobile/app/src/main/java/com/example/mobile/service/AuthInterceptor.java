@@ -18,7 +18,7 @@ public class AuthInterceptor implements Interceptor {
 
     @Override
     public Response intercept(Chain chain) throws IOException {
-        String basicAuth = "Basic " + Base64.encodeToString(token.getBytes(), Base64.NO_WRAP);
+        String basicAuth = "Basic " + token;
 
         Request request = chain.request().newBuilder()
                 .addHeader("Authorization", basicAuth)
