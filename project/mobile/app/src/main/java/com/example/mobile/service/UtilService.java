@@ -21,6 +21,9 @@ public interface UtilService {
     Call<WeightData> fetchThisWeekStatic(@Query("centerId") int centreId);
 
     @POST("util/weeklyStats")
-    Call<List<WeightData>> fetchWeekDate(@Body TimeWeightRequest body);
+    Call<List<WeightData>> fetchWeekData(@Body TimeWeightRequest body);
+
+    @POST("util/monthlyStatus")
+    Call<List<WeightData>> fetchMonthData(@Body TimeWeightRequest body);
 
 }

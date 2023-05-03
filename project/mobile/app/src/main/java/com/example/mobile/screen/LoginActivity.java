@@ -110,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                     fetchAllCentres();
                 } else {
                     // Handle error
+                    dialogs.dismiss();
                     showErrorMessage("Your username or password is invalid");
                 }
             }

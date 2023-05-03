@@ -78,7 +78,23 @@ public class SPCAService {
                 .build();
 
         UtilService utilService = retrofit.create(UtilService.class);
-        Call<List<WeightData>> listCall = utilService.fetchWeekDate(body);
+        Call<List<WeightData>> listCall = utilService.fetchWeekData(body);
+        return listCall;
+    }
+
+    public Call<List<WeightData>> fetchMonthData(String token, TimeWeightRequest body){
+        client = new OkHttpClient.Builder()
+                .addInterceptor(new AuthInterceptor(token))
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(SPCApplication.baseUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UtilService utilService = retrofit.create(UtilService.class);
+        Call<List<WeightData>> listCall = utilService.fetchMonthData(body);
         return listCall;
     }
 
