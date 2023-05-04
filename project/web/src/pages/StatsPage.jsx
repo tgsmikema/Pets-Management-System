@@ -163,7 +163,7 @@ const StatsPage = () => {
   const fetchAllCentreData = useCallback(async () => {
     const res = await axios.get(
       `${constants.backend}/util/thisWeekStats?centerId=${
-        allCentres.length === 1 ? user.centreId : centreIdx
+        user.userType !== "admin" ? user.centreId : centreIdx
       }`,
       {
         headers: {
@@ -194,7 +194,7 @@ const StatsPage = () => {
     const res = await axios.post(
       `${constants.backend}/util/weeklyStats`,
       {
-        centerId: user.userType !== "admin" ? user.centerId : centreIdx,
+        centerId: user.userType !== "admin" ? user.centreId : centreIdx,
         minTimestamp: Math.floor(
           getPreviousWeekTimeStamp(weekTimeStamp) / 1000
         ).toString(),
@@ -241,7 +241,7 @@ const StatsPage = () => {
     const res = await axios.post(
       `${constants.backend}/util/monthlyStatus`,
       {
-        centerId: user.userType !== "admin" ? user.centerId : centreIdx,
+        centerId: user.userType !== "admin" ? user.centreId : centreIdx,
         minTimestamp: Math.floor(
           getFirstDayOfMonth(monthTimeStamp) / 1000
         ).toString(),
