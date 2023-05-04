@@ -8,15 +8,47 @@ import {
   MenuItem,
 } from "@mui/material";
 import { customColor } from "../theme.js";
+import { useCallback, useState } from "react";
+import axios from "axios";
+import { constants } from "../constants.js";
+import { useAuth } from "../providers/AuthProvider.jsx";
 
 const LoginForm = (props) => {
-  const { onClose } = props;
+  const { onClose, allCentres } = props;
   const theme = useTheme();
+  const { user } = useAuth();
+
+  const [dogName, setDogName] = useState("");
+  const [dogBreed, setDogBreed] = useState("");
+  const [centreId, setCentreId] = useState(0);
+
+  const [errorDisplay, setErrorDisplay] = useState("none");
 
   const handleCancel = () => {
     onClose();
   };
 
+  //create a dog request
+  const createDog = useCallback(async () => {
+    if (dogName.trim() === "" || dogBreed.trim() === "" || centreId === 0) {
+      setErrorDisplay("block");
+      return;
+    }
+    onClose();
+    const res = await axios.post(
+      `${constants.backend}/dog/register`,
+      {
+        name: dogName,
+        breed: dogBreed,
+        centreId: centreId,
+      },
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+  }, [dogBreed, dogName, centreId]);
   return (
     <Box
       p={4}
@@ -41,6 +73,7 @@ const LoginForm = (props) => {
       <Box>
         <TextField
           fullWidth
+          onChange={(e) => setDogName(e.target.value)}
           size={"small"}
           sx={{
             backgroundColor: theme.palette.secondary.main,
@@ -55,6 +88,7 @@ const LoginForm = (props) => {
       <Box>
         <TextField
           fullWidth
+          onChange={(e) => setDogBreed(e.target.value)}
           size={"small"}
           sx={{
             backgroundColor: theme.palette.secondary.main,
@@ -68,19 +102,38 @@ const LoginForm = (props) => {
       </Box>
       <Box>
         <Select
-          fullWidth="true"
+          fullWidth
           sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
         >
           {/* TODO: replace names */}
-          <MenuItem value={"Centre 1"}>Centre 1</MenuItem>
-          <MenuItem value={"Centre 2"}>Centre 2</MenuItem>
-          <MenuItem value={"Centre 3"}>Centre 3</MenuItem>
+          {allCentres.map((it, index) => (
+            <MenuItem
+              key={index}
+              value={it}
+              onClick={() => {
+                setCentreId(index + 1);
+              }}
+            >
+              {it}
+            </MenuItem>
+          ))}
         </Select>
+      </Box>
+      <Box>
+        <Typography
+          variant={"body2"}
+          fontWeight={"500"}
+          color={"red"}
+          pt={2}
+          display={errorDisplay}
+        >
+          Please fill all information
+        </Typography>
       </Box>
       <Box
         display={"flex"}
         justifyContent={"space-between"}
-        paddingTop={"30px"}
+        paddingTop={"20px"}
       >
         <Button
           variant={"contained"}
@@ -104,7 +157,7 @@ const LoginForm = (props) => {
               backgroundColor: theme.palette.primary.main,
             },
           }}
-          // TODO: add onClick to create dog
+          onClick={createDog}
         >
           CREATE
         </Button>

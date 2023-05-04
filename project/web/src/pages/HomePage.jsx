@@ -8,7 +8,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/material/styles";
@@ -21,6 +21,8 @@ import { useNavigate } from "react-router-dom";
 import { useWebService } from "../providers/WebServiceProvider.jsx";
 import { useAuth } from "../providers/AuthProvider.jsx";
 import ProcessLoading from "../components/ProcessLoading.jsx";
+import axios from "axios";
+import { constants } from "../constants.js";
 
 const StyledButton = styled(Button)({
   padding: "2% 2%",
@@ -51,101 +53,16 @@ function ViewButton(params) {
   );
 }
 
-//TODO: replace hardcoded values with db
-const rows = [
-  {
-    id: "8093",
-    flagged: "true",
-    alert: "true",
-    name: "Kyra",
-    breed: "Border Collie",
-    last: "2021-10-05",
-    weight: "14.8",
-  },
-  {
-    id: "8043",
-    flagged: "false",
-    alert: "false",
-    name: "Malika",
-    breed: "Samoyed",
-    last: "2021-10-05",
-    weight: "22.4",
-  },
-  {
-    id: "4759",
-    flagged: "false",
-    alert: "true",
-    name: "Nutella",
-    breed: "Dachshund",
-    last: "2021-10-05",
-    weight: "10.0",
-  },
-  {
-    id: "2406",
-    flagged: "false",
-    alert: "false",
-    name: "Oliver",
-    breed: "Basset Hound",
-    last: "2021-10-05",
-    weight: "14.3",
-  },
-  {
-    id: "2346",
-    flagged: "true",
-    alert: "true",
-    name: "Otto",
-    breed: "Mixed",
-    last: "2021-10-05",
-    weight: "23.4",
-  },
-  {
-    id: "2467",
-    flagged: "true",
-    alert: "false",
-    name: "Ravioli",
-    breed: "Goldendoodle",
-    last: "2021-10-05",
-    weight: "18.7",
-  },
-  {
-    id: "0489",
-    flagged: "false",
-    alert: "false",
-    name: "Ted",
-    breed: "Corgi",
-    last: "2021-10-05",
-    weight: "8.9",
-  },
-  {
-    id: "1394",
-    flagged: "false",
-    alert: "false",
-    name: "Wolf",
-    breed: "Husky",
-    last: "2021-10-05",
-    weight: "23.9",
-  },
-  {
-    id: "8401",
-    flagged: "false",
-    alert: "true",
-    name: "Zephyr",
-    breed: "Australian Shepherd",
-    last: "2021-10-05",
-    weight: "21.0",
-  },
-];
-
 const columns = [
   {
-    field: "flagged",
+    field: "isFlag",
     headerName: "flagged",
     flex: 1,
     renderCell: (params) =>
       params.value === "true" ? <FlagCircleIcon /> : null,
   },
   {
-    field: "alert",
+    field: "isAlert",
     headerName: "alert",
     flex: 1,
     renderCell: (params) => (params.value === "true" ? <ErrorIcon /> : null),
@@ -153,11 +70,11 @@ const columns = [
   { field: "id", headerName: "id", flex: 1 },
   { field: "name", headerName: "name", flex: 1.5 },
   { field: "breed", headerName: "breed", flex: 1.5 },
-  { field: "last", headerName: "last check-in", flex: 1.5 },
-  { field: "weight", headerName: "weight(kg)", flex: 1 },
+  { field: "lastCheckInTimeStamp", headerName: "last check-in", flex: 1.5 },
+  { field: "lastCheckInWeight", headerName: "weight(kg)", flex: 1 },
   {
     field: "view",
-    headerName: " ",
+    headerName: "",
     flex: 1,
     renderCell: (params) => <ViewButton params={params.row.id} />,
   },
@@ -176,10 +93,6 @@ const HomePage = () => {
   const [centreIdx, setCentreIdx] = useState(0);
 
   const theme = useTheme();
-  useEffect(() => {
-    setSelected("Home");
-    setCentreValue(allCentres[centreIdx]);
-  }, [user, centreIdx, centreLoading]);
 
   //control centres drop down
   const [anchorEl, setAnchorEl] = useState(null);
@@ -199,6 +112,44 @@ const HomePage = () => {
   const handleAddDogClose = () => {
     setOpenAddDog(false);
   };
+
+  const getDateString = useCallback((timestamp) => {
+    const date = new Date(timestamp * 1000);
+    return (
+      date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear()
+    );
+  }, []);
+
+  // fetch data from the backend
+  const [dogList, setDogList] = useState([]);
+  const fetchDogData = useCallback(async () => {
+    const res = await axios.get(
+      `${constants.backend}/dog/${
+        user.userType === "admin"
+          ? centreIdx === 0
+            ? "adminListAllCentres"
+            : "adminListOneCentre?centreId=" + centreIdx
+          : "userListOwnCentre"
+      }`,
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+
+    const dogArr = res.data.map((it, index) => ({
+      ...it,
+      lastCheckInTimeStamp: getDateString(it.lastCheckInTimeStamp),
+    }));
+    setDogList(dogArr);
+  }, [user, centreIdx]);
+
+  useEffect(() => {
+    setSelected("Home");
+    setCentreValue(allCentres[centreIdx]);
+    fetchDogData();
+  }, [user, centreIdx, centreLoading, openAddDog]);
 
   return (
     <Box
@@ -281,9 +232,9 @@ const HomePage = () => {
         }}
       >
         <DataGrid
-          rows={rows}
+          rows={dogList}
           columns={columns}
-          columnHeaderHeight={"45"}
+          columnHeaderHeight={45}
           slots={{ toolbar: GridToolbar }}
           slotProps={{
             toolbar: {
@@ -302,7 +253,12 @@ const HomePage = () => {
         fullWidth={true}
         PaperProps={{ sx: { borderRadius: "20px", height: "70%" } }}
       >
-        <AddDog onClose={handleAddDogClose} />
+        <AddDog
+          onClose={handleAddDogClose}
+          allCentres={
+            user.userType === "admin" ? allCentres.slice(1) : allCentres
+          }
+        />
       </Dialog>
     </Box>
   );
