@@ -16,17 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.mobile.R;
 import com.example.mobile.SPCApplication;
-import com.example.mobile.databinding.FragmentHomeBinding;
 import com.example.mobile.databinding.FragmentMessageBinding;
 import com.example.mobile.model.User;
-import com.example.mobile.screen.home.HomeFragment;
 import com.example.mobile.screen.message.ChatPage.ChatFragment;
+import com.example.mobile.service.SPCAService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MessageFragment extends Fragment implements OnItemClickListener {
 
@@ -36,11 +38,23 @@ public class MessageFragment extends Fragment implements OnItemClickListener {
 
     private ChatUserAdapter adapter;
 
+    private SPCAService spcaService;
+
+    private List<User> chattedUserList;
+
+    private List<User> unChattedUserList;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentMessageBinding.inflate(inflater, container, false);
         initialView();
+        spcaService = new SPCAService();
+        chattedUserList = new ArrayList<>();
+        unChattedUserList = new ArrayList<>();
+        fetchAllChattedUsers();
+        fetchAllUnChattedUsers();
+
         return binding.getRoot();
     }
 
@@ -56,19 +70,40 @@ public class MessageFragment extends Fragment implements OnItemClickListener {
         binding = null;
     }
 
+    public void fetchAllChattedUsers(){
+        Call<List<User>> listCall = spcaService.fetchAllChattedUsers(SPCApplication.currentUser.getToken(), SPCApplication.currentUser.getId());
+        listCall.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                List<User> body = response.body();
+                chattedUserList = body;
+                initRecycleViewAdapter();
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void fetchAllUnChattedUsers(){
+        Call<List<User>> listCall = spcaService.fetchAllUnChattedUsers(SPCApplication.currentUser.getToken(), SPCApplication.currentUser.getId());
+        listCall.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                List<User> body = response.body();
+                unChattedUserList = body;
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+
+            }
+        });
+    }
     public void initialView() {
 
-        List<User> userList = new ArrayList<>(Arrays.asList(
-                new User("Mike Ma", "admin"),
-                new User("Anna Verdi", "vet"),
-                new User("John Doe", "volunteer"),
-                new User("Fulano de Tal", "admin"),
-                new User("Qingyang Li", "vet"),
-                new User("Zhang San", "volunteer"),
-                new User("Nomen Nescio", "vet"),
-                new User("Hanako Yamada", "admin"),
-                new User("Jake Ma", "admin")
-        ));
         buttonNewMessage = binding.buttonNewMessage;
         buttonNewMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +112,11 @@ public class MessageFragment extends Fragment implements OnItemClickListener {
             }
         });
         chatUserRecyclerView = binding.chatUserRecyclerview;
-        adapter = new ChatUserAdapter(userList);
+        initRecycleViewAdapter();
+    }
+
+    public void initRecycleViewAdapter(){
+        adapter = new ChatUserAdapter(chattedUserList);
         adapter.setOnItemClickListener(this);
         chatUserRecyclerView.setAdapter(adapter);
         chatUserRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -86,7 +125,7 @@ public class MessageFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onItemClick(User user) {
         Bundle bundle = new Bundle();
-        bundle.putString("name", user.getUserName());
+        bundle.putString("name", user.getFirstName() + " " + user.getLastName());
         bundle.putString("type", user.getUserType());
         bundle.putInt("id", user.getId());
         ChatFragment fragment = new ChatFragment();
@@ -98,34 +137,25 @@ public class MessageFragment extends Fragment implements OnItemClickListener {
     }
 
     public void showUnChattedUserListDialog() {
-        List<User> userList = new ArrayList<>(Arrays.asList(
-                SPCApplication.currentUser,
-                new User("Qingyang", "admin"),
-                new User("Sam", "Vet"),
-                new User("Frank", "volunteer"),
-                new User("Amy", "volunteer"),
-                new User("harry", "vet")
-        ));
-
-
         new MaterialDialog.Builder(getContext())
                 // Set the title and message for the dialog
                 .title("select a user to start new message")
                 // Set the items for the dialog using the userList data
-                .items(userList.stream().map(it -> it.getUserName()).collect(Collectors.toList()))
+                .items(unChattedUserList.stream().map(it -> it.getFirstName() + " " + it.getLastName() + " (" + it.getUserType().trim() + ")").collect(Collectors.toList()))
                 // Set a positive button to confirm the user selection
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
                         // Get the selected user
-                        User selectedUser = userList.get(position);
+                        User selectedUser = unChattedUserList.get(position);
                         // Navigate to the new fragment with the selected user information
                         FragmentManager fragmentManager = getParentFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
                         ChatFragment chatFragment = new ChatFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putString("name", selectedUser.getUserName());
+                        bundle.putString("name", selectedUser.getFirstName() + " " + selectedUser.getLastName());
                         bundle.putString("type", selectedUser.getUserType());
+                        bundle.putInt("id",selectedUser.getId());
                         chatFragment.setArguments(bundle);
                         transaction.replace(R.id.container, chatFragment);
                         transaction.addToBackStack(null);

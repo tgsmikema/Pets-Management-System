@@ -12,6 +12,7 @@ import com.example.mobile.SPCApplication;
 import com.example.mobile.databinding.ChatMessageLeftBinding;
 import com.example.mobile.databinding.ChatMessageRightBinding;
 import com.example.mobile.model.Message;
+import com.example.mobile.util.TimeUtil;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class ChatContentAdapter extends RecyclerView.Adapter<ChatContentItemView
     @Override
     public void onBindViewHolder(@NonNull ChatContentItemViewHolder holder, int position) {
          Message message = messages.get(position);
-         holder.setChatTime(message.getDate());
+         holder.setChatTime(TimeUtil.getFormatDataString(Long.parseLong(message.getTimestamp()) * 1000));
          holder.setChatContent(message.getMessageContent());
     }
 
@@ -59,7 +60,7 @@ public class ChatContentAdapter extends RecyclerView.Adapter<ChatContentItemView
 
     @Override
     public int getItemViewType(int position) {
-        if (messages.get(position).getFromUser().getId() == SPCApplication.currentUser.getId()) {
+        if (messages.get(position).getFromUserId() == SPCApplication.currentUser.getId()) {
             return TYPE_RIGHT;
         } else {
             return TYPE_LEFT;

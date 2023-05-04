@@ -1,8 +1,12 @@
 package com.example.mobile.util;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -107,5 +111,13 @@ public class TimeUtil {
         calendar.set(Calendar.DAY_OF_MONTH, maxDay);
 
         return calendar.getTimeInMillis();
+    }
+
+    public static String getFormatDataString (long timestamp){
+
+        LocalDateTime datetime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.of("Pacific/Auckland"));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return datetime.format(formatter);
     }
 }

@@ -1,20 +1,18 @@
 package com.example.mobile.model;
 
-public class Message {
-
+public class MessageRequest
+{
     private int fromUserId;
     private int toUserId;
-    private String timestamp;
     private String messageContent;
 
-    public Message(){
+    public MessageRequest(){
 
     }
 
-    public Message(int fromUserId,int toUserId,String timestamp,String messageContent){
+    public MessageRequest(int fromUserId,int toUserId,String messageContent){
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
-        this.timestamp = timestamp;
         this.messageContent = messageContent;
     }
 
@@ -32,14 +30,6 @@ public class Message {
 
     public void setToUserId(int toUserId) {
         this.toUserId = toUserId;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
     }
 
     public String getMessageContent() {
