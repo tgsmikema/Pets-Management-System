@@ -17,10 +17,17 @@ import com.example.mobile.SPCApplication;
 import com.example.mobile.databinding.FragmentChatWithPeopleBinding;
 import com.example.mobile.model.Message;
 import com.example.mobile.model.User;
+import com.example.mobile.service.SPCAService;
+import com.example.mobile.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChatFragment extends Fragment {
 
@@ -35,12 +42,19 @@ public class ChatFragment extends Fragment {
     private EditText sendChatText;
     private ImageButton sendChatButton;
 
+    private SPCAService spcaService;
+
+    private List<Message> messages;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentChatWithPeopleBinding.inflate(inflater, container, false);
         Bundle bundle = getArguments();
+        messages = new ArrayList<>();
+        spcaService = new SPCAService();
         initialView(bundle);
+        fetchChatHistory(bundle.getInt("id"));
         return binding.getRoot();
     }
 
@@ -55,28 +69,22 @@ public class ChatFragment extends Fragment {
         chatUserName.setText(bundle.getString("name"));
         chatUserType.setText(bundle.getString("type"));
 
-        List<Message> messages = new ArrayList<>(Arrays.asList(
-                new Message(1,"10:01 14/03/2022","hello mike, how are you?", SPCApplication.currentUser,new User("John","admin")),
-                new Message(2,"10:01 14/03/2022","I am fine thank you, and you?", new User("John","admin"),SPCApplication.currentUser),
-                new Message(3,"10:01 14/03/2022","Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid?", SPCApplication.currentUser,new User("John","admin")),
-                new Message(4,"10:01 14/03/2022","hello mike, how are you?", SPCApplication.currentUser,new User("John","admin")),
-                new Message(5,"10:01 14/03/2022","Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis",new User("John","admin"),SPCApplication.currentUser),
-                new Message(6,"10:01 14/03/2022","hello mike, how are you?", SPCApplication.currentUser,new User("John","admin")),
-                new Message(7,"10:01 14/03/2022","hello mike, how are you?",new User("John","admin"),SPCApplication.currentUser),
-                new Message(8,"10:01 14/03/2022","hello mike, how are you?", SPCApplication.currentUser,new User("John","admin")),
-                new Message(9,"10:01 14/03/2022","hello mike, how are you?",new User("John","admin"),SPCApplication.currentUser),
-                new Message(10,"10:01 14/03/2022","hello mike, how are you?", SPCApplication.currentUser,new User("John","admin"))
-        ));
-        adapter = new ChatContentAdapter(messages);
-        chatContentRecyclerView.setAdapter(adapter);
-        chatContentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        initRecyclerViewAdapter();
 
         sendChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(sendChatText.getEditableText().toString().trim().length() != 0){
+                    sendMessage(bundle.getInt("id"),sendChatText.getEditableText().toString());
+                }
             }
         });
+    }
+
+    public void initRecyclerViewAdapter(){
+        adapter = new ChatContentAdapter(messages);
+        chatContentRecyclerView.setAdapter(adapter);
+        chatContentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     @Override
@@ -90,6 +98,48 @@ public class ChatFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void fetchChatHistory(int chatUserId){
+        Call<List<Message>> listCall = spcaService.fetchChatHistory(SPCApplication.currentUser.getToken(), SPCApplication.currentUser.getId(), chatUserId);
+        listCall.enqueue(new Callback<List<Message>>() {
+            @Override
+            public void onResponse(Call<List<Message>> call, Response<List<Message>> response) {
+                 messages = response.body();
+                 initRecyclerViewAdapter();
+            }
+
+            @Override
+            public void onFailure(Call<List<Message>> call, Throwable t) {
+            }
+        });
+    }
+
+    public void sendMessage(int chatUserId,String messageContent){
+        setSendMessageSuccessful(chatUserId,messageContent);
+        Call<ResponseBody> responseCall = spcaService.sendMessage(SPCApplication.currentUser.getToken(), SPCApplication.currentUser.getId(), chatUserId, messageContent);
+        responseCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void setSendMessageSuccessful(int charUserId,String messageContent){
+         String date = TimeUtil.curTimeStamp() / 1000 + "";
+         Message message = new Message(SPCApplication.currentUser.getId(),charUserId,date, messageContent);
+         messages.add(message);
+         initRecyclerViewAdapter();
+        int lastPosition = adapter.getItemCount() - 1;
+        chatContentRecyclerView.scrollToPosition(lastPosition);
+         getActivity().runOnUiThread(() -> {
+             sendChatText.setText("");
+         });
     }
 
 }

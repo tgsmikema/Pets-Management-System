@@ -10,6 +10,6 @@ import java.util.List;
 public class SPCApplication {
     public static final String baseUrl = "https://capstone2team-001-site1.itempurl.com/";
     public static  User currentUser = null;
-
     public static List<Centre> allCentres = new ArrayList<>();
+
 }
