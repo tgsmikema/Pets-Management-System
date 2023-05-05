@@ -60,11 +60,11 @@ const ChangePassword = ({ handleClose }) => {
       justifyContent={"space-evenly"}
     >
       <Typography variant={"h4"} fontWeight={"600"} paddingBottom={"5px"}>
-        Change PassWord
+        Change Password
       </Typography>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Old PassWord:
+          Old Password:
         </Typography>
       </Box>
       <Box>
@@ -80,7 +80,7 @@ const ChangePassword = ({ handleClose }) => {
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          New PassWord:
+          New Password:
         </Typography>
       </Box>
       <Box>
@@ -96,7 +96,7 @@ const ChangePassword = ({ handleClose }) => {
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Confirmed PassWord:
+          Confirmed Password:
         </Typography>
       </Box>
       <Box>
@@ -145,7 +145,7 @@ const ChangePassword = ({ handleClose }) => {
           }}
           onClick={changePassword}
         >
-          SAVE
+          Save
         </Button>
       </Box>
     </Box>

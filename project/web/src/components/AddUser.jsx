@@ -81,6 +81,8 @@ const AddUser = (props) => {
       p={4}
       width={"25vw"}
       sx={{
+        border: "5px #8BB6D8  solid",
+        borderRadius: "20px",
         backgroundColor: customColor.whiteBackGround,
       }}
       display={"flex"}
