@@ -8,38 +8,157 @@ import {
   MenuItem,
 } from "@mui/material";
 import { customColor } from "../theme.js";
+import { useCallback, useState } from "react";
+import axios from "axios";
+import { constants } from "../constants.js";
+import { useAuth } from "../providers/AuthProvider.jsx";
 
 const AddUser = (props) => {
-  const { onClose } = props;
+  const { onClose, allCentres } = props;
   const theme = useTheme();
-
+  const { user } = useAuth();
   const handleCancel = () => {
     onClose();
   };
 
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [centre, setCentre] = useState(0);
+  const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const checkFillAllInfo = useCallback(() => {
+    return !(
+      userName === "" ||
+      email === "" ||
+      centre === 0 ||
+      password === "" ||
+      userType === "" ||
+      firstName === "" ||
+      lastName === ""
+    );
+  }, [userName, email, centre, password, userType, firstName, lastName]);
+
+  const createNewUser = useCallback(() => {
+    if (!checkFillAllInfo()) {
+      setErrorMessage("Please fill all information");
+      return;
+    }
+    axios
+      .post(
+        `${constants.backend}/user/register`,
+        {
+          userName: userName,
+          email: email,
+          password: password,
+          userType: userType,
+          firstName: firstName,
+          lastName: lastName,
+          centreId: centre,
+        },
+        {
+          headers: {
+            Authorization: "Basic " + user.token,
+          },
+        }
+      )
+      .then((res) => {
+        handleCancel();
+      })
+      .catch((e) => {
+        setErrorMessage(
+          "The userName already existed,please change another one"
+        );
+      });
+  }, [userName, email, password, userType, firstName, lastName, centre]);
+
   return (
     <Box
       p={4}
+      width={"25vw"}
       sx={{
-        height: "100%",
-        border: "5px #8BB6D8  solid",
-        borderRadius: "20px",
         backgroundColor: customColor.whiteBackGround,
       }}
       display={"flex"}
       flexDirection={"column"}
       justifyContent={"space-evenly"}
     >
-      <Typography variant={"h3"} fontWeight={"700"} paddingBottom={"5px"}>
+      <Typography variant={"h4"} fontWeight={"700"} paddingBottom={"5px"}>
         New User
       </Typography>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Name:
+          UserName:
         </Typography>
       </Box>
       <Box>
         <TextField
+          fullWidth
+          onChange={(e) => setUserName(e.target.value)}
+          size={"small"}
+          sx={{
+            backgroundColor: theme.palette.secondary.main,
+          }}
+        />
+      </Box>
+      <Box>
+        <Typography variant={"h5"} fontWeight={"700"}>
+          Email:
+        </Typography>
+      </Box>
+      <Box>
+        <TextField
+          fullWidth
+          onChange={(e) => setEmail(e.target.value)}
+          size={"small"}
+          sx={{
+            backgroundColor: theme.palette.secondary.main,
+          }}
+        />
+      </Box>
+      <Box>
+        <Typography variant={"h5"} fontWeight={"700"}>
+          Password:
+        </Typography>
+      </Box>
+      <Box>
+        <TextField
+          fullWidth
+          type={"password"}
+          onChange={(e) => setPassword(e.target.value)}
+          size={"small"}
+          sx={{
+            backgroundColor: theme.palette.secondary.main,
+          }}
+        />
+      </Box>
+      <Box>
+        <Typography variant={"h5"} fontWeight={"700"}>
+          FirstName:
+        </Typography>
+      </Box>
+      <Box>
+        <TextField
+          fullWidth
+          onChange={(e) => setFirstName(e.target.value)}
+          size={"small"}
+          sx={{
+            backgroundColor: theme.palette.secondary.main,
+          }}
+        />
+      </Box>
+      <Box>
+        <Typography variant={"h5"} fontWeight={"700"}>
+          LastName:
+        </Typography>
+      </Box>
+      <Box>
+        <TextField
+          onChange={(e) => setLastName(e.target.value)}
           fullWidth
           size={"small"}
           sx={{
@@ -49,17 +168,26 @@ const AddUser = (props) => {
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Job:
+          Centre:
         </Typography>
       </Box>
       <Box>
-        <TextField
+        <Select
           fullWidth
-          size={"small"}
-          sx={{
-            backgroundColor: theme.palette.secondary.main,
-          }}
-        />
+          sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
+        >
+          {allCentres?.map((it, index) => (
+            <MenuItem
+              key={index}
+              value={it}
+              onClick={() => {
+                setCentre(index + 1);
+              }}
+            >
+              {it}
+            </MenuItem>
+          ))}
+        </Select>
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
@@ -68,13 +196,39 @@ const AddUser = (props) => {
       </Box>
       <Box>
         <Select
-          fullWidth="true"
+          fullWidth
           sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
         >
-          <MenuItem value={"Volunteer"}>Volunteer</MenuItem>
-          <MenuItem value={"Vet"}>Vet</MenuItem>
-          <MenuItem value={"Admin"}>Admin</MenuItem>
+          <MenuItem
+            value={"volunteer"}
+            onClick={() => {
+              setUserType("volunteer");
+            }}
+          >
+            volunteer
+          </MenuItem>
+          <MenuItem
+            value={"vet"}
+            onClick={() => {
+              setUserType("vet");
+            }}
+          >
+            vet
+          </MenuItem>
+          <MenuItem
+            value={"admin"}
+            onClick={() => {
+              setUserType("admin");
+            }}
+          >
+            admin
+          </MenuItem>
         </Select>
+      </Box>
+      <Box>
+        <Typography variant={"body1"} color={"red"} pt={2}>
+          {errorMessage}
+        </Typography>
       </Box>
       <Box
         display={"flex"}
@@ -103,7 +257,7 @@ const AddUser = (props) => {
               backgroundColor: theme.palette.primary.main,
             },
           }}
-          // TODO: add onClick to create user
+          onClick={createNewUser}
         >
           CREATE
         </Button>

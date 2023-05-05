@@ -2,12 +2,15 @@ import { Box, Button, Typography, Dialog, useTheme } from "@mui/material";
 import { useAuth } from "../providers/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import AddUser from "../components/AddUser.jsx";
 import EditUser from "../components/EditUser.jsx";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useWebService } from "../providers/WebServiceProvider.jsx";
+import axios from "axios";
+import { constants } from "../constants.js";
+import ChangePassword from "../components/ChangePassword.jsx";
 
 const styles = {
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -25,60 +28,26 @@ const button_styles = {
   margin: "10px",
 };
 
-//TODO: replace hardcoded values with db
-const rows = [
-  {
-    id: "8093",
-    name: "John Doe",
-    job: "Electrical Engineer at UOA",
-    access: "Admin",
-  },
-  {
-    id: "8043",
-    name: "Anna Verdi",
-    job: "Software Engineer at UOA",
-    access: "Admin",
-  },
-  {
-    id: "4759",
-    name: "Fulano de Tal",
-    job: "Vet at Manukau",
-    access: "Vet",
-  },
-  {
-    id: "2406",
-    name: "Zhang San",
-    job: "Vet at Papakura",
-    access: "Vet",
-  },
-  {
-    id: "6742",
-    name: "Hanako Yamada",
-    job: "Electrical Engineer at UOA",
-    access: "Volunteer",
-  },
-  {
-    id: "1255",
-    name: "Maria Ivanova",
-    job: "Software Engineer at UOA",
-    access: "Admin",
-  },
-  {
-    id: "7624",
-    name: "Nomen Nescio",
-    job: "Software Engineer at UOA",
-    access: "Volunteer",
-  },
-];
-
 const ProfilePage = () => {
   const theme = useTheme();
-  const { setAllCentres } = useWebService();
-  const columns = [
+  const { allCentres } = useWebService();
+  const { user } = useAuth();
+  const column = [
     { field: "id", headerName: "id", flex: 1 },
-    { field: "name", headerName: "name", flex: 1.5 },
-    { field: "job", headerName: "job", flex: 1.5 },
-    { field: "access", headerName: "access level", flex: 1.5 },
+    {
+      field: "username",
+      headerName: "name",
+      flex: 1.5,
+      renderCell: (params) => (
+        <div>
+          {rows.find((it) => it.id === params.row.id).firstName +
+            " " +
+            rows.find((it) => it.id === params.row.id).lastName}
+        </div>
+      ),
+    },
+    { field: "email", headerName: "email", flex: 1.5 },
+    { field: "userType", headerName: "access level", flex: 1.5 },
     {
       field: "view",
       headerName: " ",
@@ -87,7 +56,9 @@ const ProfilePage = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => handleEditUserClick(params.row)}
+          onClick={() =>
+            handleEditUserClick(rows.find((it) => it.id === params.row.id))
+          }
         >
           View
         </Button>
@@ -99,9 +70,17 @@ const ProfilePage = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setSelected("Profile");
-  });
+  //fetch the data from the backend
+  const [rows, setRows] = useState([]);
+
+  const fetchAllUsers = useCallback(async () => {
+    const res = await axios.get(`${constants.backend}/user/getAllUsers`, {
+      headers: {
+        Authorization: "Basic " + user.token,
+      },
+    });
+    setRows(res.data);
+  }, [user]);
 
   //control plus button
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -124,6 +103,21 @@ const ProfilePage = () => {
     setOpenEditUser(false);
   };
 
+  //control change password dialog
+  const [openChangePassword, setOpenChangePassword] = useState(false);
+  const handleChangePasswordOpen = useCallback(() => {
+    setOpenChangePassword(true);
+  }, [openChangePassword]);
+
+  const handleChangePasswordClose = useCallback(() => {
+    setOpenChangePassword(false);
+  }, [openChangePassword]);
+
+  useEffect(() => {
+    setSelected("Profile");
+    fetchAllUsers();
+  }, [user, openAddUser, openEditUser]);
+
   return (
     <Box
       sx={{
@@ -132,14 +126,11 @@ const ProfilePage = () => {
     >
       <Box sx={styles}>
         <div style={{ flex: "1 1 0%" }}>
-          <Typography variant={"h4"} fontWeight={"650"} color={"#000"}>
-            Maria Ivanova
+          <Typography variant={"h3"} fontWeight={"650"} color={"#000"}>
+            {`${user.firstName} ${user.lastName}`}
           </Typography>
-          <Typography variant={"h6"} fontWeight={"500"} color={"#000"}>
-            Software Engineer at UOA
-          </Typography>
-          <Typography variant={"h6"} fontWeight={"500"} color={"#000"}>
-            Admin
+          <Typography variant={"h4"} fontWeight={"500"} color={"#000"}>
+            {user.userType}
           </Typography>
         </div>
         <div
@@ -154,7 +145,7 @@ const ProfilePage = () => {
             sx={{ ...button_styles, marginLeft: "auto" }}
             variant={"contained"}
             onClick={() => {
-              // TODO: Add code to change password
+              handleChangePasswordOpen();
             }}
           >
             Change Password
@@ -164,7 +155,6 @@ const ProfilePage = () => {
             variant={"contained"}
             onClick={() => {
               logout();
-              setAllCentres([]);
               navigate("/");
             }}
           >
@@ -175,65 +165,80 @@ const ProfilePage = () => {
 
       <Box
         width={"100%"}
+        minHeight={"70vh"}
         padding={3}
+        display={"flex"}
+        flexDirection={"column"}
+        justifyContent={"center"}
         boxSizing={"border-box"}
         sx={{
           overflowY: "auto",
         }}
       >
         {/* TODO: ADD CODE HERE TO MAKE THIS ONLY SHOW TO ADMINS */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography variant={"h4"} fontWeight={"650"} color={"#000"}>
-            Manage User Access
-          </Typography>
-          {/* Add user button */}
-          <Box display="flex" justifyContent="flex-end" alignItems="center">
-            <Button
-              onClick={handleAddUserClick}
-              variant="contained"
-              color="primary"
-              sx={{
-                borderRadius: "50%",
-                minWidth: 0,
-                width: 48,
-                height: 48,
+        {user.userType === "admin" ? (
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
               }}
             >
-              <AddIcon sx={{ fontSize: 28, color: "#fff" }} />
-            </Button>
-          </Box>
-        </div>
-        {/* Table */}
-        <Box
-          height={"500px"}
-          width={"100%"}
-          display={"flex"}
-          justifyContent={"center"}
-          mt={2}
-          sx={{
-            backgroundColor: "#fff",
-            borderRadius: "13px",
-            boxShadow: 3,
-          }}
-        >
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            columnHeaderHeight={"45"}
-            slots={{ toolbar: GridToolbar }}
-            slotProps={{
-              toolbar: {
-                showQuickFilter: true,
-                quickFilterProps: { debounceMs: 500 },
-              },
-            }}
-          />
-        </Box>
+              <Typography variant={"h4"} fontWeight={"650"} color={"#000"}>
+                Manage User Access
+              </Typography>
+              {/* Add user button */}
+              <Box display="flex" justifyContent="flex-end" alignItems="center">
+                <Button
+                  onClick={handleAddUserClick}
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    borderRadius: "50%",
+                    minWidth: 0,
+                    width: 48,
+                    height: 48,
+                  }}
+                >
+                  <AddIcon sx={{ fontSize: 28, color: "#fff" }} />
+                </Button>
+              </Box>
+            </div>
+            {/* Table */}
+            <Box
+              height={"500px"}
+              width={"100%"}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              mt={2}
+              sx={{
+                backgroundColor: "#fff",
+                borderRadius: "13px",
+                boxShadow: 3,
+              }}
+            >
+              <DataGrid
+                rows={rows}
+                columns={column}
+                columnHeaderHeight={45}
+                slots={{ toolbar: GridToolbar }}
+                slotProps={{
+                  toolbar: {
+                    showQuickFilter: true,
+                    quickFilterProps: { debounceMs: 500 },
+                  },
+                }}
+              />
+            </Box>
+          </>
+        ) : (
+          <Typography variant={"h5"} color={"red"} alignSelf={"center"}>
+            You can not manage or view other users, ask for permission from the
+            admin
+          </Typography>
+        )}
+
         {/* Add user modal */}
         <Dialog
           open={openAddUser}
@@ -241,7 +246,10 @@ const ProfilePage = () => {
           maxWidth="xs"
           PaperProps={{ sx: { borderRadius: "20px", height: "70%" } }}
         >
-          <AddUser onClose={handleAddUserClose} />
+          <AddUser
+            onClose={handleAddUserClose}
+            allCentres={allCentres.slice(1)}
+          />
         </Dialog>
         {/* Edit user modal */}
         <Dialog
@@ -251,6 +259,14 @@ const ProfilePage = () => {
           PaperProps={{ sx: { borderRadius: "20px", height: "70%" } }}
         >
           <EditUser onClose={handleEditUserClose} selectedRow={selectedRow} />
+        </Dialog>
+        <Dialog
+          open={openChangePassword}
+          onClose={handleChangePasswordClose}
+          maxWidth="xs"
+          PaperProps={{ sx: { borderRadius: "20px", height: "70%" } }}
+        >
+          <ChangePassword handleClose={handleChangePasswordClose} />
         </Dialog>
       </Box>
     </Box>
