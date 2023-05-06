@@ -8,13 +8,64 @@ import {
   MenuItem,
 } from "@mui/material";
 import { customColor } from "../theme.js";
+import { Email } from "@mui/icons-material";
+import { useCallback, useEffect, useState } from "react";
+import axios from "axios";
+import { constants } from "../constants.js";
+import { useAuth } from "../providers/AuthProvider.jsx";
 
 const EditUser = ({ onClose, selectedRow }) => {
-  const name = selectedRow ? selectedRow.name : "";
-  const job = selectedRow ? selectedRow.job : "";
-  const accessLevel = selectedRow ? selectedRow.accessLevel : "";
-  const id = selectedRow ? selectedRow.id : "";
+  const name = selectedRow
+    ? selectedRow.firstName + " " + selectedRow.lastName
+    : "";
+  const accessLevel = selectedRow ? selectedRow.userType.trim() : "";
+  const id = selectedRow?.id;
   const theme = useTheme();
+
+  const [userType, setUserType] = useState(accessLevel);
+  const { user } = useAuth();
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const saveChange = useCallback(async () => {
+    if (id === user.id) {
+      setErrorMessage("You can not edit yourself");
+      return;
+    }
+    await axios
+      .post(
+        `${constants.backend}/user/editUserAccess`,
+        {
+          userId: id,
+          userType: userType,
+        },
+        {
+          headers: {
+            Authorization: "Basic " + user.token,
+          },
+        }
+      )
+      .then((res) => {
+        onClose();
+      });
+  }, [id, userType]);
+
+  const deleteUser = useCallback(async () => {
+    if (id === user.id) {
+      setErrorMessage("You can not delete yourself");
+      return;
+    }
+    if (userType === "admin") {
+      setErrorMessage("You can not delete a admin user");
+      return;
+    }
+
+    await axios.delete(`${constants.backend}/user/delete?userId=${id}`, {
+      headers: {
+        Authorization: "Basic " + user.token,
+      },
+    });
+    onClose();
+  }, [id, userType]);
 
   return (
     <Box
@@ -40,23 +91,8 @@ const EditUser = ({ onClose, selectedRow }) => {
       <Box>
         <TextField
           fullWidth
-          defaultValue={name}
+          value={name}
           size={"small"}
-          sx={{
-            backgroundColor: theme.palette.secondary.main,
-          }}
-        />
-      </Box>
-      <Box>
-        <Typography variant={"h5"} fontWeight={"700"}>
-          Job:
-        </Typography>
-      </Box>
-      <Box>
-        <TextField
-          fullWidth
-          size={"small"}
-          defaultValue={job}
           sx={{
             backgroundColor: theme.palette.secondary.main,
           }}
@@ -69,13 +105,28 @@ const EditUser = ({ onClose, selectedRow }) => {
       </Box>
       <Box>
         <Select
-          fullWidth="true"
+          fullWidth
+          value={userType}
           sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
         >
-          <MenuItem value={"Volunteer"}>Volunteer</MenuItem>
-          <MenuItem value={"Vet"}>Vet</MenuItem>
-          <MenuItem value={"Admin"}>Admin</MenuItem>
+          <MenuItem
+            value={"volunteer"}
+            onClick={() => setUserType("volunteer")}
+          >
+            volunteer
+          </MenuItem>
+          <MenuItem value={"vet"} onClick={() => setUserType("vet")}>
+            vet
+          </MenuItem>
+          <MenuItem value={"admin"} onClick={() => setUserType("admin")}>
+            admin
+          </MenuItem>
         </Select>
+      </Box>
+      <Box>
+        <Typography variant={"body1"} fontWeight={"500"} color={"red"}>
+          {errorMessage.trim().length !== 0 && errorMessage}
+        </Typography>
       </Box>
       <Box
         display={"flex"}
@@ -92,7 +143,7 @@ const EditUser = ({ onClose, selectedRow }) => {
               backgroundColor: theme.palette.primary.main,
             },
           }}
-        //   TODO: add onClick to delete user
+          onClick={deleteUser}
         >
           DELETE
         </Button>
@@ -105,7 +156,7 @@ const EditUser = ({ onClose, selectedRow }) => {
               backgroundColor: theme.palette.primary.main,
             },
           }}
-          // TODO: add onClick to update user
+          onClick={saveChange}
         >
           SAVE
         </Button>
