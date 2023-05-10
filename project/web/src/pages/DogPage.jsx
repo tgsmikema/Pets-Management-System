@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, useTheme } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useUtilProvider } from "../providers/UtilProvider.jsx";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import FlagCircleIcon from "@mui/icons-material/FlagCircle";
@@ -11,6 +11,10 @@ import LineChart from "../components/LineChart.jsx";
 import { DataGrid } from "@mui/x-data-grid";
 import EditDog from "../components/EditDog.jsx";
 import Weight from "../components/Weight.jsx";
+import { useAuth } from "../providers/AuthProvider.jsx";
+import axios from "axios";
+import { constants } from "../constants.js";
+import { useWebService } from "../providers/WebServiceProvider.jsx";
 
 const styles = {
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -21,96 +25,72 @@ const styles = {
   height: "100%",
 };
 
-//TODO: replace hardcoded values with db
-const rows = [
-  {
-    id: "6",
-    last: "2021/10/05",
-    weight: "14.8",
-  },
-  {
-    id: "5",
-    last: "2021/10/05",
-    weight: "14.8",
-  },
-  {
-    id: "4",
-    last: "2021/10/05",
-    weight: "14.8",
-  },
-  {
-    id: "3",
-    last: "2021/10/05",
-    weight: "14.8",
-  },
-  {
-    id: "2",
-    last: "2021/10/05",
-    weight: "14.8",
-  },
-  {
-    id: "1",
-    last: "2021/10/05",
-    weight: "14.8",
-  },
-];
+const timestampToDate = (timestamp) => {
+  const date = new Date(timestamp);
+  return (
+    date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+  );
+};
+
+const timestampToLineDate = (timestamp) => {
+  const date = new Date(timestamp);
+  return (
+    date.getDate() +
+    "/" +
+    (date.getMonth() + 1) +
+    "/" +
+    date.getFullYear().toString().substring(2)
+  );
+};
 
 const columns = [
-  { field: "last", headerName: "last check-in", flex: 1.5 },
-  { field: "weight", headerName: "weight(kg)", flex: 1 },
-];
-
-const dataForLine = [
   {
-    id: "weight",
-    data: [
-      {
-        x: "Dec",
-        y: 7,
-      },
-      {
-        x: "Jan",
-        y: 12,
-      },
-      {
-        x: "Feb",
-        y: 14,
-      },
-      {
-        x: "Mar",
-        y: 15,
-      },
-      {
-        x: "Apr",
-        y: 17,
-      },
-    ],
+    field: "timeStamp",
+    headerName: "last check-in",
+    flex: 1.5,
+    renderCell: (params) => (
+      <div>{timestampToDate(parseInt(params.row.timeStamp) * 1000)}</div>
+    ),
   },
+  { field: "dogWeight", headerName: "weight(kg)", flex: 1 },
 ];
 
 function DogPage() {
   const theme = useTheme();
   const { id } = useParams();
   const { setSelected } = useUtilProvider();
-  useEffect(() => {
-    setSelected(null);
-  });
+  const { user } = useAuth();
+  const { allCentres } = useWebService();
 
   // control flag button
   //TODO: set/update based on db
   const [isFlag, setIsFlag] = useState(false);
-  const handleFlagClick = () => {
+  const handleFlagClick = useCallback(async () => {
+    if (user.userType === "volunteer") return;
     setIsFlag(!isFlag);
-  };
-  const flagColor = isFlag ? "#E34B28" : "#000000";
+    const res = await axios.get(
+      `${constants.backend}/dog/toggleFlag?dogId=${id}`,
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+  }, [isFlag]);
 
   // control alert button
   //TODO: set/update based on db
   const [isAlert, setIsAlert] = useState(false);
-  const handleAlertClick = () => {
+  const handleAlertClick = useCallback(async () => {
+    if (user.userType === "volunteer") return;
     setIsAlert(!isAlert);
-  };
-  const alertColor = isAlert ? "#E34B28" : "#000000";
+    //update the state in db
+    await axios.get(`${constants.backend}/dog/toggleAlert?dogId=${id}`, {
+      headers: {
+        Authorization: "Basic " + user.token,
+      },
+    });
+  }, [isAlert]);
 
   //control edit button
   const [openEditDog, setOpenEditDog] = useState(false);
@@ -129,6 +109,71 @@ function DogPage() {
   const handleWeightClose = () => {
     setOpenWeight(false);
   };
+
+  //fetch the dog detail data from the backend
+  const [dog, setDog] = useState(null);
+  const fetchDogInfo = useCallback(async () => {
+    const res = await axios.get(
+      `${constants.backend}/dog/${
+        user.userType === "admin"
+          ? "detailFromAllCentre"
+          : "detailFromOwnCentre"
+      }?dogId=${id}`,
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+    setDog(res.data);
+    setIsFlag(res.data.isFlag);
+    setIsAlert(res.data.isAlert);
+  }, [dog]);
+
+  const [weightHistory, setWeightHistory] = useState([]);
+
+  const [weightDataForLineChart, setWeightDataForLineChart] = useState([]);
+  const fetchDogWeightHistory = useCallback(async () => {
+    const res = await axios.get(
+      `${constants.backend}/dog/getWeightHistory?dogId=${id}`,
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+    setWeightHistory(res.data);
+    setWeightDataForLineChart(
+      res.data.reverse().map((it, index) => ({
+        x: timestampToLineDate(parseInt(it.timeStamp) * 1000),
+        y: it.dogWeight,
+      }))
+    );
+  }, []);
+
+  const dataForLine = [
+    {
+      id: "weight",
+      data: weightDataForLineChart,
+    },
+  ];
+
+  const [scaleList, setScaleList] = useState([]);
+  const fetchScaleList = useCallback(async () => {
+    const res = await axios.get(`${constants.backend}/util/listAllScales`, {
+      headers: {
+        Authorization: "Basic " + user.token,
+      },
+    });
+    setScaleList(res.data);
+  }, []);
+
+  useEffect(() => {
+    setSelected(null);
+    fetchDogInfo();
+    fetchDogWeightHistory();
+    fetchScaleList();
+  }, [user, openWeight, openEditDog]);
 
   return (
     <Box
@@ -167,17 +212,19 @@ function DogPage() {
           </Button>
         </div>
         <div style={{ flex: "1 1 0%" }}>
-          <Typography variant={"h6"} fontWeight={"300"} color={"#000"}>
-            8093
+          <Typography variant={"h5"} fontWeight={"700"} color={"#000"}>
+            {id}
           </Typography>
           <Typography variant={"h3"} fontWeight={"600"} color={"#000"}>
-            Oliver
+            {dog?.name}
           </Typography>
           <Typography variant={"h5"} fontWeight={"500"} color={"#000"}>
-            Basset Hound
+            {dog?.breed}
           </Typography>
           <Typography variant={"h5"} fontWeight={"500"} color={"#000"}>
-            Māngere
+            {user.userType === "admin"
+              ? allCentres[dog?.centreId]
+              : allCentres[0]}
           </Typography>
         </div>
         <div
@@ -190,14 +237,14 @@ function DogPage() {
         >
           <div style={{ display: "flex", alignItems: "baseline" }}>
             <Typography variant={"h3"} fontWeight={"500"} color={"#000"}>
-              14.8
+              {dog?.lastCheckInWeight}
             </Typography>
             <Typography variant={"h5"} fontWeight={"300"} color={"#000"}>
               kg
             </Typography>
           </div>
           <Typography variant={"h6"} fontWeight={"400"} color={"#000"}>
-            08/03/23
+            {timestampToDate(parseInt(dog?.lastCheckInTimeStamp) * 1000)}
           </Typography>
         </div>
         <div
@@ -209,10 +256,14 @@ function DogPage() {
           }}
         >
           <Button onClick={handleFlagClick}>
-            <FlagCircleIcon sx={{ fontSize: 60, color: flagColor }} />
+            <FlagCircleIcon
+              sx={{ fontSize: 60, color: isFlag ? "#E34B28" : "#000000" }}
+            />
           </Button>
           <Button onClick={handleAlertClick}>
-            <ErrorIcon sx={{ fontSize: 60, color: alertColor }} />
+            <ErrorIcon
+              sx={{ fontSize: 60, color: isAlert ? "#E34B28" : "#000000" }}
+            />
           </Button>
         </div>
       </Box>
@@ -221,13 +272,26 @@ function DogPage() {
         <Box
           height={"500px"}
           width={"75%"}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
           sx={{
             backgroundColor: "#fff",
             borderRadius: "13px",
             boxShadow: 3,
           }}
         >
-          <LineChart data={dataForLine} />
+          {weightDataForLineChart.length === 0 ? (
+            <Typography variant={"h4"} fontWeight={600}>
+              No data display
+            </Typography>
+          ) : (
+            <LineChart
+              data={dataForLine}
+              rowLabel={"date"}
+              columnLabel={"weight(kg)"}
+            />
+          )}
         </Box>
         <Box width={"4%"}></Box>
         <Box
@@ -240,7 +304,7 @@ function DogPage() {
           }}
         >
           <DataGrid
-            rows={rows}
+            rows={weightHistory}
             columns={columns}
             style={{ fontSize: "16px" }}
           />
@@ -253,16 +317,15 @@ function DogPage() {
         maxWidth="xs"
         PaperProps={{ sx: { borderRadius: "20px", height: "70%" } }}
       >
-        <EditDog onClose={handleEditDogClose} id={id} />
+        <EditDog onClose={handleEditDogClose} dog={dog} />
       </Dialog>
       {/* Add weight modal */}
       <Dialog
         open={openWeight}
-        onClose={handleWeightClose}
         maxWidth="xs"
         PaperProps={{ sx: { borderRadius: "20px", height: "70%" } }}
       >
-        <Weight onClose={handleWeightClose} id={id} />
+        <Weight onClose={handleWeightClose} scaleList={scaleList} dog={dog} />
       </Dialog>
     </Box>
   );

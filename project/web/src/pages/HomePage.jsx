@@ -39,7 +39,6 @@ function ViewButton(params) {
   const id = params.params;
   const navigate = useNavigate();
   const handleViewClick = () => {
-    console.log("viewing " + id);
     navigate(`/dogs/${id}`);
   };
   return (
@@ -58,14 +57,13 @@ const columns = [
     field: "isFlag",
     headerName: "flagged",
     flex: 1,
-    renderCell: (params) =>
-      params.value === "true" ? <FlagCircleIcon /> : null,
+    renderCell: (params) => (params.row.isFlag ? <FlagCircleIcon /> : null),
   },
   {
     field: "isAlert",
     headerName: "alert",
     flex: 1,
-    renderCell: (params) => (params.value === "true" ? <ErrorIcon /> : null),
+    renderCell: (params) => (params.row.isAlert ? <ErrorIcon /> : null),
   },
   { field: "id", headerName: "id", flex: 1 },
   { field: "name", headerName: "name", flex: 1.5 },

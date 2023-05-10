@@ -176,6 +176,7 @@ const AddUser = (props) => {
       <Box>
         <Select
           fullWidth
+          defaultValue={""}
           sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
         >
           {allCentres?.map((it, index) => (
@@ -199,6 +200,7 @@ const AddUser = (props) => {
       <Box>
         <Select
           fullWidth
+          defaultValue={""}
           sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
         >
           <MenuItem

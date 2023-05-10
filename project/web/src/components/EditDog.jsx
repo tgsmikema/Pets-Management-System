@@ -8,12 +8,54 @@ import {
   MenuItem,
 } from "@mui/material";
 import { customColor } from "../theme.js";
+import { useAuth } from "../providers/AuthProvider.jsx";
+import { useWebService } from "../providers/WebServiceProvider.jsx";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { constants } from "../constants.js";
 
-const EditDog = ({ onClose, id }) => {
+const EditDog = ({ onClose, dog }) => {
   const theme = useTheme();
   //TODO: replace hardcoded values with db
-    const name = "name";
-    const breed = "breed";
+  const { name, id, breed, centreId } = dog;
+
+  const { user } = useAuth();
+  const { allCentreForAllUser } = useWebService();
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
+  const [dogCentreId, setDogCentreId] = useState(centreId);
+  const [dogName, setDogName] = useState(name);
+  const [dogBreed, setDogBreed] = useState(breed);
+
+  const saveDogInfo = useCallback(async () => {
+    const res = await axios.post(
+      `${constants.backend}/dog/edit`,
+      {
+        id: id,
+        name: dogName,
+        breed: dogBreed,
+        centreId: dogCentreId,
+      },
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+  }, [id, dogName, dogBreed, dogCentreId, user]);
+
+  const deleteDog = useCallback(async () => {
+    const res = await axios.delete(
+      `${constants.backend}/dog/delete?dogId=${id}`,
+      {
+        headers: {
+          Authorization: "Basic " + user.token,
+        },
+      }
+    );
+  }, [id, user]);
 
   return (
     <Box
@@ -40,6 +82,7 @@ const EditDog = ({ onClose, id }) => {
         <TextField
           fullWidth
           defaultValue={name}
+          onChange={(e) => setDogName(e.target.value)}
           size={"small"}
           sx={{
             backgroundColor: theme.palette.secondary.main,
@@ -53,6 +96,7 @@ const EditDog = ({ onClose, id }) => {
       </Box>
       <Box>
         <TextField
+          onChange={(e) => setDogBreed(e.target.value)}
           fullWidth
           size={"small"}
           defaultValue={breed}
@@ -68,18 +112,34 @@ const EditDog = ({ onClose, id }) => {
       </Box>
       <Box>
         <Select
+          defaultValue={
+            allCentreForAllUser.find((it) => it.id === centreId).name
+          }
           fullWidth="true"
           sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
         >
-          <MenuItem value={"a"}>a</MenuItem>
-          <MenuItem value={"b"}>b</MenuItem>
-          <MenuItem value={"c"}>c</MenuItem>
+          {allCentreForAllUser?.map((it, index) => (
+            <MenuItem
+              key={index}
+              value={it.name}
+              onClick={() => {
+                setDogCentreId(it.id);
+              }}
+            >
+              {it.name}
+            </MenuItem>
+          ))}
         </Select>
+      </Box>
+      <Box pt={1.5}>
+        <Typography variant={"body1"} color={"red"}>
+          {errorMessage.trim().length !== 0 && errorMessage}
+        </Typography>
       </Box>
       <Box
         display={"flex"}
         justifyContent={"space-between"}
-        paddingTop={"30px"}
+        paddingTop={"20px"}
       >
         <Button
           variant={"contained"}
@@ -91,7 +151,15 @@ const EditDog = ({ onClose, id }) => {
               backgroundColor: theme.palette.primary.main,
             },
           }}
-        //   TODO: add onClick to delete dog
+          onClick={async () => {
+            if (user.userType === "volunteer") {
+              setErrorMessage("You can not delete a dog");
+              return;
+            }
+            await deleteDog();
+            onClose();
+            navigate("/");
+          }}
         >
           DELETE
         </Button>
@@ -104,7 +172,18 @@ const EditDog = ({ onClose, id }) => {
               backgroundColor: theme.palette.primary.main,
             },
           }}
-          // TODO: add onClick to update dog
+          onClick={async () => {
+            if (
+              dogName.trim().length === 0 ||
+              dogBreed.trim().length === 0 ||
+              dogCentreId === 0
+            ) {
+              setErrorMessage("please fill all information");
+              return;
+            }
+            await saveDogInfo();
+            onClose();
+          }}
         >
           SAVE
         </Button>

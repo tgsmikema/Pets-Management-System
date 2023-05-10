@@ -1,5 +1,4 @@
-import { Box, Divider, IconButton, Typography } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications.js";
+import { Box, Divider, Typography } from "@mui/material";
 
 const ChatUserItem = ({
   name,

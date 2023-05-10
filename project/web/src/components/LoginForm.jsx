@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const LoginForm = () => {
   const theme = useTheme();
-  const { login, setUser, loading } = useAuth();
+  const { login } = useAuth();
   const [userName, setName] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");

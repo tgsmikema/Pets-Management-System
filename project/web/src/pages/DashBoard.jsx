@@ -11,9 +11,6 @@ import DogPage from "./DogPage.jsx";
 
 //the dahsboard pages is used for router controller, the functionality is same as the pageLayout
 const DashBoard = () => {
-  const theme = useTheme();
-  const { user } = useAuth();
-
   return (
     <Box
       height={"100vh"}

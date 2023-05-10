@@ -8,8 +8,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { customColor } from "../theme.js";
-import { Email } from "@mui/icons-material";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import { constants } from "../constants.js";
 import { useAuth } from "../providers/AuthProvider.jsx";
