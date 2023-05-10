@@ -107,8 +107,8 @@ const Weight = ({ onClose, scaleList, dog }) => {
       </Typography>
       <Box>
         <Select
-          fullWidth="true"
-          defaultValue={scaleList.find((it) => it.id === scaleId).name}
+          fullWidth
+          value={scaleList.find((it) => it.id === scaleId).name}
           sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
         >
           {scaleList.map((it, index) => (

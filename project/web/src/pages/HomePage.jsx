@@ -39,7 +39,6 @@ function ViewButton(params) {
   const id = params.params;
   const navigate = useNavigate();
   const handleViewClick = () => {
-    console.log("viewing " + id);
     navigate(`/dogs/${id}`);
   };
   return (

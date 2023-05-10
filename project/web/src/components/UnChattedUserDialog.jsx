@@ -6,7 +6,6 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import ChatUserItem from "./ChatUserItem.jsx";
 
 const UnChattedUserDialog = ({
   open,

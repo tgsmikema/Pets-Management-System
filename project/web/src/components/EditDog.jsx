@@ -57,10 +57,6 @@ const EditDog = ({ onClose, dog }) => {
     );
   }, [id, user]);
 
-  useEffect(() => {
-    console.log(allCentreForAllUser);
-  }, []);
-
   return (
     <Box
       p={4}
