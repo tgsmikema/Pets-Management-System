@@ -163,6 +163,7 @@ const ChatPage = () => {
 
         {chattedUserList?.map((it, index) => (
           <ChatUserItem
+            key={index}
             name={`${it.firstName} ${it.lastName}`}
             type={it.userType}
             index={index}
@@ -229,6 +230,7 @@ const ChatPage = () => {
             ) : (
               chatHistory.map((it, index) => (
                 <Box
+                  key={index}
                   display={"flex"}
                   flexDirection={"column"}
                   maxWidth={"60%"}

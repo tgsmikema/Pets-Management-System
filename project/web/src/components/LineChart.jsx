@@ -1,6 +1,6 @@
 import { ResponsiveLine } from "@nivo/line";
 
-const LineChart = ({ data }) => {
+const LineChart = ({ data, rowLabel, columnLabel }) => {
   return (
     <ResponsiveLine
       data={data}
@@ -21,7 +21,7 @@ const LineChart = ({ data }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: "date",
+        legend: rowLabel,
         legendOffset: 36,
         legendPosition: "middle",
       }}
@@ -30,7 +30,7 @@ const LineChart = ({ data }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: "count",
+        legend: columnLabel,
         legendOffset: -42,
         legendPosition: "middle",
       }}

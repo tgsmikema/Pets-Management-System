@@ -521,9 +521,21 @@ const StatsPage = () => {
             {loading ? (
               <ProcessLoading />
             ) : isWeek ? (
-              weekWeightData.length && <LineChart data={weekDataForLine} />
+              weekWeightData.length && (
+                <LineChart
+                  data={weekDataForLine}
+                  rowLabel={"date"}
+                  columnLabel={"count"}
+                />
+              )
             ) : (
-              monthWeightData.length && <LineChart data={monthDataForLine} />
+              monthWeightData.length && (
+                <LineChart
+                  data={monthDataForLine}
+                  rowLabel={"date"}
+                  columnLabel={"count"}
+                />
+              )
             )}
           </Box>
         </Box>

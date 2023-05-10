@@ -16,6 +16,7 @@ export function WebServiceProvider({ children }) {
   //this will use for list centres for different userType
   const [allCentres, setAllCentres] = useState([]);
   const [centreLoading, setCentreLoading] = useState(false);
+  const [allCentreForAllUser, setAllCentreForAllUser] = useState([]);
 
   //we want to fetch all centres when the app start according to the user type
   useEffect(() => {
@@ -29,12 +30,12 @@ export function WebServiceProvider({ children }) {
   //handle the centre list, will add the All Centres item for the admin user
   const handleCentres = useCallback(async () => {
     const res = await fetchAllCenters();
-    const centers = res.data.map((it) => it.name);
-    if (user.userType === "admin") {
+    const centers = res?.map((it) => it.name);
+    if (user?.userType === "admin") {
       setAllCentres(["All Centres", ...centers]);
     } else {
-      const center = res.data.find((it) => it.id === user.centreId);
-      setAllCentres([center.name]);
+      const center = res?.find((it) => it.id === user?.centreId);
+      setAllCentres([center?.name]);
     }
   }, [user]);
 
@@ -49,7 +50,8 @@ export function WebServiceProvider({ children }) {
           },
         }
       );
-      return centers;
+      setAllCentreForAllUser(centers?.data);
+      return centers?.data;
     }
   }, [user]);
 
@@ -58,6 +60,7 @@ export function WebServiceProvider({ children }) {
     handleCentres,
     setAllCentres,
     centreLoading,
+    allCentreForAllUser,
   };
 
   return <WebContext.Provider value={value}>{children}</WebContext.Provider>;

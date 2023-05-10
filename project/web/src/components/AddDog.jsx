@@ -102,6 +102,7 @@ const LoginForm = (props) => {
       </Box>
       <Box>
         <Select
+          defaultValue={""}
           fullWidth
           sx={{ backgroundColor: theme.palette.secondary.main, height: "45px" }}
         >

@@ -25,9 +25,8 @@ const UnChattedUserDialog = ({
       <DialogTitle>Select a new user to chat</DialogTitle>
       <List sx={{ pt: 0 }}>
         {unChattedUserList?.map((it, index) => (
-          <ListItem disableGutters>
+          <ListItem disableGutters key={index}>
             <ListItemButton
-              key={index}
               onClick={() => {
                 handleItemClick(index);
               }}
