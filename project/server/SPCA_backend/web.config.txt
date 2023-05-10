@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <location path="." inheritInChildApplications="false">
+    <system.webServer>
+      <rewrite>
+      <rules>
+        <!-- Redirect HTTP to HTTPS for all endpoints except /dog/addWeightFromScale -->
+        <rule name="httpTohttps" stopProcessing="true">
+          <match url="^(.*)$" />
+          <conditions>
+            <add input="{HTTPS}" pattern="off" ignoreCase="true" />
+            <add input="{REQUEST_URI}" pattern="^/dog/addWeightFromScale" negate="true" />
+          </conditions>
+          <action type="Redirect" url="https://{HTTP_HOST}/{R:1}" redirectType="Permanent" />
+        </rule>
+        <!-- Redirect /dog/addWeightFromScale to HTTP -->
+        <rule name="insecureTohttp" stopProcessing="true">
+          <match url="^dog/addWeightFromScale(.*)" />
+          <conditions>
+            <add input="{HTTPS}" pattern="on" ignoreCase="true" />
+            <add input="{REQUEST_URI}" pattern="^/dog/addWeightFromScale" />
+          </conditions>
+          <action type="Redirect" url="http://{HTTP_HOST}/{R:0}" redirectType="Permanent" />
+        </rule>
+      </rules>
+    </rewrite>
+      <handlers>
+        <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
+      </handlers>
+      <aspNetCore processPath=".\SPCA_backend.exe" stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" hostingModel="inprocess" />
+    </system.webServer>
+  </location>
+</configuration>
+<!--ProjectGuid: ae46e7ee-8fd9-4047-a9bd-6a8528d4cc1a-->

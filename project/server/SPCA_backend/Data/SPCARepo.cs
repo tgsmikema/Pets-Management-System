@@ -788,9 +788,19 @@ namespace SPCA_backend.Data
 
         private Request addNewRequestHelper(RequestInDto requestInDto)
         {
-            // remove expired requests--- (only delete the current scale stale requests)
+            
             int currentTimeStampInSecond = (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
+            // remove same dog id on all other scales
+            IEnumerable<Request> listOfRequestsHasSameDogOnOtherScales = _dbContext.Requests.ToList().Where(e => (e.ScaleId != requestInDto.ScaleId) && (e.DogId == requestInDto.DogId));
+
+            foreach (Request req in listOfRequestsHasSameDogOnOtherScales)
+            {
+                    _dbContext.Remove(req);
+                    _dbContext.SaveChanges();
+            }
+
+            // remove expired requests--- (only delete the current scale stale requests)
             IEnumerable<Request> listOfRequests = _dbContext.Requests.ToList().Where(e => e.ScaleId == requestInDto.ScaleId);
 
             foreach (Request request in listOfRequests)
