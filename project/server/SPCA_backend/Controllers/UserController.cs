@@ -118,7 +118,9 @@ namespace SPCA_backend.Controllers
         {
             int userId = _repository.GetUserIdFromUserName(getLoggedInUserUserNameOrToken(USER_NAME));
             bool isValid = _repository.ChangePasswordForCurrentUser(userId, userChangePasswordInDto);
-            return (isValid ? Ok("Successfully changed the password for the current user.") : NotFound("An Error Occured, please try again!"));
+            string username = getLoggedInUserUserNameOrToken(USER_NAME);
+            string newTokenPlainText = username + ":" + userChangePasswordInDto.NewPassword;
+            return (isValid ? Ok(Base64Encode(newTokenPlainText)) : NotFound("An Error Occured, please try again!"));
         }
 
 
@@ -189,6 +191,12 @@ namespace SPCA_backend.Controllers
             {
                 return retrieveTokenOfLoggedInUser();
             }
+        }
+
+        private string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
         }
 
     }
