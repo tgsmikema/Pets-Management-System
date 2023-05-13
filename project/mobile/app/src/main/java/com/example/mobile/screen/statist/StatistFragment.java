@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.mobile.R;
 import com.example.mobile.SPCApplication;
 import com.example.mobile.databinding.FragmentStatistBinding;
 import com.example.mobile.model.TimeWeightRequest;
@@ -333,7 +334,8 @@ public class StatistFragment extends Fragment {
             allCentres.add(SPCApplication.allCentres.get(SPCApplication.currentUser.getCentreId()).getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, allCentres);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.text_spinner, allCentres);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

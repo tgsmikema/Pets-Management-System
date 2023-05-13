@@ -16,9 +16,9 @@
     <string name="flagged">flagged</string>
     <string name="alert">alert</string>
     <string name="new_dog">New Dog</string>
-    <string name="name_enter">name:</string>
-    <string name="breed_enter">breed:</string>
-    <string name="location_enter">location:</string>
+    <string name="name_enter">Username:</string>
+    <string name="breed_enter">Breed:</string>
+    <string name="location_enter">Location:</string>
     <string name="create">CREATE</string>
     <string name="cancel">CANCEL</string>
     <string name="change_password">Change Password</string>

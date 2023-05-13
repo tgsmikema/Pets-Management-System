@@ -12,21 +12,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobile.R;
 import com.example.mobile.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileAdaptor extends RecyclerView.Adapter<ProfileAdaptor.ViewHolder> {
 
-    private static List<User> userList;
+    private static List<User> userList = new ArrayList<>();
     private ItemClickListener clickListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView name, job, access;
+        private TextView name, access,email;
 
         public ViewHolder(@NonNull View v) {
             super(v);
             name = v.findViewById(R.id.text_name);
-            job = v.findViewById(R.id.text_job);
             access = v.findViewById(R.id.text_access);
+            email = v.findViewById(R.id.text_email);
             itemView.setOnClickListener(this);
         }
 
@@ -54,9 +55,9 @@ public class ProfileAdaptor extends RecyclerView.Adapter<ProfileAdaptor.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ProfileAdaptor.ViewHolder vh, int position) {
         User user = userList.get(position);
-        vh.name.setText(user.getUserName());
-        vh.job.setText(user.getJob());
+        vh.name.setText(user.getFirstName() + " " + user.getLastName());
         vh.access.setText(user.getUserType());
+        vh.email.setText(user.getEmail());
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

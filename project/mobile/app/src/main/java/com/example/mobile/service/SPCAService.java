@@ -2,8 +2,13 @@ package com.example.mobile.service;
 
 import com.example.mobile.SPCApplication;
 import com.example.mobile.model.Centre;
+import com.example.mobile.model.ChangePasswordRequest;
+import com.example.mobile.model.Dog;
+import com.example.mobile.model.DogRegisterRequest;
+import com.example.mobile.model.EditUserRequest;
 import com.example.mobile.model.Message;
 import com.example.mobile.model.MessageRequest;
+import com.example.mobile.model.UserRegisterRequest;
 import com.example.mobile.model.TimeWeightRequest;
 import com.example.mobile.model.User;
 import com.example.mobile.model.WeightData;
@@ -13,7 +18,6 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -110,4 +114,60 @@ public class SPCAService {
         return responseCall;
     }
 
+    public Call<List<User>> getAllUsers(String token){
+         initRetrofit(token);
+         UtilService utilService = retrofit.create(UtilService.class);
+         Call<List<User>> call = utilService.getAllUsers();
+         return call;
+    }
+
+    public Call<ResponseBody> register(String token, UserRegisterRequest registerRequest){
+        initRetrofit(token);
+        UtilService utilService = retrofit.create(UtilService.class);
+        Call<ResponseBody> responseBodyCall = utilService.register(registerRequest);
+        return responseBodyCall;
+    }
+
+    public Call<ResponseBody> editUser(String token, EditUserRequest editUserRequest){
+        initRetrofit(token);
+        UtilService utilService = retrofit.create(UtilService.class);
+        Call<ResponseBody> responseBodyCall = utilService.editUser(editUserRequest);
+        return responseBodyCall;
+    }
+
+    public Call<ResponseBody> deletedUser(String token,int userId){
+        initRetrofit(token);
+        UtilService utilService = retrofit.create(UtilService.class);
+        Call<ResponseBody> responseBodyCall = utilService.deleteUser(userId);
+        return responseBodyCall;
+    }
+
+    public Call<ResponseBody> changePassword(String token, ChangePasswordRequest changePasswordRequest){
+        initRetrofit(token);
+        UtilService utilService = retrofit.create(UtilService.class);
+        Call<ResponseBody> responseBodyCall = utilService.changePassword(changePasswordRequest);
+        return responseBodyCall;
+    }
+
+    public Call<List<Dog>> getAllDogFromOneCentre(String token, int centreId){
+         initRetrofit(token);
+         UtilService utilService = retrofit.create(UtilService.class);
+         if(centreId == 0){
+             return utilService.getAllDogFromAllCentres();
+         }else{
+             return utilService.getAllDogFromOneCentre(centreId);
+         }
+    }
+
+    public Call<List<Dog>> getAllDogFromNonAdminUser(String token){
+        initRetrofit(token);
+        UtilService utilService = retrofit.create(UtilService.class);
+        return utilService.getAllDogForNonAdminUser();
+    }
+
+    public Call<ResponseBody> addNewDog(String token, DogRegisterRequest dogRegisterRequest){
+         initRetrofit(token);
+         UtilService utilService = retrofit.create(UtilService.class);
+         return utilService.addNewDog(dogRegisterRequest);
+    }
 }

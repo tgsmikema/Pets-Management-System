@@ -120,4 +120,13 @@ public class TimeUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return datetime.format(formatter);
     }
+
+    public static String getFormatDataStringForDogDate(long timesStamp){
+        Date date = new Date(timesStamp);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int year = calendar.get(Calendar.YEAR);
+        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + year;
+    }
 }

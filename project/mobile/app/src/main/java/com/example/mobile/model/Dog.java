@@ -1,82 +1,92 @@
 package com.example.mobile.model;
 
 public class Dog {
-    private String id;
+    private int id;
     private String name;
     private String breed;
-    private String location;
-    private int[] weightList;
 
-    private String weight;
-    private String date;
-    private boolean flag;
-    private boolean alert;
+    private int centreId;
+    private double lastCheckInWeight;
+    private String lastCheckInTimeStamp;
+    private boolean isFlag;
+    private boolean isAlert;
 
-    public String getWeight() {
-        return weight;
+    public Dog(){
+
     }
 
-    public String getDate() {
-        return date;
+    public Dog(int id, String name, String breed, int centreId, double lastCheckInWeight, String lastCheckInTimeStamp, boolean isFlag, boolean isAlert) {
+        this.id = id;
+        this.name = name;
+        this.breed = breed;
+        this.centreId = centreId;
+        this.lastCheckInWeight = lastCheckInWeight;
+        this.lastCheckInTimeStamp = lastCheckInTimeStamp;
+        this.isFlag = isFlag;
+        this.isAlert = isAlert;
     }
 
-    public boolean isFlag() {
-        return flag;
-    }
-
-    public boolean isAlert() {
-        return alert;
-    }
-
-    public String getId() {
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getBreed() {
         return breed;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public int[] getWeightList() {
-        return weightList;
-    }
-
-    public String[] getDateList() {
-        return dateList;
-    }
-
-    private String[] dateList;
-    public Dog() {
-    }
-
-    public Dog(String id, String name, String breed, String weight, String date, boolean flag, boolean alert) {
-        this.id = id;
-        this.name = name;
+    public void setBreed(String breed) {
         this.breed = breed;
-        this.weight = weight;
-        this.date = date;
-        this.flag = flag;
-        this.alert = alert;
     }
 
-    public Dog(String id, String name, String breed, String location, String weight, String date, boolean flag, boolean alert) {
-        this.id = id;
-        this.name = name;
-        this.breed = breed;
-        this.location = location;
-        this.weight = weight;
-        this.date = date;
-        this.flag = flag;
-        this.alert = alert;
+    public int getCentreId() {
+        return centreId;
     }
 
+    public void setCentreId(int centreId) {
+        this.centreId = centreId;
+    }
 
+    public double getLastCheckInWeight() {
+        return lastCheckInWeight;
+    }
 
+    public void setLastCheckInWeight(double lastCheckInWeight) {
+        this.lastCheckInWeight = lastCheckInWeight;
+    }
+
+    public String getLastCheckInTimeStamp() {
+        return lastCheckInTimeStamp;
+    }
+
+    public void setLastCheckInTimeStamp(String lastCheckInTimeStamp) {
+        this.lastCheckInTimeStamp = lastCheckInTimeStamp;
+    }
+
+    public boolean isFlag() {
+        return isFlag;
+    }
+
+    public void setFlag(boolean flag) {
+        isFlag = flag;
+    }
+
+    public boolean isAlert() {
+        return isAlert;
+    }
+
+    public void setAlert(boolean alert) {
+        isAlert = alert;
+    }
 }

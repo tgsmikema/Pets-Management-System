@@ -1,14 +1,19 @@
 package com.example.mobile.screen.home;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,88 +23,215 @@ import com.example.mobile.R;
 import com.example.mobile.SPCApplication;
 import com.example.mobile.databinding.FragmentHomeBinding;
 import com.example.mobile.model.Dog;
-import com.example.mobile.model.User;
 import com.example.mobile.screen.dog.DogFragment;
-import com.example.mobile.screen.profile.EditUser;
+import com.example.mobile.service.SPCAService;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-    private Spinner menu;
+    private Spinner spinner;
     private SearchView searchView;
     private RecyclerView recyclerView;
     private ImageButton plusButton;
+    private Button nameButton,lastCheckButton;
+    private int centreId;
+    private List<Dog> dogs;
+
+    private List<Dog> curDogs;
+    private List<String> allCentres;
+
+    private boolean nameAscendSort;
+
+    private boolean LastCheckAscendSort;
+    private SPCAService spcaService;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
+        centreId = SPCApplication.currentUser.getUserType().equals("admin") ? 0 : SPCApplication.currentUser.getCentreId();
+        spcaService = new SPCAService();
+        dogs = new ArrayList<>();
+        nameAscendSort = false;
+        LastCheckAscendSort = false;
         //drop down menu to select centers
-        //TODO: replace centers_list mock data with db
-        menu = root.findViewById(R.id.dropdown_centers);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.centers_list, R.layout.text_spinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        menu.setAdapter(adapter);
+        initView();
 
+        return binding.getRoot();
+    }
+
+    public void initView(){
+        spinner = binding.dropdownCenters;
+        initSpinner();
         //search bar
-        searchView = root.findViewById(R.id.search);
+        searchView = binding.search;
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // TODO: Perform search operation with query string
+                List<Dog> collect = dogs.stream().filter(it -> {
+                    return it.getName().trim().toLowerCase().contains(query) ||
+                            it.getBreed().trim().toLowerCase().contains(query);
+                }).collect(Collectors.toList());
+
+                curDogs = collect;
+                initAdaptor();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // TODO: Update search results based on new text
                 return false;
             }
         });
 
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                searchView.setQuery("", false); // clear text
+                curDogs = dogs;
+                initAdaptor();
+                return false;
+            }
+        });
         //recycler view
-        recyclerView = root.findViewById(R.id.recycler_view);
+        recyclerView = binding.recyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //TODO: replace mock data with db
-        List<Dog> dogs = new ArrayList<>();
-        dogs.add(new Dog("8093", "Kyra", "Border Collie", "Manukau", "14.8", "08/03/23", false, true));
-        dogs.add(new Dog("8094", "Luna", "Husky", "Manukau","7.6", "24/03/23", true, false));
-        dogs.add(new Dog("8095", "Ted", "Corgi", "Manukau","8.7", "24/03/23", false, false));
-        dogs.add(new Dog("8096", "Bella", "Poodle", "Manukau","9.2", "24/03/23", true, true));
-
-        HomeAdaptor listAdaptor = new HomeAdaptor(dogs, this::onItemClick);
-        recyclerView.setAdapter(listAdaptor);
+        fetchDogData();
 
         //add button
-        plusButton = root.findViewById(R.id.plus_button);
+        plusButton = binding.plusButton;
 
         plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AddDog addDog = new AddDog();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container,addDog).addToBackStack(null).commit();
-
             }
         });
 
-        return root;
+        nameButton = binding.filterName;
+        lastCheckButton = binding.filterLastcheck;
+
+        nameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(curDogs, (a, b) -> a.getName().compareTo(b.getName()));
+                if(nameAscendSort) {
+                    Collections.reverse(curDogs);
+                }
+                initAdaptor();
+                nameAscendSort = !nameAscendSort;
+            }
+        });
+
+        lastCheckButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(curDogs,(a,b) -> a.getLastCheckInTimeStamp().compareTo(b.getLastCheckInTimeStamp()));
+                if(LastCheckAscendSort){
+                    Collections.reverse(curDogs);
+                }
+                initAdaptor();
+                LastCheckAscendSort = !LastCheckAscendSort;
+            }
+        });
+    }
+
+    public void fetchDogData(){
+
+        if(!SPCApplication.currentUser.getUserType().equals("admin")){
+            Call<List<Dog>> allDogFromNonAdminUser = spcaService.getAllDogFromNonAdminUser(SPCApplication.currentUser.getToken());
+            allDogFromNonAdminUser.enqueue(new Callback<List<Dog>>() {
+                @Override
+                public void onResponse(Call<List<Dog>> call, Response<List<Dog>> response) {
+                     dogs = response.body();
+                     curDogs = dogs;
+                     initAdaptor();
+                }
+
+                @Override
+                public void onFailure(Call<List<Dog>> call, Throwable t) {
+
+                }
+            });
+            return;
+        }
+
+        Call<List<Dog>> allDogFromAllCentres = spcaService.getAllDogFromOneCentre(SPCApplication.currentUser.getToken(),centreId);
+        allDogFromAllCentres.enqueue(new Callback<List<Dog>>() {
+            @Override
+            public void onResponse(Call<List<Dog>> call, Response<List<Dog>> response) {
+                List<Dog> body = response.body();
+                dogs = body;
+                curDogs = dogs;
+                initAdaptor();
+            }
+
+            @Override
+            public void onFailure(Call<List<Dog>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void initSpinner(){
+        if (SPCApplication.currentUser.getUserType().equals("admin")) {
+            allCentres = SPCApplication.allCentres.stream().map(it -> it.getName()).collect(Collectors.toList());
+        } else {
+            allCentres = new ArrayList<String>();
+            allCentres.add(SPCApplication.allCentres.get(SPCApplication.currentUser.getCentreId()).getName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.text_spinner, allCentres);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.v("item", (String) parent.getItemAtPosition(position));
+                TextView curItem = (TextView) parent.getChildAt(0);
+                curItem.setTextSize(30);
+                curItem.setTypeface(null, Typeface.BOLD);
+                if (SPCApplication.currentUser.getUserType().equals("admin")) {
+                    centreId = position;
+                    fetchDogData();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+            }
+        });
+    }
+
+    public void initAdaptor(){
+        HomeAdaptor listAdaptor = new HomeAdaptor(curDogs, this::onItemClick);
+        recyclerView.setAdapter(listAdaptor);
     }
 
     public void onItemClick(Dog dog) {
         Bundle bundle = new Bundle();
         bundle.putString("name", dog.getName());
         bundle.putString("breed", dog.getBreed());
-        bundle.putString("id", dog.getId());
-        bundle.putString("location", dog.getLocation());
-        bundle.putString("weight", dog.getWeight());
-        bundle.putString("date", dog.getDate());
+        bundle.putInt("id", dog.getId());
+        bundle.putInt("centreId", dog.getCentreId());
+        bundle.putDouble("weight", dog.getLastCheckInWeight());
+        bundle.putString("date", dog.getLastCheckInTimeStamp());
         bundle.putBoolean("flag", dog.isFlag());
         bundle.putBoolean("alert", dog.isAlert());
         DogFragment fragment = new DogFragment();
@@ -108,6 +240,12 @@ public class HomeFragment extends Fragment {
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        initView();
     }
 
     @Override
