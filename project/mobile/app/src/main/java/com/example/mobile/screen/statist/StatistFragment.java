@@ -477,13 +477,13 @@ public class StatistFragment extends Fragment {
             entries1.add(new Entry(data.getIdx(), data.getAmount()));
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "weighted"); // add entries to dataset
+        LineDataSet dataSet = new LineDataSet(entries, "weighed"); // add entries to dataset
         dataSet.setColor(Color.rgb(255, 192, 203));
         dataSet.setLineWidth(2);
         dataSet.setValueTextSize(13);
         dataSet.setCircleColor(Color.RED);
 
-        LineDataSet dataSet1 = new LineDataSet(entries1, "unweighted"); // add entries to dataset
+        LineDataSet dataSet1 = new LineDataSet(entries1, "unweighed"); // add entries to dataset
         dataSet1.setColor(Color.rgb(173, 216, 230));
         dataSet1.setLineWidth(2);
         dataSet1.setValueTextSize(13);
