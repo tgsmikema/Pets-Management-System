@@ -9,7 +9,8 @@ public class User {
     private String lastName;
     private int centreId;
     private String token;
-    private String job;
+
+    private String email;
 
     public User(){
 
@@ -17,23 +18,24 @@ public class User {
 
     public User(String userName, String job, String userType) {
         this.userName = userName;
-        this.job = job;
         this.userType = userType;
     }
 
-    public String getJob() {
-        return job;
-    }
     public User(String userName, String userType){
          this.userName = userName;
          this.userType = userType;
     }
 
+    public String getEmail(){return email;}
     public int getId() {
         return id;
     }
     public String getUserName() {
         return userName;
+    }
+
+    public void setUserToken(String token){
+        this.token = token;
     }
 
 

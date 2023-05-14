@@ -81,7 +81,7 @@ const columns = [
 const HomePage = () => {
   const { user } = useAuth();
   const { setSelected } = useUtilProvider();
-  const { allCentres, centreLoading } = useWebService();
+  const { allCentres, centreLoading, allCentreForAllUser } = useWebService();
   //display the centre name
   const [centreValue, setCentreValue] = useState("");
 
@@ -253,9 +253,7 @@ const HomePage = () => {
       >
         <AddDog
           onClose={handleAddDogClose}
-          allCentres={
-            user.userType === "admin" ? allCentres.slice(1) : allCentres
-          }
+          allCentres={allCentreForAllUser?.map((it) => it.name)}
         />
       </Dialog>
     </Box>

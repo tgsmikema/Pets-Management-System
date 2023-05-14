@@ -24,14 +24,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/text_job"
+            android:id="@+id/text_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@id/text_name"
-            android:text="Vet at Manukau"
+            android:text="123@gmail.com"
+            android:layout_marginVertical="8dp"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_name" />
+
 
         <TextView
             android:id="@+id/text_access"
@@ -41,7 +42,7 @@
             android:text="Vet"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_job" />
+            app:layout_constraintTop_toBottomOf="@+id/text_email" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

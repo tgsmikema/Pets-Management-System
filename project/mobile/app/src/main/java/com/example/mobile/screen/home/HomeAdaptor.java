@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobile.R;
 import com.example.mobile.model.Dog;
 import com.example.mobile.screen.dog.DogFragment;
+import com.example.mobile.util.TimeUtil;
 
 import java.util.List;
 
@@ -64,11 +65,11 @@ public class HomeAdaptor extends RecyclerView.Adapter<HomeAdaptor.ViewHolder> {
         //TODO: set content from database
         //e.g vh.name.setText(dogList.get(position).getName());
         Dog dog = dogList.get(position);
-        vh.id.setText(dog.getId());
+        vh.id.setText(String.valueOf(dog.getId()));
         vh.name.setText(dog.getName());
         vh.breed.setText(dog.getBreed());
-        vh.weight.setText(dog.getWeight());
-        vh.date.setText(dog.getDate());
+        vh.weight.setText(String.valueOf(dog.getLastCheckInWeight()));
+        vh.date.setText(TimeUtil.getFormatDataStringForDogDate(Long.parseLong(dog.getLastCheckInTimeStamp().trim()) * 1000));
         if (dog.isFlag()) {
             vh.flag.setImageResource(R.drawable.ic_flag_on);
         } else {

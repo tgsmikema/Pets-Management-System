@@ -7,7 +7,7 @@ import { constants } from "../constants.js";
 
 const ChangePassword = ({ handleClose }) => {
   const theme = useTheme();
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   const [errorMessage, setErrorMessage] = useState("");
   const [password, setPassword] = useState("");
@@ -38,6 +38,7 @@ const ChangePassword = ({ handleClose }) => {
           }
         )
         .then((res) => {
+          setUser({ ...user, token: res.data });
           handleClose();
         })
         .catch((e) => {

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.mobile.R;
 import com.example.mobile.SPCApplication;
 import com.example.mobile.databinding.FragmentStatistBinding;
 import com.example.mobile.model.TimeWeightRequest;
@@ -333,7 +334,8 @@ public class StatistFragment extends Fragment {
             allCentres.add(SPCApplication.allCentres.get(SPCApplication.currentUser.getCentreId()).getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, allCentres);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.text_spinner, allCentres);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -475,13 +477,13 @@ public class StatistFragment extends Fragment {
             entries1.add(new Entry(data.getIdx(), data.getAmount()));
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "weighted"); // add entries to dataset
+        LineDataSet dataSet = new LineDataSet(entries, "weighed"); // add entries to dataset
         dataSet.setColor(Color.rgb(255, 192, 203));
         dataSet.setLineWidth(2);
         dataSet.setValueTextSize(13);
         dataSet.setCircleColor(Color.RED);
 
-        LineDataSet dataSet1 = new LineDataSet(entries1, "unweighted"); // add entries to dataset
+        LineDataSet dataSet1 = new LineDataSet(entries1, "unweighed"); // add entries to dataset
         dataSet1.setColor(Color.rgb(173, 216, 230));
         dataSet1.setLineWidth(2);
         dataSet1.setValueTextSize(13);
