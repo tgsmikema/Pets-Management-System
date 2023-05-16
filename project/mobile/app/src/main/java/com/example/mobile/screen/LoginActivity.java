@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.mobile.SPCApplication;
 import com.example.mobile.databinding.ActivityLoginBinding;
 import com.example.mobile.model.Centre;
+import com.example.mobile.model.Scale;
 import com.example.mobile.model.User;
 import com.example.mobile.service.SPCAService;
 import com.google.android.material.textfield.TextInputEditText;
@@ -107,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
 //                    if(!hasInfo){
 //                        saveUserInfo(username,password);
 //                    }
+                    fetchAllScales();
                     fetchAllCentres();
                 } else {
                     // Handle error
@@ -140,6 +142,24 @@ public class LoginActivity extends AppCompatActivity {
         if (username != null && password != null) {
             userLogin(username,password,true);
         }
+    }
+
+    public void fetchAllScales(){
+        Call<List<Scale>> allScale = spcaService.getAllScale(SPCApplication.currentUser.getToken());
+        allScale.enqueue(new Callback<List<Scale>>() {
+            @Override
+            public void onResponse(Call<List<Scale>> call, Response<List<Scale>> response) {
+                List<Scale> body = response.body();
+                if(body != null){
+                    SPCApplication.allScales = body;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Scale>> call, Throwable t) {
+
+            }
+        });
     }
 
     public void fetchAllCentres(){

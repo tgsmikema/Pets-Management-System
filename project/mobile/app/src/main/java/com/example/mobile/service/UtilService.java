@@ -3,10 +3,16 @@ package com.example.mobile.service;
 import com.example.mobile.model.Centre;
 import com.example.mobile.model.ChangePasswordRequest;
 import com.example.mobile.model.Dog;
+import com.example.mobile.model.DogDetail;
+import com.example.mobile.model.DogEditRequest;
 import com.example.mobile.model.DogRegisterRequest;
+import com.example.mobile.model.DogWeight;
+import com.example.mobile.model.DogWeightHistory;
 import com.example.mobile.model.EditUserRequest;
+import com.example.mobile.model.InvokeRequest;
 import com.example.mobile.model.Message;
 import com.example.mobile.model.MessageRequest;
+import com.example.mobile.model.Scale;
 import com.example.mobile.model.UserRegisterRequest;
 import com.example.mobile.model.TimeWeightRequest;
 import com.example.mobile.model.User;
@@ -74,4 +80,38 @@ public interface UtilService {
 
     @POST("dog/register")
     Call<ResponseBody> addNewDog(@Body DogRegisterRequest dogRegisterRequest);
+
+    @GET("dog/toggleFlag")
+    Call<ResponseBody> toggleFlag(@Query("dogId") int dogId);
+
+    @GET("dog/toggleAlert")
+    Call<ResponseBody> toggleAlert(@Query("dogId") int dogId);
+
+    @GET("dog/getWeightHistory")
+    Call<List<DogWeightHistory>> getWeightHistory(@Query("dogId") int dogId);
+
+    @DELETE("dog/delete")
+    Call<ResponseBody> deleteDog(@Query("dogId") int dogId);
+
+    @POST("dog/edit")
+    Call<ResponseBody> editDog(@Body DogEditRequest dogEditRequest);
+
+    @GET("dog/detailFromAllCentre")
+    Call<DogDetail> getDogDetailFromAllCentre(@Query("dogId") int dogId);
+
+    @GET("dog/detailFromOwnCentre")
+    Call<DogDetail> getDogDetailFromOwnCentre(@Query("dogId") int dogId);
+
+    @GET("util/listAllScales")
+    Call<List<Scale>> getScaleList();
+
+    @GET("dog/saveCurrentWeight")
+    Call<ResponseBody> saveCurrentWeight(@Query("dogId") int dogId);
+
+    @POST("dog/invokeScaleRequest")
+    Call<ResponseBody> invokeScaleRequest(@Body InvokeRequest invokeRequest);
+
+    @GET("dog/getCurrentWeightFromScale")
+    Call<DogWeight> getCurrentDogWeight(@Query("dogId") int dogId);
+
 }
