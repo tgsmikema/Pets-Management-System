@@ -41,7 +41,7 @@ namespace SPCA_backend.Controllers
 
         [HttpDelete("delete")]
         [Authorize(AuthenticationSchemes = "Authentication")]
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminAndVetOnly")]
         public ActionResult deleteDog(int dogId)
         {
             bool isDeleteSuccessful = _repository.DeleteDog(dogId);
@@ -195,7 +195,7 @@ namespace SPCA_backend.Controllers
 
 
         [Authorize(AuthenticationSchemes = "Authentication")]
-        [Authorize(Policy = "AdminAndVetOnly")]
+        [Authorize(Policy = "AllUser")]
         [HttpGet("getWeightHistory")]
         public ActionResult<IEnumerable<Weight>> getWeightHistory(int dogId)
         {
