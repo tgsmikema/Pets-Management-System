@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -15,10 +14,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.mobile.R;
-import com.example.mobile.databinding.FragmentEditDogBinding;
+import com.example.mobile.SPCApplication;
 import com.example.mobile.databinding.FragmentWeightBinding;
-import com.example.mobile.model.Dog;
-import com.example.mobile.screen.profile.ProfileFragment;
+import com.example.mobile.model.InvokeRequest;
+import com.example.mobile.service.SPCAService;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Weight extends Fragment {
 
@@ -27,45 +34,43 @@ public class Weight extends Fragment {
     private Button cancelButton;
     private Button startButton;
     private FragmentWeightBinding binding;
-
+    int dogId;
+    String dogName;
+    int scaleId;
+    SPCAService spcaService;
     public Weight() {
         // Required empty public constructor
     }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentWeightBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        spcaService = new SPCAService();
+        initView();
+        return binding.getRoot();
+    }
 
+    public void initView(){
+
+        scaleId = 1;
         Bundle bundle = getArguments();
-        String dogId = bundle.getString("id");
-        String dogName = bundle.getString("name");
-        String dogBreed = bundle.getString("breed");
-        String dogLocation = bundle.getString("location");
-        String dogWeight = bundle.getString("weight");
-        String dogDate = bundle.getString("date");
-        boolean dogAlert = bundle.getBoolean("alert");
-        boolean dogFlagged = bundle.getBoolean("flagged");
-
-        locationSpinner = root.findViewById(R.id.weight_location_spinner);
-        cancelButton = root.findViewById(R.id.weight_cancel);
-        startButton = root.findViewById(R.id.weight_start);
+        dogId = bundle.getInt("id");
+        dogName = bundle.getString("name");
+        locationSpinner = binding.weightLocationSpinner;
+        cancelButton = binding.weightCancel;
+        startButton = binding.weightStart;
 
         //drop down menu to select location
-        locationSpinner = root.findViewById(R.id.weight_location_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.centers_list, android.R.layout.simple_spinner_item);
+        List<String> collect = SPCApplication.allScales.stream().map(it -> it.getName()).collect(Collectors.toList());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.text_spinner, collect);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(adapter);
-        final String[] selectedLocation = {""};
 
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Get the selected item from the spinner
-                selectedLocation[0] = parent.getItemAtPosition(position).toString();
+                scaleId = position + 1;
             }
 
             @Override
@@ -77,17 +82,12 @@ public class Weight extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                inovkeRequest();
                 WeightInput weightInput = new WeightInput();
                 Bundle bundle = new Bundle();
-                bundle.putString("name", dogName);
-                bundle.putString("breed", dogBreed);
-                bundle.putString("id", dogId);
-                bundle.putString("location", dogLocation);
-                bundle.putString("weight", dogWeight);
-                bundle.putString("date", dogDate);
-                bundle.putBoolean("flag", dogFlagged);
-                bundle.putBoolean("alert", dogAlert);
-                bundle.putString("location", selectedLocation[0]);
+                bundle.putInt("id", dogId);
+                bundle.putInt("scaleId", scaleId);
+                bundle.putString("dogName",dogName);
                 weightInput.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container,weightInput).commit();
             }
@@ -98,20 +98,32 @@ public class Weight extends Fragment {
             public void onClick(View view) {
                 DogFragment dogFragment = new DogFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("name", dogName);
-                bundle.putString("breed", dogBreed);
-                bundle.putString("id", dogId);
-                bundle.putString("location", dogLocation);
-                bundle.putString("weight", dogWeight);
-                bundle.putString("date", dogDate);
-                bundle.putBoolean("flag", dogFlagged);
-                bundle.putBoolean("alert", dogAlert);
+                bundle.putInt("id", dogId);
                 dogFragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container,dogFragment).commit();
             }
         });
+    }
 
-        return root;
+    public void inovkeRequest(){
+        Call<ResponseBody> responseBodyCall = spcaService.invokeRequest(SPCApplication.currentUser.getToken(), new InvokeRequest(dogId, scaleId));
+        responseBodyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        initView();
     }
 
     @Override
