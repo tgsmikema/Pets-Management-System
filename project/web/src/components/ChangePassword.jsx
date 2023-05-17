@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { useAuth } from "../providers/AuthProvider.jsx";
 import axios from "axios";
 import { constants } from "../constants.js";
+import { useLanguageProvider } from "../providers/LanguageProvider.jsx";
 
 const ChangePassword = ({ handleClose }) => {
   const theme = useTheme();
@@ -13,6 +14,8 @@ const ChangePassword = ({ handleClose }) => {
   const [password, setPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [confirmedPassword, setConfirmedPassword] = useState("");
+
+  const { languageMap } = useLanguageProvider();
 
   const changePassword = useCallback(() => {
     if (
@@ -61,7 +64,7 @@ const ChangePassword = ({ handleClose }) => {
       justifyContent={"space-evenly"}
     >
       <Typography variant={"h4"} fontWeight={"600"} paddingBottom={"5px"}>
-        Change Password
+        {languageMap.ChangePassword}
       </Typography>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
@@ -133,7 +136,7 @@ const ChangePassword = ({ handleClose }) => {
           }}
           onClick={handleClose}
         >
-          Cancel
+          {languageMap.Cancel}
         </Button>
         <Button
           variant={"contained"}
@@ -146,7 +149,7 @@ const ChangePassword = ({ handleClose }) => {
           }}
           onClick={changePassword}
         >
-          Save
+          {languageMap.Save}
         </Button>
       </Box>
     </Box>

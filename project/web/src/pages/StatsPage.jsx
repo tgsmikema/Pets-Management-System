@@ -20,6 +20,7 @@ import { useAuth } from "../providers/AuthProvider.jsx";
 import axios from "axios";
 import { constants } from "../constants.js";
 import ProcessLoading from "../components/ProcessLoading.jsx";
+import { useLanguageProvider } from "../providers/LanguageProvider.jsx";
 
 const StatsPage = () => {
   const theme = useTheme();
@@ -30,6 +31,8 @@ const StatsPage = () => {
   const { allCentres, centreLoading } = useWebService();
   //this value is used to display the centre name
   const [centreValue, setCentreValue] = useState("");
+
+  const { languageMap } = useLanguageProvider();
 
   //below is used to show and close the centre menu
   const [anchorEl, setAnchorEl] = useState(null);
@@ -144,12 +147,12 @@ const StatsPage = () => {
   const data = [
     {
       id: "Weighed",
-      label: "Weighed",
+      label: languageMap.Weighed,
       value: weekTotalData.noOfDogsWeighted,
     },
     {
       id: "UnWeighed",
-      label: "UnWeighed",
+      label: languageMap.Unweighed,
       value: weekTotalData.noOfDogsUnweighted,
     },
   ];
@@ -180,13 +183,13 @@ const StatsPage = () => {
   const [weekUnWeightData, setWeekUnWeightData] = useState([]);
 
   const weekArray = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
+    languageMap.Monday,
+    languageMap.Tuesday,
+    languageMap.Wednesday,
+    languageMap.Thursday,
+    languageMap.Friday,
+    languageMap.Saturday,
+    languageMap.Sunday,
   ];
 
   const fetchWeekData = useCallback(async () => {
@@ -223,11 +226,11 @@ const StatsPage = () => {
 
   const weekDataForLine = [
     {
-      id: "weighed",
+      id: languageMap.Weighed,
       data: weekWeightData,
     },
     {
-      id: "unWeighed",
+      id: languageMap.Unweighed,
       data: weekUnWeightData,
     },
   ];
@@ -325,7 +328,7 @@ const StatsPage = () => {
   };
 
   useEffect(() => {
-    setSelected("Stats");
+    setSelected(languageMap.Stats);
     setCentreValue(allCentres[centreIdx]);
     fetchAllCentreData();
     fetchWeekData();
@@ -410,7 +413,7 @@ const StatsPage = () => {
               alignItems={"center"}
               justifyContent={"center"}
             >
-              This Week
+              {languageMap.ThisWeek}
             </Typography>
           </Box>
 
@@ -432,13 +435,13 @@ const StatsPage = () => {
               justifyContent={"space-evenly"}
             >
               <Typography variant={"body1"} textAlign={"center"}>
-                Weighed
+                {languageMap.Weighed}
               </Typography>
               <Typography variant={"h5"} fontWeight={600} textAlign={"center"}>
                 {weekTotalData.noOfDogsWeighted}
               </Typography>
               <Typography variant={"body1"} textAlign={"center"}>
-                Unweighed
+                {languageMap.Unweighed}
               </Typography>
               <Typography variant={"h5"} fontWeight={600} textAlign={"center"}>
                 {weekTotalData.noOfDogsUnweighted}
@@ -488,7 +491,7 @@ const StatsPage = () => {
                   },
                 }}
               >
-                week
+                {languageMap.Week}
               </Button>
               <Button
                 variant={"contained"}
@@ -505,7 +508,7 @@ const StatsPage = () => {
                   },
                 }}
               >
-                month
+                {languageMap.Month}
               </Button>
             </Stack>
           </Box>
@@ -524,16 +527,16 @@ const StatsPage = () => {
               weekWeightData.length && (
                 <LineChart
                   data={weekDataForLine}
-                  rowLabel={"date"}
-                  columnLabel={"count"}
+                  rowLabel={languageMap.Date}
+                  columnLabel={languageMap.Count}
                 />
               )
             ) : (
               monthWeightData.length && (
                 <LineChart
                   data={monthDataForLine}
-                  rowLabel={"date"}
-                  columnLabel={"count"}
+                  rowLabel={languageMap.Date}
+                  columnLabel={languageMap.Count}
                 />
               )
             )}

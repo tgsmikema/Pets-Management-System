@@ -23,6 +23,7 @@ import { useAuth } from "../providers/AuthProvider.jsx";
 import ProcessLoading from "../components/ProcessLoading.jsx";
 import axios from "axios";
 import { constants } from "../constants.js";
+import { useLanguageProvider } from "../providers/LanguageProvider.jsx";
 
 const StyledButton = styled(Button)({
   padding: "2% 2%",
@@ -32,58 +33,65 @@ const StyledButton = styled(Button)({
   },
 });
 
-//control row click
-//TODO: route to dog page
-
-function ViewButton(params) {
-  const id = params.params;
-  const navigate = useNavigate();
-  const handleViewClick = () => {
-    navigate(`/dogs/${id}`);
-  };
-  return (
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={() => handleViewClick()}
-    >
-      View
-    </Button>
-  );
-}
-
-const columns = [
-  {
-    field: "isFlag",
-    headerName: "flagged",
-    flex: 1,
-    renderCell: (params) => (params.row.isFlag ? <FlagCircleIcon /> : null),
-  },
-  {
-    field: "isAlert",
-    headerName: "alert",
-    flex: 1,
-    renderCell: (params) => (params.row.isAlert ? <ErrorIcon /> : null),
-  },
-  { field: "id", headerName: "id", flex: 1 },
-  { field: "name", headerName: "name", flex: 1.5 },
-  { field: "breed", headerName: "breed", flex: 1.5 },
-  { field: "lastCheckInTimeStamp", headerName: "last check-in", flex: 1.5 },
-  { field: "lastCheckInWeight", headerName: "weight(kg)", flex: 1 },
-  {
-    field: "view",
-    headerName: "",
-    flex: 1,
-    renderCell: (params) => <ViewButton params={params.row.id} />,
-  },
-];
-
 const HomePage = () => {
   const { user } = useAuth();
   const { setSelected } = useUtilProvider();
   const { allCentres, centreLoading, allCentreForAllUser } = useWebService();
   //display the centre name
   const [centreValue, setCentreValue] = useState("");
+
+  const { languageMap } = useLanguageProvider();
+
+  function ViewButton(params) {
+    const id = params.params;
+    const navigate = useNavigate();
+    const handleViewClick = () => {
+      navigate(`/dogs/${id}`);
+    };
+    return (
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => handleViewClick()}
+      >
+        {languageMap.View}
+      </Button>
+    );
+  }
+
+  const columns = [
+    {
+      field: "isFlag",
+      headerName: languageMap.Flagged,
+      flex: 1,
+      renderCell: (params) => (params.row.isFlag ? <FlagCircleIcon /> : null),
+    },
+    {
+      field: "isAlert",
+      headerName: languageMap.Alert,
+      flex: 1,
+      renderCell: (params) => (params.row.isAlert ? <ErrorIcon /> : null),
+    },
+    { field: "id", headerName: "id", flex: 1 },
+    { field: "name", headerName: languageMap.Name, flex: 1.5 },
+    { field: "breed", headerName: languageMap.Breed, flex: 1.5 },
+    {
+      field: "lastCheckInTimeStamp",
+      headerName: languageMap.LastCheckIn,
+      flex: 1.5,
+    },
+    {
+      field: "lastCheckInWeight",
+      headerName: languageMap.Weight + "(kg)",
+      flex: 1,
+    },
+    {
+      field: "view",
+      headerName: "",
+      flex: 1,
+      renderCell: (params) => <ViewButton params={params.row.id} />,
+    },
+  ];
 
   //this centreIdx is used for the admin user, as it will list all the centres,
   //the centreIdx will match the centre id, such as when centreIdx = 0 , it represents the all centre
@@ -144,7 +152,7 @@ const HomePage = () => {
   }, [user, centreIdx]);
 
   useEffect(() => {
-    setSelected("Home");
+    setSelected(languageMap.Home);
     setCentreValue(allCentres[centreIdx]);
     fetchDogData();
   }, [user, centreIdx, centreLoading, openAddDog]);

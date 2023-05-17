@@ -12,6 +12,7 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import { constants } from "../constants.js";
 import { useAuth } from "../providers/AuthProvider.jsx";
+import { useLanguageProvider } from '../providers/LanguageProvider.jsx';
 
 const EditUser = ({ onClose, selectedRow }) => {
   const name = selectedRow
@@ -20,6 +21,8 @@ const EditUser = ({ onClose, selectedRow }) => {
   const accessLevel = selectedRow ? selectedRow.userType.trim() : "";
   const id = selectedRow?.id;
   const theme = useTheme();
+  const { languageMap } = useLanguageProvider();
+
 
   const [userType, setUserType] = useState(accessLevel);
   const { user } = useAuth();
@@ -84,7 +87,7 @@ const EditUser = ({ onClose, selectedRow }) => {
       </Typography>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Name:
+          {languageMap.Name}:
         </Typography>
       </Box>
       <Box>
@@ -99,7 +102,7 @@ const EditUser = ({ onClose, selectedRow }) => {
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Access Level:
+          {languageMap.AccessLevel}:
         </Typography>
       </Box>
       <Box>
@@ -144,7 +147,7 @@ const EditUser = ({ onClose, selectedRow }) => {
           }}
           onClick={deleteUser}
         >
-          DELETE
+          {languageMap.Delete}
         </Button>
         <Button
           variant={"contained"}
@@ -157,7 +160,7 @@ const EditUser = ({ onClose, selectedRow }) => {
           }}
           onClick={saveChange}
         >
-          SAVE
+          {languageMap.Save}
         </Button>
       </Box>
     </Box>

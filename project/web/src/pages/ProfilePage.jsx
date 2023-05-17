@@ -11,6 +11,7 @@ import { useWebService } from "../providers/WebServiceProvider.jsx";
 import axios from "axios";
 import { constants } from "../constants.js";
 import ChangePassword from "../components/ChangePassword.jsx";
+import { useLanguageProvider } from "../providers/LanguageProvider.jsx";
 
 const styles = {
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -31,12 +32,13 @@ const button_styles = {
 const ProfilePage = () => {
   const theme = useTheme();
   const { allCentres } = useWebService();
+  const { languageMap } = useLanguageProvider();
   const { user } = useAuth();
   const column = [
     { field: "id", headerName: "id", flex: 1 },
     {
       field: "username",
-      headerName: "name",
+      headerName: languageMap.Name,
       flex: 1.5,
       renderCell: (params) => (
         <div>
@@ -46,8 +48,8 @@ const ProfilePage = () => {
         </div>
       ),
     },
-    { field: "email", headerName: "email", flex: 1.5 },
-    { field: "userType", headerName: "access level", flex: 1.5 },
+    { field: "email", headerName: languageMap.Email, flex: 1.5 },
+    { field: "userType", headerName: languageMap.AccessLevel, flex: 1.5 },
     {
       field: "view",
       headerName: " ",
@@ -60,7 +62,7 @@ const ProfilePage = () => {
             handleEditUserClick(rows.find((it) => it.id === params.row.id))
           }
         >
-          View
+          {languageMap.View}
         </Button>
       ),
     },
@@ -114,7 +116,7 @@ const ProfilePage = () => {
   }, [openChangePassword]);
 
   useEffect(() => {
-    setSelected("Profile");
+    setSelected(languageMap.Profile);
     fetchAllUsers();
   }, [user, openAddUser, openEditUser]);
 
@@ -148,7 +150,7 @@ const ProfilePage = () => {
               handleChangePasswordOpen();
             }}
           >
-            Change Password
+            {languageMap.ChangePassword}
           </Button>
           <Button
             sx={button_styles}
@@ -158,7 +160,7 @@ const ProfilePage = () => {
               navigate("/");
             }}
           >
-            Log out
+            {languageMap.Logout}
           </Button>
         </div>
       </Box>

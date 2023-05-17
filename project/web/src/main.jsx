@@ -8,6 +8,7 @@ import { theme } from "./theme.js";
 import { ThemeProvider } from "@mui/material";
 import { UtilProvider } from "./providers/UtilProvider";
 import { WebServiceProvider } from "./providers/WebServiceProvider.jsx";
+import { LanguageProvider } from "./providers/LanguageProvider";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -16,7 +17,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <WebServiceProvider>
           <UtilProvider>
             <ThemeProvider theme={theme}>
-              <App />
+              <LanguageProvider>
+                <App />
+              </LanguageProvider>
             </ThemeProvider>
           </UtilProvider>
         </WebServiceProvider>
