@@ -16,10 +16,13 @@ import { useAuth } from "../providers/AuthProvider.jsx";
 import ChatUserItem from "../components/ChatUserItem.jsx";
 import UnChattedUserDialog from "../components/UnChattedUserDialog.jsx";
 import axios from "axios";
+import { useLanguageProvider } from "../providers/LanguageProvider.jsx";
 
 const ChatPage = () => {
   const { setSelected } = useUtilProvider();
   const theme = useTheme();
+
+  const { languageMap } = useLanguageProvider();
 
   const { user } = useAuth();
   const [selectUser, setSelectUser] = useState(-1);
@@ -111,7 +114,7 @@ const ChatPage = () => {
   );
 
   useEffect(() => {
-    setSelected("Chat");
+    setSelected(languageMap.Chat);
     fetchChattedUser();
     fetchUnChattedUser();
   }, []);
@@ -156,7 +159,7 @@ const ChatPage = () => {
               },
             }}
           >
-            <Typography>+ New Message</Typography>
+            <Typography>+ {languageMap.NewMessage}</Typography>
           </Button>
         </Box>
         <Divider />

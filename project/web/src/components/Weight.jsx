@@ -13,12 +13,15 @@ import ProcessLoading from "./ProcessLoading.jsx";
 import axios from "axios";
 import { constants } from "../constants";
 import { useAuth } from "../providers/AuthProvider.jsx";
+import { useLanguageProvider } from "../providers/LanguageProvider.jsx";
 
 const Weight = ({ onClose, scaleList, dog }) => {
   const [screen, setScreen] = useState("init");
   const theme = useTheme();
   const { user } = useAuth();
   const { id, name, centreId } = dog;
+
+  const { languageMap } = useLanguageProvider();
 
   const [scaleId, setScaleId] = useState(1);
 
@@ -100,7 +103,7 @@ const Weight = ({ onClose, scaleList, dog }) => {
       justifyContent={"space-evenly"}
     >
       <Typography variant={"h3"} fontWeight={"700"} paddingBottom={"5px"}>
-        Add Weight
+        {languageMap.AddWeight}
       </Typography>
       <Typography variant={"h5"} fontWeight={"700"}>
         Place {name} on the scales
@@ -143,7 +146,7 @@ const Weight = ({ onClose, scaleList, dog }) => {
             handleCancel();
           }}
         >
-          CANCEL
+          {languageMap.Cancel}
         </Button>
         <Button
           variant={"contained"}
@@ -160,7 +163,7 @@ const Weight = ({ onClose, scaleList, dog }) => {
             setIntervalToFetch();
           }}
         >
-          WEIGH
+          {languageMap.Weighed}
         </Button>
       </Box>
     </Box>
@@ -180,7 +183,7 @@ const Weight = ({ onClose, scaleList, dog }) => {
       justifyContent={"space-evenly"}
     >
       <Typography variant={"h3"} fontWeight={"700"} paddingBottom={"5px"}>
-        Add Weight
+        {languageMap.AddWeight}
       </Typography>
       <Typography variant={"h5"} fontWeight={"700"} alignSelf={"center"}>
         Place {name} on {`scale ${scaleId}`}
@@ -218,7 +221,7 @@ const Weight = ({ onClose, scaleList, dog }) => {
             handleCancel();
           }}
         >
-          CANCEL
+          {languageMap.Cancel}
         </Button>
         <Button
           variant={"contained"}
@@ -234,7 +237,7 @@ const Weight = ({ onClose, scaleList, dog }) => {
             handleCancel();
           }}
         >
-          SAVE
+          {languageMap.Save}
         </Button>
       </Box>
     </Box>

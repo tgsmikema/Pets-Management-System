@@ -56,6 +56,8 @@ public class HomeFragment extends Fragment {
     private boolean LastCheckAscendSort;
     private SPCAService spcaService;
 
+    int dogId;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -128,7 +130,7 @@ public class HomeFragment extends Fragment {
         nameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Collections.sort(curDogs, (a, b) -> a.getName().compareTo(b.getName()));
+                curDogs.sort((a, b) -> a.getName().compareTo(b.getName()));
                 if(nameAscendSort) {
                     Collections.reverse(curDogs);
                 }
@@ -140,7 +142,7 @@ public class HomeFragment extends Fragment {
         lastCheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Collections.sort(curDogs,(a,b) -> a.getLastCheckInTimeStamp().compareTo(b.getLastCheckInTimeStamp()));
+                curDogs.sort((a, b) -> a.getLastCheckInTimeStamp().compareTo(b.getLastCheckInTimeStamp()));
                 if(LastCheckAscendSort){
                     Collections.reverse(curDogs);
                 }
@@ -226,14 +228,14 @@ public class HomeFragment extends Fragment {
 
     public void onItemClick(Dog dog) {
         Bundle bundle = new Bundle();
-        bundle.putString("name", dog.getName());
-        bundle.putString("breed", dog.getBreed());
+//        bundle.putString("name", dog.getName());
+//        bundle.putString("breed", dog.getBreed());
         bundle.putInt("id", dog.getId());
-        bundle.putInt("centreId", dog.getCentreId());
-        bundle.putDouble("weight", dog.getLastCheckInWeight());
-        bundle.putString("date", dog.getLastCheckInTimeStamp());
-        bundle.putBoolean("flag", dog.isFlag());
-        bundle.putBoolean("alert", dog.isAlert());
+//        bundle.putString("location", SPCApplication.allCentres.get(dog.getCentreId() - 1).getName());
+//        bundle.putDouble("weight", dog.getLastCheckInWeight());
+//        bundle.putString("date", dog.getLastCheckInTimeStamp());
+//        bundle.putBoolean("flag", dog.isFlag());
+//        bundle.putBoolean("alert", dog.isAlert());
         DogFragment fragment = new DogFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

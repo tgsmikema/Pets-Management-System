@@ -85,7 +85,17 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_dog_location" />
+        app:layout_constraintTop_toBottomOf="@id/edit_dog_location"/>
+
+    <TextView
+        android:id="@+id/edit_dog_error_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/edit_dog_location_spinner"
+        android:layout_marginTop="50dp"
+        android:textSize="20sp"
+        android:textColor="@color/alert_500"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -129,4 +129,13 @@ public class TimeUtil {
         int year = calendar.get(Calendar.YEAR);
         return date.getDate() + "/" + (date.getMonth() + 1) + "/" + year;
     }
+
+    public static String getFormatDataStringForSimplyDogDate(long timesStamp){
+        Date date = new Date(timesStamp);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int year = calendar.get(Calendar.YEAR);
+        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + String.valueOf(year).substring(2);
+    }
 }
