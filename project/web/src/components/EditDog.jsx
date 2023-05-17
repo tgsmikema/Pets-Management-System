@@ -14,11 +14,14 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { constants } from "../constants.js";
+import { useLanguageProvider } from "../providers/LanguageProvider.jsx";
 
 const EditDog = ({ onClose, dog }) => {
   const theme = useTheme();
   //TODO: replace hardcoded values with db
   const { name, id, breed, centreId } = dog;
+
+  const { languageMap } = useLanguageProvider();
 
   const { user } = useAuth();
   const { allCentreForAllUser } = useWebService();
@@ -71,11 +74,11 @@ const EditDog = ({ onClose, dog }) => {
       justifyContent={"space-evenly"}
     >
       <Typography variant={"h3"} fontWeight={"700"} paddingBottom={"5px"}>
-        Edit Dog
+        {languageMap.EditDog}
       </Typography>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Name:
+          {languageMap.Name}:
         </Typography>
       </Box>
       <Box>
@@ -91,7 +94,7 @@ const EditDog = ({ onClose, dog }) => {
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Breed:
+          {languageMap.Breed}:
         </Typography>
       </Box>
       <Box>
@@ -107,7 +110,7 @@ const EditDog = ({ onClose, dog }) => {
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Location:
+          {languageMap.location}:
         </Typography>
       </Box>
       <Box>
@@ -161,7 +164,7 @@ const EditDog = ({ onClose, dog }) => {
             navigate("/");
           }}
         >
-          DELETE
+          {languageMap.Delete}
         </Button>
         <Button
           variant={"contained"}
@@ -185,7 +188,7 @@ const EditDog = ({ onClose, dog }) => {
             onClose();
           }}
         >
-          SAVE
+          {languageMap.Save}
         </Button>
       </Box>
     </Box>

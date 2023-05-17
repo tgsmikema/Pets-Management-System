@@ -15,6 +15,7 @@ import { useAuth } from "../providers/AuthProvider.jsx";
 import axios from "axios";
 import { constants } from "../constants.js";
 import { useWebService } from "../providers/WebServiceProvider.jsx";
+import { useLanguageProvider } from "../providers/LanguageProvider.jsx";
 
 const styles = {
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -43,24 +44,25 @@ const timestampToLineDate = (timestamp) => {
   );
 };
 
-const columns = [
-  {
-    field: "timeStamp",
-    headerName: "last check-in",
-    flex: 1.5,
-    renderCell: (params) => (
-      <div>{timestampToDate(parseInt(params.row.timeStamp) * 1000)}</div>
-    ),
-  },
-  { field: "dogWeight", headerName: "weight(kg)", flex: 1 },
-];
-
 function DogPage() {
   const theme = useTheme();
   const { id } = useParams();
   const { setSelected } = useUtilProvider();
   const { user } = useAuth();
   const { allCentres } = useWebService();
+  const { languageMap } = useLanguageProvider();
+
+  const columns = [
+    {
+      field: "timeStamp",
+      headerName: languageMap.LastCheckIn,
+      flex: 1.5,
+      renderCell: (params) => (
+        <div>{timestampToDate(parseInt(params.row.timeStamp) * 1000)}</div>
+      ),
+    },
+    { field: "dogWeight", headerName: languageMap.Weight + "(kg)", flex: 1 },
+  ];
 
   // control flag button
   //TODO: set/update based on db
@@ -288,8 +290,8 @@ function DogPage() {
           ) : (
             <LineChart
               data={dataForLine}
-              rowLabel={"date"}
-              columnLabel={"weight(kg)"}
+              rowLabel={languageMap.Date}
+              columnLabel={languageMap.Weight + "(kg)"}
             />
           )}
         </Box>

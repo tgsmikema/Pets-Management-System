@@ -12,6 +12,7 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import { constants } from "../constants.js";
 import { useAuth } from "../providers/AuthProvider.jsx";
+import { useLanguageProvider } from "../providers/LanguageProvider.jsx";
 
 const AddUser = (props) => {
   const { onClose, allCentres } = props;
@@ -20,6 +21,8 @@ const AddUser = (props) => {
   const handleCancel = () => {
     onClose();
   };
+
+  const { languageMap } = useLanguageProvider();
 
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -250,7 +253,7 @@ const AddUser = (props) => {
           }}
           onClick={handleCancel}
         >
-          CANCEL
+          {languageMap.Cancel}
         </Button>
         <Button
           variant={"contained"}
@@ -263,7 +266,7 @@ const AddUser = (props) => {
           }}
           onClick={createNewUser}
         >
-          CREATE
+          {languageMap.Create}
         </Button>
       </Box>
     </Box>

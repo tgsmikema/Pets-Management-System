@@ -12,11 +12,13 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import { constants } from "../constants.js";
 import { useAuth } from "../providers/AuthProvider.jsx";
+import { useLanguageProvider } from "../providers/LanguageProvider.jsx";
 
 const LoginForm = (props) => {
   const { onClose, allCentres } = props;
   const theme = useTheme();
   const { user } = useAuth();
+  const { languageMap } = useLanguageProvider();
 
   const [dogName, setDogName] = useState("");
   const [dogBreed, setDogBreed] = useState("");
@@ -63,11 +65,11 @@ const LoginForm = (props) => {
       justifyContent={"space-evenly"}
     >
       <Typography variant={"h3"} fontWeight={"700"} paddingBottom={"5px"}>
-        New Dog
+        {languageMap.NewDog}
       </Typography>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Name:
+          {languageMap.Name}:
         </Typography>
       </Box>
       <Box>
@@ -82,7 +84,7 @@ const LoginForm = (props) => {
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Breed:
+          {languageMap.Breed}:
         </Typography>
       </Box>
       <Box>
@@ -97,7 +99,7 @@ const LoginForm = (props) => {
       </Box>
       <Box>
         <Typography variant={"h5"} fontWeight={"700"}>
-          Location:
+          {languageMap.location}:
         </Typography>
       </Box>
       <Box>
@@ -147,7 +149,7 @@ const LoginForm = (props) => {
           }}
           onClick={handleCancel}
         >
-          CANCEL
+          {languageMap.Cancel}
         </Button>
         <Button
           variant={"contained"}
@@ -160,7 +162,7 @@ const LoginForm = (props) => {
           }}
           onClick={createDog}
         >
-          CREATE
+          {languageMap.Create}
         </Button>
       </Box>
     </Box>
