@@ -8,19 +8,20 @@ const LanguageMenu = () => {
     setLanguage(event.target.value);
   };
   return (
-    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-      <Select
-        displayEmpty
-        inputProps={{ "aria-label": "Without label" }}
-        defaultValue={language}
-        onChange={handleChange}
-      >
-        <MenuItem value="English">
-          <em>English</em>
-        </MenuItem>
-        <MenuItem value={"Maori"}>Maori</MenuItem>
-      </Select>
-    </FormControl>
+		<FormControl
+			sx={{ m: 1, minWidth: 120 }}
+			size='small'>
+			<Select
+				displayEmpty
+				inputProps={{ 'aria-label': 'Without label' }}
+				defaultValue={language}
+				onChange={handleChange}>
+				<MenuItem value='English'>
+					<em>English</em>
+				</MenuItem>
+				<MenuItem value={'Maori'}>Māori</MenuItem>
+			</Select>
+		</FormControl>
   );
 };
 
