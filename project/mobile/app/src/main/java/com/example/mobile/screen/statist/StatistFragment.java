@@ -412,15 +412,15 @@ public class StatistFragment extends Fragment {
         dataSet.setValueTextSize(13);
         dataSet.setCircleColor(Color.RED);
 
-        LineDataSet dataSet1 = new LineDataSet(entries1, "unweighed"); // add entries to dataset
-        dataSet1.setColor(Color.rgb(173, 216, 230));
-        dataSet1.setLineWidth(2);
-        dataSet1.setValueTextSize(13);
-        dataSet1.setCircleColor(Color.RED);
+//        LineDataSet dataSet1 = new LineDataSet(entries1, "unweighed"); // add entries to dataset
+//        dataSet1.setColor(Color.rgb(173, 216, 230));
+//        dataSet1.setLineWidth(2);
+//        dataSet1.setValueTextSize(13);
+//        dataSet1.setCircleColor(Color.RED);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(dataSet);
-        dataSets.add(dataSet1);
+//        dataSets.add(dataSet1);
 
         LineData lineData = new LineData(dataSets);
         weekLineChart.setData(lineData);
@@ -483,15 +483,15 @@ public class StatistFragment extends Fragment {
         dataSet.setValueTextSize(13);
         dataSet.setCircleColor(Color.RED);
 
-        LineDataSet dataSet1 = new LineDataSet(entries1, "unweighed"); // add entries to dataset
-        dataSet1.setColor(Color.rgb(173, 216, 230));
-        dataSet1.setLineWidth(2);
-        dataSet1.setValueTextSize(13);
-        dataSet1.setCircleColor(Color.RED);
+//        LineDataSet dataSet1 = new LineDataSet(entries1, "unweighed"); // add entries to dataset
+//        dataSet1.setColor(Color.rgb(173, 216, 230));
+//        dataSet1.setLineWidth(2);
+//        dataSet1.setValueTextSize(13);
+//        dataSet1.setCircleColor(Color.RED);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(dataSet);
-        dataSets.add(dataSet1);
+//        dataSets.add(dataSet1);
 
         LineData lineData = new LineData(dataSets);
         monthLineChart.setData(lineData);

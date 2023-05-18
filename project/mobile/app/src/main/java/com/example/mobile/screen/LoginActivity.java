@@ -48,7 +48,6 @@ public class LoginActivity extends AppCompatActivity {
         initialView();
         spcaService = new SPCAService();
         dialogs = new MaterialDialog.Builder(this).content("Please wait").progress(true, 0).cancelable(false).build();
-//        checkUserInfo();
     }
 
     @Override
@@ -105,9 +104,6 @@ public class LoginActivity extends AppCompatActivity {
                     textViewErrorMessage.setText("");
                     editTextUserName.setText("");
                     editTextPassword.setText("");
-//                    if(!hasInfo){
-//                        saveUserInfo(username,password);
-//                    }
                     fetchAllScales();
                     fetchAllCentres();
                 } else {
@@ -124,24 +120,6 @@ public class LoginActivity extends AppCompatActivity {
                 showErrorMessage(t.toString());
             }
         });
-    }
-
-    public void saveUserInfo(String username,String password){
-        SharedPreferences sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("username", username);
-        editor.putString("password", password);
-        editor.apply();
-    }
-
-    public void checkUserInfo(){
-        SharedPreferences sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        String username = sharedPref.getString("username", null);
-        String password = sharedPref.getString("password", null);
-
-        if (username != null && password != null) {
-            userLogin(username,password,true);
-        }
     }
 
     public void fetchAllScales(){
