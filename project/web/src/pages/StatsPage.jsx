@@ -229,10 +229,10 @@ const StatsPage = () => {
       id: languageMap.Weighed,
       data: weekWeightData,
     },
-    {
-      id: languageMap.Unweighed,
-      data: weekUnWeightData,
-    },
+    // {
+    //   id: languageMap.Unweighed,
+    //   data: weekUnWeightData,
+    // },
   ];
 
   //3. fetch one month's data for line chart
@@ -280,10 +280,10 @@ const StatsPage = () => {
       id: "weighed",
       data: monthWeightData,
     },
-    {
-      id: "unWeighed",
-      data: monthUnWeightData,
-    },
+    // {
+    //   id: "unWeighed",
+    //   data: monthUnWeightData,
+    // },
   ];
 
   //back button click
