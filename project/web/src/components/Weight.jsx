@@ -163,7 +163,7 @@ const Weight = ({ onClose, scaleList, dog }) => {
             setIntervalToFetch();
           }}
         >
-          {languageMap.Weighed}
+          {languageMap.AddWeight}
         </Button>
       </Box>
     </Box>
