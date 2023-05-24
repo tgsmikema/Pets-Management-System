@@ -805,7 +805,7 @@ namespace SPCA_backend.Data
 
             foreach (Request request in listOfRequests)
             {
-                if (int.Parse(request.TimeStamp) + REQUEST_EXPIRING_MINUTES * 60 < currentTimeStampInSecond)
+                if (int.Parse(request.TimeStamp) + 2 < currentTimeStampInSecond)
                 {
                     _dbContext.Remove(request);
                     _dbContext.SaveChanges();
