@@ -4,31 +4,175 @@
 
 \chapter{Overview}
 
-TODO: Introduce the project and what it will deliver
+This project outlines the development of digital scales and accompanying applications to aid the SPCA in weighing dogs. The SPCA cares for 31000 animals across 31 centres, and weighing these animals is a key task as it is an indication of an animal's health. However, this task can be stressful for the animal and difficult for staff to complete in an efficient manner. Our product will streamline the weighing process and allow staff to work more efficiently with the extra functionality available via the software applications. It has been developed in compliance with data privacy laws and sustainability practices, and with awareness of Te Ao Māori. 
 
-You can add and remove the sections below, these are just some starting \textit{suggestions}.
+These digital scales will automate the weight taking process, so that the staff can focus on the wellbeing of the animal. The scales are automatically calibrated in order to take accurate weight measurements, and conduct this measurement quickly in order to minimise the time that the dog must be on the scales. This weight measurement is sent automatically to the software, so that the staff member does not have to note the weight manually. In addition, we have included a seven-segment LED display. This allows the staff member to view the weight as it is being measured like a normal scale, which will bring more familiarity to the staff member. If the wifi goes down or for some reason the staff cannot access the software, this LED display will allow the staff to still take weight measurements in a manual way.
 
-\chapter{Deliverables}
+Two software applications have been developed to aid the SPCA, a mobile app and a web application. These applications communicate with the digital scales to save the weight of a dog, and include several additional features such as data analytics and chat functionality. The mobile application will allow staff to view dogs, save weights, and chat while on the go. The web application will additionally allow them to export data to query in excel. These applications will help the SPCA staff to work more efficiently and better provide for the animals in their care. 
 
-TODO: What are the main deliverables, how will they be achieved, how does it meet the project requirements
+This report will demonstrate the capabilities of a minimum viable product (MVP) that has been developed. It will show the benefits of this product to the SPCA, and detail how the product and its development are in line with the SPCA's core values and considerations. Information on the development of hardware and software components of the product is made available so that readers can fully understand the product. This report will include an implementation plan to develop this product beyond its current state, including stakeholders and key resources needed. It will conclude by summarising our business case presented to the SPCA, including the foreseen advantages of implementing our product.
 
-\chapter{Requirements}
 
-TODO: This chapter should review the different areas and explain how they are met
+\chapter{Problem Definition}
+An intelligent scale is required for weighing dogs and improving their well-being at SPCA’s rescue centres. SPCA is a major New Zealand organisation that cares for over 31,000 animals annually. SPCA needs to adapt to the increased number of animals that need rescuing. When under the SPCA’s care, one crucial task to determine their health is the regular weighing of animals. Currently, this is a challenging task for SPCA staff members as the process can cause stress for the animals and requires many manual steps of staff members. By prioritising the animal’s well-being during weighings, data is sometimes lost. This process can become an ongoing cycle, adding to the stress on animals and staff by requiring further re-weighing. As such, a solution that automates the weighing procedure and reliably stores data is required.
 
-\section{Te Tiriti o Waitangi}
+From this scope, we define our problem statement as such: How can we implement a product to assist the staff of the SPCA with weighing dogs so that they can obtain and store accurate weights with less manual procedures and less stress placed on the animal?
 
-TODO: How are the Te Tiriti o Waitangi goals met
+To address this issue, SPCA needs a scale that automatically stores a dog's weight after it is taken. The scale needs to be capable of measuring small to medium-weight dogs ranging from 0 to 25 kg. As a dog's health is correlated with its weight, the scale requires the accuracy to be within 0.5kgs of its real weight. To ensure operation under different environments, the scale will need to be powered by batteries and function correctly under ambient temperatures ranging from 0 to 40 degrees Celsius. To automatically store weights, the scale will be required to communicate with a server securely via HTTPS. The server must then store the weight in a database and be accessible via a website and mobile app.
+
+The product will be used by SPCA staff. SPCA staff can be divided into three categories: volunteers, vets, and administrators. User profiles were provided by the SPCA so that we were aware of the requirements of different users. The different requirements of the users will be discussed in relation to the provided user profiles.
+
+Volunteers will use the product to weigh dogs and save weight measurements, and use auxiliary software features such as messaging. As part of the weighing process, they will need to zero the scale as required, be able to obtain a stable measurement of weight even if the animal is moving on the scale, and easily record the weight somewhere it will be stored for future usage. Since the weighing of dogs occurs so frequently, the process must be streamlined, user-friendly, and intuitive to ensure it can be completed with minimal stress. 
+
+Vets will weigh dogs, but will also take an interest in any trends or metrics that we can generate for them, as these will help them to determine the animal's health. Particularly, they are interested in seeing the weight history of each animal over time, to notice any sudden changes that may indicate a health issue. Furthermore, they will need to be able to keep track of which dogs are sick, as they require more frequent weighings than healthy dogs. 
+
+Administrators will do all of this, but will also want to be able to perform administrative activities. These may include managing users, viewing different centres, and performing a range of data analyses using data logged by the smart system. This data analysis may include looking at overall trends of animal weights or checking the number of animals being weighed at different centres to ensure that their health needs are being met. Currently, the process of entering data into a spreadsheet for analysis is done manually, but ideally would be automated by being able to export data from the weighing system to allow legacy users to continue cooperation with our product’s users i.e.: volunteers who prefer traditional methods, or staff at centres that don’t use our product.
+
+The delivery of the project will include hardware to measure the weights of animals on a physical weighing platform and a mobile and web application where weight data can be recorded and viewed among other aforementioned functions. The software applications are integrated with the hardware to create a single smart system that can be used to weigh dogs, record their weights, view trends, and chat with other staff.
+
+This system will provide functionalities that existing systems either do not possess or possess in excess to the point that affects its price. For example, the common human digital scale found in most homes does not provide any extra functionality outside of showing the user their weight in different measurement units. In contrast, more advanced scales from popular fitness brands allow users to track their weight metrics and observe trends in said data. However, they provide functionality specifically for humans such as their BMI, and diet and fitness plans. This increases the cost of the scale and its services far beyond our system. It will provide real-time data on the weight and growth of the animals, enabling staff to identify any issues and take appropriate action quickly. The system should use a combination of sensors and digital technology, such as load cells and wireless connectivity, to monitor the health of the animals in SPCA’s care and assist staff in their day-to-day jobs.
+
+
+\chapter{Implementation Plan}
+
+\section{Improvements Since Proposal}
+
+Upon completion of the proposal of the smart scale, feedback was received regarding changes that could be made to improve the prototype. These changes revolved around designing the product more holistically to address societal considerations relevant in New Zealand such as sustainability and Te Ao Māori. For example, a plan on what will be done to the scale’s hardware at its end of life was developed, and the implementation of multiple languages for inclusivity was added in the software. These changes have made the product more user-centred to ensure that any user at the SPCA will be able to interact with our product easily. Now, a prototype has been developed that must be presented to the SPCA.
+
+\section{Stakeholders}
+
+Throughout the development of smart scale, considering the relevant stakeholders of the project is important to understand the impacts it will have. Accordingly, the stakeholders for the smart scale project are outlined. Table \ref{tab:stakeholders} presents the power-interest matrix of the stakeholders, showing the relative influence of them to the project.
+
+
+\begin{itemize}
+	\item 
+	SPCA CEO, senior leadership team, and board of directors are interested in a product that will make it easier and faster to care for animals by improving the weighing process. They are interested in its safety, cost, and advantages compared to existing solutions. They are available to provide input and consulting.
+	\item 
+	SPCA vets and volunteers are interested in having an accurate, efficient and easily used weighing system to streamline the weighing process. They have insight into the current weighing process, how they would want the system to operate, and what they want out of the user interface. They are also available to provide input and consulting.
+	\item 
+	SPCA charity donors are interested in seeing the money they donate to the SPCA to be used in alignment with its existing values and objectives.
+	\item 
+	Members of the public who care about animal welfare are interested in seeing animals being taken care of well by a well known organisation, and will be interested in an ethical scale solution.
+	\item 
+	The project team is interested in how the scale should operate to successfully deliver the product. 
+	\item 
+	Animals under the SPCA’s care are directly affected by the scale and thus would be interested in having a simple solution.
+	\item 
+	Companies that make other animal weight scales and animal data management solutions are interested in a new product in the market that may have similar and different features to existing products.
+	\item 
+	Other animal care providers such as veterinarian clinics are interested in a new weighing scale solution that may improve their weighing processes.
+\end{itemize}
+
+\begin{table}[!ht]
+	\centering
+	\caption{Stakeholder power-interest matrix.}
+	
+	\begin{tabular}{l|llll}
+		\hline
+		 Higher& & SPCA CEO, senior leadership, board of directors\\
+		&&  SPCA veterinarians and volunteers\\
+	\textbf{Power}	& SPCA donors & &\\
+	& Competitive companies & Animal welfare advocates\\
+		& Other veterinarian clinics & Project team\\
+		Lower& & Animals under the SPCAs care
+		\\
+		\hline
+		&Lower & \multicolumn{1}{r}{Higher}\\
+		\multicolumn{3}{c}{\textbf{Interest}}
+	\end{tabular}
+	\label{tab:stakeholders}
+\end{table}
+
+From the stakeholder analysis, it is observed that the main stakeholders are employees of the SPCA, as they are funding the project and will be the users it is designed for.
+
+
+\section{Scope}
+
+The scope of the project is defined in relation to the goals and requirements of the product. Tasks that are in scope directly relate to meeting the requirements. As such, in scope tasks are as follows: research on existing solutions; development of a prototype; hardware for weight sensing; power reduction strategies; storage of animal weight data; an interface for SPCA staff to interact with; integration between these aspects. Other in scope tasks are making recommendations after the minimum viable product, investigating compliance, and testing of the scales with weights.
+
+Tasks that were out of scope for a prototype but may be required during further development are listed. These tasks include: powering the scale via a mains wall plug; designing the mechanical enclosure of the scale; installing the scales at SPCA centres; training SPCA staff on how to use the scale; gaining compliance certifications; and testing the scale with animals. A task that is certainly out of scope of the project team is changing the method and frequency of animal weighing at SPCA centres.
+
+
+\section{Assumptions}
+
+For the project team to successfully complete the design, several assumptions are defined to simplify the design process. Assumptions related to the technical design of the scale include: the scale is powered by a 6V supply; animals being between 0.5kg and 25kg; 0.5kg resolution of weight is sufficient; all animals at the SPCA have a name they can be identified by; and the project team will successfully complete the project provided within a specified timeline and budget.
+
+Assumptions related to the usage of the scale include: SPCA centres internet will be available for communications required by the smart scale; SPCA staff will have access to phones or computers; the SPCA will pay for ongoing costs such as data storage and power; the SPCA will use the stored animal weight data responsibly and privately for veterinary care; the SPCA staff will use a chat feature; and the SPCA will dispose of the scale at its end of life in alignment with recommendations made by the project team.
+
+\section{Further Development}
+
+After a successful prototype, steps are suggested to the project team to continue further development. Firstly, the prototype should be presented to the SPCA for consultation on its implementation. The consultation could include SPCA senior leadership team members, veterinarians, and IT. Based on feedback, the design should be modified to improve the performance and usability of the scale and remove faults. Then, mass testing should be completed to ensure the requirements are met by several units rather than a single successful prototype. After, the required compliance certifications and permissions should be obtained. Then, trials of the scale in use at one SPCA centre should be completed to gauge the system’s effectiveness by SPCA staff using the system. Finally, based on feedback from the trials, more revisions may be required before mass production and distribution occur. However, maximum feedback should be obtained before the trials to prevent large changes, as they will require recertification at additional cost.
+
+
+\subsection{Costs of Further Development}
+
+To successfully develop the prototype into a product that is used by the SPCA, the aforementioned steps must be followed. With these steps come additional costs that will be discussed in this section. Particularly, mass production costs and ongoing costs are considered. Assuming each SPCA and community partnership centre will have at least one scale, this equates to 37 scales minimum. Part of the software requirements is to be able to handle 40 concurrent scale connections, indicating some centres will have more than one scale. Thus, we predict that roughly 60 scales will be required.
+
+To fulfil the hardware requirements beyond prototype, the main costs are the cost of the printed circuit boards (PCBs), components, and certification testing to comply with RoHS. The hardware components cost an estimated \$30.61 obtained from reputable electronics suppliers Mouser and Digikey. To produce the PCB assembly for the hardware using the reputable manufacturer PCBWay, the cost to develop hardware for 60 smart scales is quoted as \$550 USD, equivalent to \$2800 NZD. This cost includes the cost of PCB manufacturing (\$150 USD), components (\$31.60 NZD per scale for the prototype for \$1900 NZD total), and the soldering of the components (\$400 USD). Soldering could be done by the project team to reduce production costs, however would likely incur greater costs due to PCBWay being an affordable manufacturer with the tools to automate it. It should also be noted that there will be an additional cost for the physical weighing platform appropriate for animal interaction, and also the cost of integration of the hardware with the weighing platform. 
+
+The other substantial hardware cost is the cost of certification testing to comply with RoHS which is mandatory for an electronic product to ensure that it can safely be used by humans and animals. RoHS ensures that a limited quantity of restricted materials are used in the hardware. To find the cost of RoHS certification testing will require getting a personalised quote from a certified laboratory, but is estimated to be\$415 USD, equivalent to \$700 NZD.
+
+To fulfil the software scalability requirements for SPCA, we have devised a comprehensive plan that aligns with their business needs. Our strategy entails leveraging the services of a renowned hosting provider, namely MyAsp.Net, to accommodate the back-end of the application on a dedicated server. MyAsp.Net offers an exceptional business plan featuring a dedicated and secure server with unlimited bandwidth. This plan adequately satisfies the requirements outlined by SPCA and incurs a monthly cost of \$30 USD, equivalent to approximately \$50 NZD, for site hosting.
+
+In addition, we have carefully considered the front-end hosting needs for the application. To address this, we propose utilising a hosting plan offered by Heroku, who offers up to 500 client applications running concurrently which perfectly suits the requirements of SPCA of maximum 100 concurrent client applications. This plan comes at a monthly expense of \$50 USD, approximately \$80 NZD, ensuring seamless front-end functionality.
+Regarding the Android App, it is noteworthy that publishing it on the Google Play Store does not incur any service fees. Therefore, there are no charges associated with releasing the Android App to the public. 
+
+Overall, we can see that the majority of the costs are for the production of the hardware, which are only initial costs. During the smart scale’s use, it will only require the ongoing software costs. By implementing this comprehensive development, hosting and deployment strategy, we are confident in our ability to meet the business requirements of SPCA efficiently and effectively.
+
+\subsection{Timeframe of Further Development}
+
+For the aforementioned further development, timeframes are estimated.
+
+Presentation of the prototype to the SPCA, feedback, and design revisions may take up to a month. Production of multiple units for mass testing will take 1-2 weeks according to PCBWay guidelines. Then mass testing can occur over one week. Compliance certifications must be obtained from RoHS certification testing, which is estimated as 15-20 days from New Zealand certification testing laboratories. Then, implementation testing at an SPCA centre should be undertaken for at least a week to have an appropriate amount of time for staff to learn how to use the system, become familiar with it, and develop sufficient feedback around its usage. Finally, mass production can occur which will also take 1-2 weeks according to PCBWay guidelines. Distribution of the product is estimated to take a further week, excluding delivery times of the project teams chosen postal service.
+
+Overall, the future timeframe of the product is estimated to take 3-4 months.
+
+
+\chapter{Societal Considerations}
+Our application is designed with a number of societal factors in mind that are relevant in New Zealand. Firstly, we will design the system to fulfil our treaty obligations to make the system usable by different cultures, including Māori. To fulfil this obligation, we need to implement processes to allow any user to maintain full control over their data including access, management, and deletion. In terms of legal and privacy concerns, the collection, holding, usage, and disclosure of data are considered, and procedures have been implemented to respect Te Tiriti o Waitangi and the privacy act. Multiple levels of security and access are used in our application to protect the confidentiality and integrity of the system. To ensure sustainability, we will also design our circuit in a way that uses the least amount of materials and dispose of them correctly after use. We also use components that comply with the RoHS restrictions, and have an end of life cycle plan in place for the components.
 
 \section{Sustaintability and Environmental}
 
-TODO: How are the sustaintability goals met
+Many of the sustainability concerns involve the hardware of the scale and its effects on the environment. WEEE (electrical and electronics waste) is increasing each year, so we need to reduce the amount of waste as much as possible. 
+
+To maximise sustainability, it must be considered over the scale's entire lifetime. The scale should be designed to use the least amount of materials. Specifically, all components and subcircuits should be critical to the scale's performance in terms of usability or accuracy, otherwise they may be unnecessary and a waste of resources. Additionally, surface mounted electronic components will be used rather than their through-hole equivalents since they are smaller, requiring less resources to produce. Components with long lifetimes are chosen so that the scale is able to last extended periods of time before requiring disposal. By allowing the scale to last longer, it reduces long-term landfill waste, and it is also more convenient for the user by not requiring timely and costly replacements as often. To get the scale to the SPCA centres, the product will be flat packed to save space for distribution and reduce the environmental impact of shipping, therefore requiring the user to assemble the scale before use. Once operating, the scale's power consumption should be limited. This is achieved by implementing features in the embedded system that substantially reduce power consumption when not in use. At the end of life of the scale, it must be disposed of safely to comply with WEEE and AS/NZS 5377, where it causes minimal harm to human health and the environment. Our End of Life Cycle plan is as follows: 
+\begin{itemize}
+	\item Electrical components should be separated from plastic components and taken to a AS/NZS 5377 certified disposable centre for disassembly and processing. 
+	\item Standard connections are used to provide easy and simple disassembly. 
+	\item The plastic and glass in the scale should be separated and recycled if possible based on local recycling laws and regulations. 
+	\item All electrical components are RoHS certified and so do not contain any restricted hazardous materials. 
+\end{itemize}
+
+The scale must comply with RoHS restricted material limitations before it can be brought to production. The restriction of hazardous materials is important to protect the users and animals interacting with the scale, as well as the environment during manufacturing and end-of-life.
+
+Data storage can use a lot of electricity, and so this is another area where sustainability must be considered. We cannot know exactly how our data is stored in a cloud based system, so we cannot determine if the data centre has been built sustainably or uses green energy. However, we can ensure that we are storing minimal amounts of data. We achieve this by having deletion processes, only storing required information, and using temporary storage where possible. 
+
+
+\section{Te Tiriti o Waitangi}
+
+In New Zealand, it is important that we align ourselves with the principles of Te Tiriti o Waitangi and honour our whakapapa. This means we must recognise and respect the treaty principles of partnership, participation and protection. The principles of protection and tino rangatiratanga over resources are important to consider for our product. There are two key resources used in the scale: natural resources, and data. 
+
+Natural resources are used in the hardware components of the scale with the PCB and its components. In Te Ao Māori, we as humans and engineers are guardians of the natural world, and resources are taonga. Accordingly, as discussed in relation to sustainability, resource usage will be thoughtful and minimalistic. The resources should not be wasted or used frivolously, thus the hardware design will ensure that all hardware used serves a purpose. Furthermore, robust components with long lifetimes will be used, to ensure that the hardware that is developed will be able to last a long time, ideally for generations to come, as also emphasised in Te Ao Māori. It is not only about making the scale for SPCA staff and animals now, but ensuring the system is fit for use in the future too.
+
+Resources in the form of data are also used and collected by the scale. In Te Ao Māori, data is taonga and we must recognize tangata whenua as kaitiaki of their data. To fulfil this obligation we have processes in place to allow any user to maintain full control over their data including access, management, deletion. We will also allow Te Reo Māori as a language option in our software applications to support its protection and revitalisation. We have aimed to implement translations that best suit the intention of the English word, rather than literal translation. Where possible, we have used terms that are becoming common with Māori translations with modern technology, such as using ‘āhau’ for ‘profile’. We acknowledge that we may make mistakes when trying to incorporate mātauranga Māori, mō taku hē, mō taku hē.
 
 \section{Legal and Privacy}
 
-TODO: How are the legal and privacy goals met
+The collection, management, and use of data are all primary focuses for our data privacy obligations. We will only hold information about SPCA staff and animals. Customers, e.g. people who are adopting animals, will not be stored in our system. 
+
+For data collection, in our application, staff details such as first name, last name, and job description will be collected in order to open an account and update their profile. This is the minimum requirement of user information to be collected in order to find and identify users within our system. We offer a service where users may communicate within our application, hence contact details do not need to be collected, therefore corresponding to the minimum amount of data needed to be collected by each user.
+
+We hold data in a serverless SQLite database, coupled with the application's back end in a secure hosted environment. Since our API endpoints are protected, only users who have access to each endpoint will be able to access the personal data stored. This prevents personal data being used by people outside the organisation and minimises the risk of data being exposed. Passwords are encrypted so that even if the database is compromised, bad actors will not be able to access users’ accounts.
+
+For using and disclosing data, no personal data will be ever disclosed to any other parties outside the organisation except for legal reasons. One assumption is that only internal communications are done within our application, and hence that sensitive user data will not be disclosed outside of the organisation. This data includes staff names and emails, and any messages that they have sent using our product. We will not disclose staff’s private messages without cause, however these messages are the property of the SPCA and should only be used for professional purposes.
 
 \section{Other Ethical Issues}
 
-TODO: How are the ethical goals met
+In order to protect the confidentiality and integrity of the system, our application will have multiple levels of security. An administrator will be able to access all parts of the system, whereas a volunteer will only have limited control. This protects the application from sabotage, either malicious or accidental. Only vets and volunteers will have access to animals within the centre that they work at, since there is no need for them to access other animals’ data. 
+
+A large potential issue is the reliability of the recordings. This is an ethical issue as if our product measure inaccurate weights, it would impact the treatment of the dogs and could negatively impact them. This comes in two parts: hardware error and user error. To mitigate potential hardware errors, we will design and build the scales to the highest possible standards. Regular maintenance should be conducted on the scales to ensure that they are not degrading. User error includes the potential of staff attributing the weight to the wrong dog. There is no way for us to control or mitigate this, so we will rely on the high standards of the SPCA as well as ensuring our user interface is easy to understand. 
+
+We will assume that the owners of these dogs give consent to the SPCA to record and store their dogs’ weight. In the majority of cases, the animals at the SPCA don’t have a home, so the SPCA assume legal ownership and as such can grant permission for data to be collected and used. 
+
+We also consider the safety of those using our product, specifically the scale as it has electrical current and delicate parts. The scale is designed to be hardy so that dogs or staff cannot accidentally break it. All electrical components are safely soldered and should not be in reach of users, so there is minimal risk of electric shock. The scale and associated applications should be added to the safety procedures at the SPCA, and appropriate training should be given to staff to ensure that they do not use it outside of its intended purposes. 
 

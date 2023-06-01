@@ -4,12 +4,55 @@
 
 \part{Appendices}
 
-\chapter{Optional}
+\chapter{Hardware - Bill of Materials \label{appendix-bom}}
 
-TODO: you can include as many optional appendices as required, these should contain any extra details for the project that haven't been included previously. 
+The hardware bill of materials is in Table \ref{tab:hardware-BOM}. Costs are those used in the prototype for a single unit, and are obtained from reputable electronics suppliers Mouser and Digikey, where (M) indicates Mouser and (D) indicates Digikey. Costs are subject to change at any time and are in NZD.
 
-Do NOT include code.
+\begin{table}[!ht]
+	\centering
+	\caption{Hardware required specifications.}
+	\begin{tabular}{llllll} 
+		\hline
+		PCB Designator              & Description           & MPN (Supplier)             & Unit cost & \# & Total \\
+		\hline
+		PI                          & RPi Pico W   & SC0915 (M)                 & 6.60              & 1        & 6.60          \\
+		DISPLAY                     & LED Display           & LTC-5723HR (M)             & 4.90              & 1        & 4.90          \\
+		U3                          & Display Driver    & CD4511BE (D)               & 1.56              & 1        & 1.56          \\
+		U2                          & Opamp & LM324N (D)                 & 0.86              & 1        & 0.86          \\
+		U1                          & Regulator             & LD1117S33CTR (D)           & 1.28              & 1        & 1.28          \\
+		Q2/Q3/Q4/Q5                 & Transistor            & BC547B (D)                 & 0.85              & 4        & 3.40          \\
+		ZERO BUT                    & Button                & TS04-66-43-BK-100-SMT (M)  & 0.31              & 1        & 0.31          \\
+		SENSOR                      & Header                & G800W590018EU (M)          & 0.86              & 1        & 0.86          \\
+		+SUPPLY- BAT POWER          & Header                & HM3172 (D)                 & 0.79              & 2        & 1.58          \\
+		ON, MEAS ZERO               & LED                   & LTST-C191KRKT (D)          & 0.46              & 3        & 1.38          \\
+		C3/C6/C14                   & Cap 1UF 25V     & CL21B105KAFNNNE (M)        & 0.17              & 3        & 0.50          \\
+		C2                          & Cap 10UF 16V    & CL21A106KOQNNNE (M)        & 0.17              & 1        & 0.17          \\
+		C5                          & Cap 100UF 6.3V  & GRM31CR60J107MEA8L (M)     & 0.73              & 1        & 0.73          \\
+		C1/C4/C8/C9/C10/C11/C12/C13 & Cap 100nF 50V   & CL21B104KBCNNNC (D)        & 0.18              & 8        & 1.44          \\
+		R1                          & Resistor 220K         & RC0805JR-07220KL (D)       & 0.18              & 1        & 0.18          \\
+		R2                          & Resistor 22K          & RC0805FR-0722KL (D)        & 0.18              & 1        & 0.18          \\
+		R3/R12                      & Resistor 10K          & RC0805FR-0710KL (D)        & 0.18              & 2        & 0.36          \\
+		R7/R14                      & Resistor 33K          & RC0805JR-0733KL (D)        & 0.18              & 2        & 0.36          \\
+		R10/R16/R17/R18             & Resistor 100R         & RC0805FR-07100RL (D)       & 0.18              & 4        & 0.72          \\
+		R8/R15                      & Resistor 820K         & RC0805FR-07820KL (D)       & 0.18              & 2        & 0.36          \\
+		R9/R13                      & Resistor 5K6          & RC0805FR-075K6L (D)        & 0.18              & 2        & 0.36          \\
+		R11                         & Resistor 180R         & RC0805JR-07180RL (D)       & 0.18              & 1        & 0.18          \\
+		R19/R20/R21/R23/R24/R28/R29 & Resistor 100R         & 311-100JRCT-ND (D)         & 0.18              & 7        & 1.26          \\
+		R25/R26/R27/R30             & Resistor 1K           & 13-RC0402FR-131KLCT-ND (D) & 0.18              & 4        & 0.72          \\
+		R22                         & Resistor 1R           & 311-1.0JRCT-ND (D)         & 0.18              & 1        & 0.18          \\
+		R6                          & Resistor 390R         & RC0805JR-07390RL (D)       & 0.18              & 1        & 0.18          \\
+		\hline
+		\multicolumn{5}{l}{Total Cost}                                                  & 30.61        
+	\end{tabular}
+	\label{tab:hardware-BOM}
+\end{table}
 
-Only include the appendices if NEEDED.
 
-\textbf{Important:} if there are no appendices, delete all the content for this file. \textbf{DO NOT} delete the file!
+\chapter{Software - Backend \label{appendix-backend}}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[scale=0.8]{api_endpoints_list.png}
+	\caption{API Endpoints for the Backend}
+	\label{fig:api_endpoints_list}
+\end{figure}
